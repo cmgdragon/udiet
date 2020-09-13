@@ -1,0 +1,29 @@
+.meal-name {
+    position: absolute;
+    top: 8rem;
+}
+
+.meal-box {
+    border-radius: .2rem;
+    border: 3px solid red;
+    margin: 3rem 1rem;
+    padding: 2rem 1rem;
+}
+
+.meal-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.meal-option {
+    background-image: url('../../img/meal-default.png');
+    background-size: cover;
+    max-width: 3rem;
+    width: 3rem;
+    left: 1px;
+    min-height: 3rem;
+    border-radius: 30%;
+    border: 2px solid black;
+    box-shadow: 0px 1px 10px 0px black;
+}
