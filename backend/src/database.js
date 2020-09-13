@@ -1,15 +1,22 @@
-import mongoose from 'mongoose';
+import Sequelize from 'sequelize';
+import env from './config';
 
-const DATABASE_URL = "mongodb://localhost/youdiet";
+const connection = new Sequelize(
+    env.DB_NAME,
+    env.DB_USER,
+    env.DB_PASS, {
+        host: "you-tales.com",
+        dialect: "mysql"
+    }
 
-mongoose.connect(DATABASE_URL, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: false
-});
+);
+//console.log(DB_HOST, DB_USER, DB_PASS);
 
-const connection = mongoose.connection;
-
-connection.once('open', () => {
-    console.log('connected to mongodb')
-})
+(async () => {
+    try {
+        await connection.authenticate();
+        console.log('Connection has been established successfully.');
+      } catch (error) {
+        console.error('Unable to connect to the database:', error);
+      }
+})();
