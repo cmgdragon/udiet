@@ -7,6 +7,7 @@ import Diet from './Components/Diet'
 const App = () => {
 //dietData={dietData}
   return (
+    
   <Diet />
   )
 
