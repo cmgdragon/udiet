@@ -4,12 +4,14 @@ import Meal from '../Meal'
 
 const Diet = (props) => {
 
+    //const {dietData} = props;
+    //const [mealData] = dietData;
 
     return (
 
         <div className={styles.cuerpo}>
-           <h1 className={styles['diet-name']}>Dieta de alguien</h1>
-            <Meal />
+           <h1 className={styles['diet-name']}>{/*dietData.title*/}</h1>
+            {/*<Meal mealData={mealData} />*/}
 
         </div>
 

@@ -1,0 +1,14 @@
+.options-box {
+    background-color: burlywood;
+    margin: 3rem 0 0 0;
+    height: 0px;
+    padding: 0rem;
+    transition: all 1s;
+}
+
+.options-box-displayed {
+    background-color: burlywood;
+    margin: 3rem 0 0 0;
+    height: 100%;
+    padding: 1.7rem;
+}
