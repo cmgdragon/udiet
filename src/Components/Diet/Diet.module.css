@@ -7,8 +7,9 @@
     border-radius: 1rem;
 }
 
-.diet-name {
-    text-align: center;
-    margin: 0;
-    margin-bottom: 5rem;
+.diet-list-item {
+    margin: .3rem 0rem;
+    padding: 1rem 3rem;
+    cursor: pointer;
+    background-color: burlywood;
 }

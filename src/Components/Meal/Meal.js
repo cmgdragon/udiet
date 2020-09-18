@@ -4,37 +4,58 @@ import MealOption from '../MealOption';
 
 const Meal = (props) => {
 
-    //const {mealData} = props;
-    //const [displayed, setDisplayed] = useState(false);
+    const { dietObject } = props;
+    const { mealData, dietName, isPrivate } = dietObject;
+    const [displayed, setDisplayed] = useState(undefined);
 
-    let currentlyDisplayed;
+    console.log(Object.values(mealData))
 
     const optionClick = (e) => {
 
 
-        //currentlyDisplayed = e.target;
+        setDisplayed(e.target)
     }
 
     return (
-        <div className={styles['meal-box']}>
-        
-            <h2 className={styles['meal-name']}>{/*mealData[0].name*/}</h2>
+    <>
+        <h1 className={styles['diet-name']}>{dietName}</h1>
+        <div className={styles['diet-list']}>
 
-            <div className={styles['meal-list']}>
+            <div className={styles['meal-box']}>
+            
+                {
+                    Object.values(mealData).map((meal, index) => {
+                        return (
+                            <React.Fragment key={index}>
+                                <h2 className={styles['meal-name']}>{meal.name}</h2>
 
-                {}
+                                    <div className={styles['meal-list']}>
 
-                <div onClick={optionClick} className={styles['meal-option']}></div>
-                <div className={styles['meal-option']}></div>
+                                    {
+
+                                        Object.values(meal.courseMeals).map(course => {
+                                            return (
+                                                <div key={index} onClick={optionClick} className={styles['meal-option']}></div>
+                                            )
+                                        })
+
+                                    }
+
+                                </div>
+
+                                <MealOption 
+                                    courseMeals={meal.courseMeals}
+                                    displayed={displayed}
+                                />
+
+                            </React.Fragment>
+                        )
+                    })
+                }
+
             </div>
-
-            {/*<MealOption 
-                mealData={mealData.courseMeals}
-                displayed={displayed}
-            />*/}
-
-
         </div>
+    </>
     )
 }
 

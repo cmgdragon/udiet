@@ -1,13 +1,30 @@
+.diet-name {
+    text-align: center;
+    margin: 0;
+    margin-bottom: 5rem;
+}
+
+.diet-list {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    text-align: center;
+    width: fit-content;
+    padding-bottom: 1.5rem;
+}
+
+
 .meal-name {
     position: absolute;
-    top: 8rem;
+    margin-left: -30%;
+    margin-top: -3rem;
 }
 
 .meal-box {
     border-radius: .2rem;
     border: 3px solid red;
-    margin: 3rem 1rem;
-    padding: 2rem 1rem;
+    margin: 0rem 1rem;
+    padding: 0rem 1rem;
 }
 
 .meal-list {
