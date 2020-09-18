@@ -16,21 +16,23 @@ const MealOption = (props) => {
                 return (
                     <React.Fragment key={index} >
                         <div>Nombre: {name}</div>
-                    { properties ? <div>Propiedades: {properties}</div> : undefined}
-
-                        {
-                            Object.values(ingredients).map(({name, quantity, branf, location, info}, index) => {
-                                return (
-                                    <div key={index}>
-                                        {name}
-                                    </div>
-                                )
-                            })
-                        }
-
-                        <div>Ingredientes: </div>
-                    { recipe ? <div>Preparación: {recipe}</div> : undefined}
-                    { comments ? <div>Comentarios: {comments}</div> : undefined}
+                        { properties ? <div>Propiedades: {properties}</div> : undefined}
+                            <div>Ingredientes: </div>
+                            
+                                <div className={styles['ingredient-list']}>
+                                {
+                                    Object.values(ingredients).map(({name, quantity, brand, location, info}, index) => {
+                                        return (
+                                            <div key={index} className={styles.ingredient}>
+                                                {name}
+                                            </div>
+                                        )
+                                    })
+                                }
+                                </div>
+                            
+                        { recipe ? <div>Preparación: {recipe}</div> : undefined}
+                        { comments ? <div>Comentarios: {comments}</div> : undefined}
                     </React.Fragment>
                 )
             })
