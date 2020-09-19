@@ -1,21 +1,21 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import styles from './Meal.module.css';
 import MealOption from '../MealOption';
 
-const Meal = (props) => {
+const Meal = props => {
 
     const { dietObject } = props;
     const { mealData, dietName, isPrivate } = dietObject;
-    const [displayed, setDisplayed] = useState(undefined);
+    const [mealDisplayed, setMealDisplayed] = useState(undefined);
+    const mealOption = useRef();
+
 
     console.log(Object.values(mealData))
 
-    const optionClick = (e) => {
-
-
-        setDisplayed(e.target)
+    const optionClick = (courseIndex, event) => {
+        setMealDisplayed(mealData[Object.keys(courseIndex)])
     }
-
+    console.log(mealData[Object.keys(0)])
     return (
     <>
         <h1 className={styles['diet-name']}>{dietName}</h1>
@@ -24,18 +24,18 @@ const Meal = (props) => {
             <div className={styles['meal-box']}>
             
                 {
-                    Object.values(mealData).map((meal, index) => {
+                    Object.values(mealData).map((meal, mealIndex) => {
                         return (
-                            <React.Fragment key={index}>
+                            <React.Fragment key={mealIndex}>
                                 <h2 className={styles['meal-name']}>{meal.name}</h2>
 
                                     <div className={styles['meal-list']}>
 
                                     {
 
-                                        Object.values(meal.courseMeals).map(course => {
+                                        Object.values(meal.courseMeals).map((course, courseIndex) => {
                                             return (
-                                                <div key={index} onClick={optionClick} className={styles['meal-option']}></div>
+                                                <div key={courseIndex} onClick={() => optionClick(courseIndex)} className={styles['meal-option']}></div>
                                             )
                                         })
 
@@ -43,15 +43,15 @@ const Meal = (props) => {
 
                                 </div>
 
-                                <MealOption 
-                                    courseMeals={meal.courseMeals}
-                                    displayed={displayed}
-                                />
-
                             </React.Fragment>
                         )
                     })
                 }
+
+                <MealOption
+                    courseMeals={mealDisplayed}
+                   /* displayed={displayed}*/
+                />
 
             </div>
         </div>

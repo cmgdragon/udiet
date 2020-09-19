@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import styles from './MealOption.module.css';
+import Ingredient from '../Ingredient';
 
-const MealOption = (props) => {
+const MealOption = props => {
 
     console.log(props)
     const { courseMeals } = props;
-    
+    //const [displayed, setDisplayed] = useState(undefined);
+    const mealOption = useRef();
+
+    const expandedStyle = {
+        //height: displayed ? mealOption.current.scrollHeight : '0px'
+    }
         
     return (  
-    <div className={styles['options-box-displayed']
-                /*props.displayed ? styles['options-box-displayed'] : styles['options-box']*/}>
+    <div ref={mealOption} className={styles['options-box']} style={expandedStyle}>
 
         {
             Object.values(courseMeals).map(({ingredients, name, properties, recipe, comments}, index) => {
@@ -23,9 +28,15 @@ const MealOption = (props) => {
                                 {
                                     Object.values(ingredients).map(({name, quantity, brand, location, info}, index) => {
                                         return (
-                                            <div key={index} className={styles.ingredient}>
-                                                {name}
-                                            </div>
+                                            <React.Fragment key={index}>
+                                                <Ingredient
+                                                    ingredientName={name}
+                                                    quantity={quantity}
+                                                    brand={brand}
+                                                    location={location}
+                                                    info={info}
+                                                />
+                                            </React.Fragment>
                                         )
                                     })
                                 }

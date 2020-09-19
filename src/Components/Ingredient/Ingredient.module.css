@@ -1,0 +1,10 @@
+.ingredient-name {
+    
+}
+
+.ingredient-list {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: .5s height cubic-bezier(0, 0.9, 0.97, 0.96);;
+}

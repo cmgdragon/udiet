@@ -1,9 +1,10 @@
 .options-box {
     background-color: burlywood;
     margin: 3rem 0 0 0;
-    height: 0px;
     padding: 0rem;
-    transition: all 1s;
+    transition: height .5s ease-in;
+    padding: 0;
+    overflow: hidden;
 }
 
 .options-box-displayed {

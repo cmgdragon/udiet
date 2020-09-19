@@ -27,6 +27,42 @@ const dietObjectDB = {
                     ],
                     recipe: "preparación",
                     comments: "comments"
+                },
+                {
+                    name: "course 2",
+                    properties: "propiedades",
+                    ingredients: [
+                        {
+                            name: "arroz22",
+                            quantity: "80g",
+                            location: "Soli Corbera",
+                            brand: "Marca",
+                            info: "más info"
+                        }
+                    ],
+                    recipe: "preparación",
+                    comments: "comments"
+                }
+            ]
+        },
+
+        {
+            name: "Merienda2",
+            courseMeals: [
+                {
+                    name: "course 2",
+                    properties: "propiedades",
+                    ingredients: [
+                        {
+                            name: "arroz2",
+                            quantity: "80g",
+                            location: "Soli Corbera",
+                            brand: "Marca",
+                            info: "más info"
+                        }
+                    ],
+                    recipe: "preparación",
+                    comments: "comments"
                 }
             ]
         }
