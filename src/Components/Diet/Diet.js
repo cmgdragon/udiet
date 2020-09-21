@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
 import styles from './Diet.module.css';
 import Meal from '../Meal';
 import { auth } from '../../Services/authProviders';
@@ -8,11 +8,71 @@ import { addNewUserDiet } from '../../Database/writeDietInfo';
 
 const dietObjectDB = {
     isPrivate: false,
-    dietName: "dsdsdsadasdadsds",
+    dietName: "testets",
     mealData: [
         {
             name: "Merienda",
             courseMeals: [
+                {
+                    name: "course 1",
+                    properties: "propiedades",
+                    ingredients: [
+                        {
+                            name: "arroz",
+                            quantity: "80g",
+                            location: "Soli Corbera",
+                            brand: "Marca",
+                            info: "más info"
+                        }
+                    ],
+                    recipe: "preparación",
+                    comments: "comments"
+                },
+                {
+                    name: "course 2",
+                    properties: "propiedades",
+                    ingredients: [
+                        {
+                            name: "arroz22",
+                            quantity: "80g",
+                            location: "Soli Corbera",
+                            brand: "Marca",
+                            info: "más info"
+                        }
+                    ],
+                    recipe: "preparación",
+                    comments: "comments"
+                },
+                {
+                    name: "course 1",
+                    properties: "propiedades",
+                    ingredients: [
+                        {
+                            name: "arroz",
+                            quantity: "80g",
+                            location: "Soli Corbera",
+                            brand: "Marca",
+                            info: "más info"
+                        }
+                    ],
+                    recipe: "preparación",
+                    comments: "comments"
+                },
+                {
+                    name: "course 2",
+                    properties: "propiedades",
+                    ingredients: [
+                        {
+                            name: "arroz22",
+                            quantity: "80g",
+                            location: "Soli Corbera",
+                            brand: "Marca",
+                            info: "más info"
+                        }
+                    ],
+                    recipe: "preparación",
+                    comments: "comments"
+                },
                 {
                     name: "course 1",
                     properties: "propiedades",
@@ -70,22 +130,32 @@ const dietObjectDB = {
     ]
 }
 
-const Diet = () => {
+const Diet = props => {
 
-    const user = useContext(UserContext);
     const [dietUserList, setDietUserList] = useState({});
     const [dietObject, setDietObject] = useState(undefined);
+    const userContext = useContext(UserContext);
 
+    const user = userContext ? userContext : {
+        uid: props.ids.uid,
+        dietId: props.ids.dietId
+    };
+    
     useEffect(() => {
-
-        //addNewUserDiet(user.uid, dietObjectDB);
         
-        getUserDiets(user.uid).then(diets => {
-            setDietUserList(diets);
-        });
+        //addNewUserDiet(user.uid, dietObjectDB);
 
+       (async()=>{
+            const dietlist = await getUserDiets(user.uid);
+            setDietUserList(dietlist);
+        })();
+
+        if (user.dietId) {
+            setDietObject(Object.values(dietUserList)[user.dietId]);
+        }
 
     }, []);
+
 
     const signOut = async () => {
     
@@ -105,11 +175,11 @@ const Diet = () => {
 
     return (
         <>
-            <button onClick={signOut}>Sign out</button>
+           { user.notLoggedIn ? undefined : <button onClick={signOut}>Sign out</button>}
             <div className={styles.cuerpo}>
 
-
                 {  dietObject ? <Meal dietObject={dietObject} /> :
+                   Object.values(dietUserList)[user.dietId] ? <Meal dietObject={Object.values(dietUserList)[user.dietId]} /> :
 
                     Object.values(dietUserList).map((diet, index) => {
                         return (

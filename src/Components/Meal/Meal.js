@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, { useState } from 'react';
 import styles from './Meal.module.css';
 import MealOption from '../MealOption';
 
@@ -6,16 +6,29 @@ const Meal = props => {
 
     const { dietObject } = props;
     const { mealData, dietName, isPrivate } = dietObject;
-    const [mealDisplayed, setMealDisplayed] = useState(undefined);
-    const mealOption = useRef();
+    const [mealDisplayed, setMealDisplayed] = useState({meal: undefined, meals: {}});
 
-
-    console.log(Object.values(mealData))
-
-    const optionClick = (courseIndex, event) => {
-        setMealDisplayed(mealData[Object.keys(courseIndex)])
+    const optionClick = (mealIndex, courseIndex) => {
+        setMealDisplayed(
+            {
+                meal: mealData[mealIndex].courseMeals[courseIndex],
+                meals:
+                 {
+                    ...mealDisplayed.meals,
+                    [mealIndex]: mealDisplayed.meals[mealIndex] === courseIndex ? undefined : courseIndex      
+                     
+                 }
+            }
+        );
     }
-    console.log(mealData[Object.keys(0)])
+
+    const renderCourse = (mealIndex, courseIndex) => {
+        return (
+            mealDisplayed.meals[mealIndex] !== undefined
+            && mealDisplayed.meals[mealIndex] === courseIndex
+        )
+    }
+
     return (
     <>
         <h1 className={styles['diet-name']}>{dietName}</h1>
@@ -35,23 +48,34 @@ const Meal = props => {
 
                                         Object.values(meal.courseMeals).map((course, courseIndex) => {
                                             return (
-                                                <div key={courseIndex} onClick={() => optionClick(courseIndex)} className={styles['meal-option']}></div>
+                                                <div key={courseIndex} onClick={() => optionClick(mealIndex, courseIndex)} className={styles['meal-option']}></div>
                                             )
                                         })
 
                                     }
 
                                 </div>
+                                
+                                {
+
+                                    Object.values(meal.courseMeals).map((course, courseIndex) => {
+                                        return (
+                                            <React.Fragment key={courseIndex}>
+                                                <MealOption
+                                                    courseMeals={course}
+                                                    display={renderCourse(mealIndex, courseIndex)}
+                                                />
+                                            </React.Fragment>
+                                        )
+                                    })
+
+                                }
 
                             </React.Fragment>
                         )
                     })
                 }
 
-                <MealOption
-                    courseMeals={mealDisplayed}
-                   /* displayed={displayed}*/
-                />
 
             </div>
         </div>

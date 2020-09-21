@@ -1,30 +1,25 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import styles from './MealOption.module.css';
 import Ingredient from '../Ingredient';
 
 const MealOption = props => {
+  
+    const { courseMeals, display } = props;
+    const {comments, ingredients, name, properties, recipe} = courseMeals;
 
-    console.log(props)
-    const { courseMeals } = props;
-    //const [displayed, setDisplayed] = useState(undefined);
-    const mealOption = useRef();
+    return ( 
+    <div  className={
+      !display ? styles['options-box'] : styles['options-box'] + " " + styles.displayed
+    }>
+        {console.log("cagon",courseMeals)}
 
-    const expandedStyle = {
-        //height: displayed ? mealOption.current.scrollHeight : '0px'
-    }
-        
-    return (  
-    <div ref={mealOption} className={styles['options-box']} style={expandedStyle}>
-
-        {
-            Object.values(courseMeals).map(({ingredients, name, properties, recipe, comments}, index) => {
-                return (
-                    <React.Fragment key={index} >
+                        {console.log('cagonn', name)}
                         <div>Nombre: {name}</div>
                         { properties ? <div>Propiedades: {properties}</div> : undefined}
                             <div>Ingredientes: </div>
                             
                                 <div className={styles['ingredient-list']}>
+                                    
                                 {
                                     Object.values(ingredients).map(({name, quantity, brand, location, info}, index) => {
                                         return (
@@ -44,12 +39,9 @@ const MealOption = props => {
                             
                         { recipe ? <div>Preparación: {recipe}</div> : undefined}
                         { comments ? <div>Comentarios: {comments}</div> : undefined}
-                    </React.Fragment>
-                )
-            })
-        }
 
-    </div>
+
+     </div>
     )
 }
 

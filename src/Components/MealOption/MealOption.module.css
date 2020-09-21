@@ -1,15 +1,18 @@
 .options-box {
     background-color: burlywood;
-    margin: 3rem 0 0 0;
-    padding: 0rem;
-    transition: height .5s ease-in;
-    padding: 0;
+    transition: all .5s ease-in;
+    transform: scale(0);
+    height: 0;
+    opacity: 0;
     overflow: hidden;
 }
 
-.options-box-displayed {
+.displayed {
     background-color: burlywood;
-    margin: 3rem 0 0 0;
+    transform: scale(1);
+    opacity: 1;
     height: 100%;
     padding: 1.7rem;
+    margin-top: -5rem;
+    margin-bottom: 5rem;
 }
