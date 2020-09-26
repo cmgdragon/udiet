@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import styles from './Meal.module.css';
 import MealOption from '../MealOption';
+import * as firebase from 'firebase/app';
+import 'firebase/storage';
 
 const Meal = props => {
-
-    const { dietObject } = props;
-    const { mealData, dietName, isPrivate } = dietObject;
+console.log(props)
+    const { dietObject, dietId, userUid } = props;
+    const { mealData, dietName } = dietObject;
     const [mealDisplayed, setMealDisplayed] = useState({meal: undefined, meals: {}});
+    const [courseMealImage, setcourseMealImage] = useState(undefined);
 
     const optionClick = (mealIndex, courseIndex) => {
         setMealDisplayed(
@@ -29,6 +32,21 @@ const Meal = props => {
         )
     }
 
+    const getCourseMealImage = async imageRefs => {
+
+        const imageRef = firebase.storage().ref().child(`coursemeals/${userUid}-${dietId}-${imageRefs}`)
+
+        try {
+            const url = await imageRef.getDownloadURL();
+            setcourseMealImage(url);
+            console.log(url)
+            return url;
+        } catch (error) {
+            console.error(error)
+        }
+
+    }
+
     return (
     <>
         <h1 className={styles['diet-name']}>{dietName}</h1>
@@ -45,10 +63,17 @@ const Meal = props => {
                                     <div className={styles['meal-list']}>
 
                                     {
-
                                         Object.values(meal.courseMeals).map((course, courseIndex) => {
+
+                                           if (course.hasImage) getCourseMealImage(`${mealIndex}-${courseIndex}`)
+                                           
                                             return (
-                                                <div key={courseIndex} onClick={() => optionClick(mealIndex, courseIndex)} className={styles['meal-option']}></div>
+                                                <div key={courseIndex} 
+                                                onClick={() => optionClick(mealIndex, courseIndex)} 
+                                                className={styles['meal-option']}
+                                                style={course.hasImage ? {backgroundImage: `url(${courseMealImage})`} : {}}
+                                                >
+                                                </div>
                                             )
                                         })
 

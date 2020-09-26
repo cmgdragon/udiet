@@ -1,0 +1,55 @@
+form {
+    margin: auto 10%;
+}
+
+input, label {
+    display: block;
+}
+
+i {
+    float: right;
+}
+
+.meal-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.meal {
+    padding: 1.5rem 0;
+    background-color: burlywood;
+    border-radius: 3px;
+    padding: .5rem;
+    margin: .5rem;
+}
+
+.meal .name {
+    padding: 1rem 0;
+}
+
+.ingredient .name {
+    padding: .5rem 0rem 1rem 1.5rem;
+}
+
+.meal-input {
+    margin: 0 0 0 1rem;
+    padding: .5rem 0 1rem 0;
+}
+
+.checkboxes {
+    display: flex;
+}
+
+[type=checkbox] {
+    height: 1.1rem;
+}
+
+.ingredient {
+    margin: 1.5rem;
+    background-color: cadetblue;
+    padding: 1rem;
+}
+
+.ingredient-button {
+    margin: .2rem 0 1rem 0;
+}

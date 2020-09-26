@@ -11,34 +11,32 @@ const MealOption = props => {
     <div  className={
       !display ? styles['options-box'] : styles['options-box'] + " " + styles.displayed
     }>
-        {console.log("cagon",courseMeals)}
 
-                        {console.log('cagonn', name)}
-                        <div>Nombre: {name}</div>
-                        { properties ? <div>Propiedades: {properties}</div> : undefined}
-                            <div>Ingredientes: </div>
-                            
-                                <div className={styles['ingredient-list']}>
-                                    
-                                {
-                                    Object.values(ingredients).map(({name, quantity, brand, location, info}, index) => {
-                                        return (
-                                            <React.Fragment key={index}>
-                                                <Ingredient
-                                                    ingredientName={name}
-                                                    quantity={quantity}
-                                                    brand={brand}
-                                                    location={location}
-                                                    info={info}
-                                                />
-                                            </React.Fragment>
-                                        )
-                                    })
-                                }
-                                </div>
-                            
-                        { recipe ? <div>Preparación: {recipe}</div> : undefined}
-                        { comments ? <div>Comentarios: {comments}</div> : undefined}
+        <div>Nombre: {name}</div>
+        { properties ? <div>Propiedades: {properties}</div> : undefined}
+            <div>Ingredientes: </div>
+            
+                <div className={styles['ingredient-list']}>
+                    
+                {
+                    Object.values(ingredients).map(({name, quantity, brand, location, info}, index) => {
+                        return (
+                            <React.Fragment key={index}>
+                                <Ingredient
+                                    ingredientName={name}
+                                    quantity={quantity}
+                                    brand={brand}
+                                    location={location}
+                                    info={info}
+                                />
+                            </React.Fragment>
+                        )
+                    })
+                }
+                </div>
+            
+        { recipe ? <div>Preparación: {recipe}</div> : undefined}
+        { comments ? <div>Comentarios: {comments}</div> : undefined}
 
 
      </div>

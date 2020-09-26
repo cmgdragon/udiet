@@ -3,10 +3,7 @@ import Diet from './Components/Diet';
 import Login from './Components/login';
 import { BrowserRouter } from 'react-router-dom';
 import { UserContext } from './Context/userContext';
-import { getUserDiets } from './Database/readDietInfo';
-//import getDiets from '../../../backend/src/controllers/getDietData';
-
-//const dietData = getDiets('carlos.ole@1996gmail.com');
+import CreateDiet from './Components/CreateDiet';
 
 const App = () => {
   const user = useContext(UserContext);
