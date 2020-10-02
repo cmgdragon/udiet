@@ -1,10 +1,61 @@
-.ingredient-name {
-    
+.ingredients {
+    text-align: -webkit-center;
 }
 
-.ingredient-list {
+.ingredient-name {
+    padding: .4rem;
+    margin: .5rem 0;
+    background: rgb(248 248 249);
+    box-shadow: 0px 0 4px 3px #0000003a;
+    border-radius: 1rem;
+    transition: box-shadow .5s;
+}
+
+.ingredient-name:hover {
+    box-shadow: 0px 0 4px 3px #00000093;
+    cursor: pointer;
+}
+
+.ingredient-list-background {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    transition: .5s height cubic-bezier(0, 0.9, 0.97, 0.96);;
+    transition: .5s height cubic-bezier(0, 0.9, 0.97, 0.96);
+    box-shadow: inset 0px 0px 5px 1px rgb(0 0 0 / 33%);
+    background: white;
+}
+
+.quantity, .location, .brand, .info {
+    display: flex;
+    justify-content: center;
+    margin: .5rem 0;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+}
+
+.ingredient-labels {
+    font-size: .9rem;
+    font-weight: bold;
+    padding: .1rem;
+    border-radius: 5px;
+    box-shadow: 0px 0 4px 1px #0000004a;
+    background:#ebebeb;
+    min-width: fit-content;
+}
+
+.ingredient-labels + div {
+    padding-left: 1rem;
+}
+
+.info .ingredient-labels + span {
+    padding-left: 0;
+}
+
+.info .ingredient-labels {
+    margin-bottom: .5rem;
+    max-width: fit-content;
+    align-self: center;
 }

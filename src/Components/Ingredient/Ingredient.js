@@ -8,7 +8,8 @@ const Ingredient = props => {
     const ingredientContent = useRef();
 
     const expandedStyle = {
-        height: expanded ? ingredientContent.current.scrollHeight : '0px'
+        height: expanded ? ingredientContent.current.scrollHeight : '0px',
+        padding: expanded ? '0.7rem' : '0px'
     }
 
     const expand = () => {
@@ -21,13 +22,15 @@ const Ingredient = props => {
 
 
     return (
-        <div>
+        <div className={styles.ingredients}>
+
+
             <div className={styles['ingredient-name']} onClick={expand}>{ingredientName}</div>
-            <div className={styles['ingredient-list']} style={expandedStyle} ref={ingredientContent}>
-                <div>{quantity}</div>
-                <div>{brand}</div>
-                <div>{location}</div>
-                <div>{info}</div>
+            <div className={styles['ingredient-list-background']} style={expandedStyle} ref={ingredientContent}>
+            {quantity ? <div className={styles.quantity}><div className={styles['ingredient-labels']}>Cantidad</div> <div>{quantity}</div></div> : undefined }
+            {brand ? <div className={styles.brand}><div className={styles['ingredient-labels']}>Marca</div> <div>{brand}</div></div> : undefined }
+            {location ? <div className={styles.location}><div className={styles['ingredient-labels']}>Localización</div> <div>{location}</div></div> : undefined }
+            {info ? <div className={styles.info}><div className={styles['ingredient-labels']}>Más info</div> <div>{info}</div></div> : undefined }
             </div>
         </div>
     ) 

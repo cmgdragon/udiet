@@ -1,18 +1,99 @@
 .options-box {
-    background-color: burlywood;
+    background-color: #ebebeb;
     transition: all .5s ease-in;
     transform: scale(0);
     height: 0;
     opacity: 0;
     overflow: hidden;
+    box-shadow: 0px 0px 9px 1px rgb(0 0 0 / 33%);
 }
 
 .displayed {
-    background-color: burlywood;
+    background-color: #ebebeb;
     transform: scale(1);
     opacity: 1;
+    min-height: 8.5rem;
     height: 100%;
     padding: 1.7rem;
     margin-top: -5rem;
     margin-bottom: 5rem;
+}
+
+.courseMealName {
+    display: inline-block;
+    font-size: 1.3rem;
+    transform: scale(0);
+    font-weight: bold;
+    z-index: 1;
+    left: 0%;
+    padding: .3rem;
+    border-radius: 5px;
+    position: absolute;
+    box-shadow: 0px 0 4px 4px #0000004a;
+    top: -1.2rem;
+    background: white;
+    transition: all .5s ease-in;
+}
+
+.courseMealName-displayed {
+    transform: scale(1);
+    left: 45%;
+}
+
+.courseMealName-displayed-top {
+    top: -6.2rem;
+}
+
+.courseMealInfo {
+    display: none;
+}
+
+.ingredient-list {
+    display: none;
+    margin-top: 1.2rem;
+}
+
+.coursemeal-tab-list {
+   
+}
+
+.coursemeal-tab {
+    padding: .3rem .6rem;
+    margin-bottom: .7rem;
+    background: white;
+    transition: all .5s;
+    box-shadow: 2px 3px 4px 0px #00000038;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.meal-box {
+    display: flex;
+    justify-content: space-between;
+}
+
+.meal-info {
+    overflow-wrap: anywhere;
+    margin: auto;
+    padding-left: 1rem;
+}
+
+.meal-info > div:not(.ingredient-list) {
+    box-shadow: inset 0px 0px 5px 1px rgb(0 0 0 / 33%);
+    background: white;
+    padding: .7rem;
+}
+
+.coursemeal-tab:hover {
+    cursor: pointer;
+    background: #ebebeb;
+    margin: 0 0 .6rem 0;
+}
+
+.coursemeal-tab-selected {
+    box-shadow: inset 0px 0px 5px 1px rgb(0 0 0 / 33%);
+}
+
+.shown-info {
+    display: block;
 }

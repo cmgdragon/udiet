@@ -3,8 +3,6 @@ import styles from './CreateDiet.module.css';
 import MealForm from './mealForm';
 import { addNewUserDiet } from '../../Database/writeDietInfo';
 import { UserContext } from '../../Context/userContext';
-import * as firebase from 'firebase/app';
-import 'firebase/storage';
 
 const CreateDiet = () => {
     
@@ -13,20 +11,6 @@ const CreateDiet = () => {
 
     const sendDiet = async e => {
         e.preventDefault()
-
-        const courseMealImg = document.getElementById('imag').files[0];
-        const imgType = courseMealImg.type.substring(
-            courseMealImg.type.indexOf('/')+1,
-            courseMealImg.type.length
-        );
-
-        try {
-            await firebase.storage().ref().child(`coursemeals/${user.uid}-0-0-0`).put(
-                courseMealImg
-            )        
-        } catch (error) {
-            console.error(error)
-        }
         
         const dietObject = {
             dietName:  document.getElementById('diet-name').value,
@@ -88,7 +72,7 @@ const CreateDiet = () => {
         });
 
         console.log(dietObject);
-        //addNewUserDiet(user.uid, dietObject);
+        addNewUserDiet(user.uid, dietObject);
 
     }
 

@@ -5,7 +5,7 @@ import { auth } from '../../Services/authProviders';
 import { getUserDiets } from '../../Database/readDietInfo';
 import { UserContext } from '../../Context/userContext';
 import CreateDiet from '../CreateDiet'
-import { addNewUserDiet } from '../../Database/writeDietInfo';
+import { addNewUserDiet, modifyCouseMealImageInfo } from '../../Database/writeDietInfo';
 
 const dietObjectDB = {
     isPrivate: false,
@@ -1286,6 +1286,7 @@ const Diet = props => {
         
         //only for testing
         //addNewUserDiet(user.uid, dietObjectDB);
+        //modifyCouseMealImageInfo(user.uid, 0);
 
     }, []);
 
@@ -1316,19 +1317,23 @@ const Diet = props => {
 
                 {  dietObject ? <Meal dietObject={dietObject.dietObject} 
                     dietId={dietObject.dietId} 
-                    userUid={user.uid} /> :
+                    userUid={user.uid} 
+                    notLoggedIn={user.notLoggedIn} /> :
 
                    Object.values(dietUserList)[user.dietId] &&
                    Object.values(dietUserList)[user.dietId].isPrivate ? <strong>¡Esta dieta es privada! Pírate subnormal</strong> :
                     
                    Object.values(dietUserList)[user.dietId] ? <Meal dietObject={Object.values(dietUserList)[user.dietId]} 
                     dietId={user.dietId} 
-                    userUid={user.uid} /> :
+                    userUid={user.uid} 
+                    notLoggedIn={user.notLoggedIn} /> :
 
                    isCreatePath() ? <CreateDiet /> :
 
                    <>
-                    <div id="create-diet" onClick={createNewDiet}>Crear una nueva dieta</div>
+                    <div id="create-diet" className={styles['create-diet']} onClick={createNewDiet}>Crear una nueva dieta</div>
+                    <div className={styles['my-diets-label']}>Mis dietas</div>
+                    <div className={styles['my-diets-label-border-bottom']}></div>
                    {
                     Object.values(dietUserList).map((diet, index) => {
                         return (

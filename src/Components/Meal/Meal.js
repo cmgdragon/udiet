@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Meal.module.css';
 import MealOption from '../MealOption';
-import * as firebase from 'firebase/app';
-import 'firebase/storage';
+import { modifyCouseMealImageInfo, uploadNewCourseMealImage, deleteCourseMealImage } from '../../Database/writeDietInfo';
+import { getCourseMealImage } from '../../Database/readDietInfo';
+import Compressor from 'compressorjs';
 
 const Meal = props => {
 console.log(props)
-    const { dietObject, dietId, userUid } = props;
+
+    const { dietObject, dietId, userUid, notLoggedIn } = props;
     const { mealData, dietName } = dietObject;
     const [mealDisplayed, setMealDisplayed] = useState({meal: undefined, meals: {}});
-    const [courseMealImage, setcourseMealImage] = useState(undefined);
+    const [courseMealImages, setcourseMealImages] = useState(undefined);
 
-    const optionClick = (mealIndex, courseIndex) => {
+    useEffect(() => {
+        getCourseMealImageList()
+    }, [])
+
+    const optionClick = (event, mealIndex, courseIndex) => {
+
         setMealDisplayed(
             {
                 meal: mealData[mealIndex].courseMeals[courseIndex],
@@ -23,6 +30,19 @@ console.log(props)
                  }
             }
         );
+
+        event.target.parentElement.querySelectorAll(`.${styles['meal-option']}`).forEach((element, index) => {
+            switch(index) {
+                case courseIndex:
+                    event.target.classList.contains(styles['selected-option'])
+                     ? element.classList.remove(styles['selected-option'])
+                     : element.classList.add(styles['selected-option']);
+                    break;
+                default:
+                    element.classList.remove(styles['selected-option']);    
+            }          
+        });
+
     }
 
     const renderCourse = (mealIndex, courseIndex) => {
@@ -32,17 +52,110 @@ console.log(props)
         )
     }
 
-    const getCourseMealImage = async imageRefs => {
+    const getCourseMealImageList = async() => {
 
-        const imageRef = firebase.storage().ref().child(`coursemeals/${userUid}-${dietId}-${imageRefs}`)
+        const courseMeals = Object.values(mealData).map(courseMeal => courseMeal);
+        const courseMealImageInfo = [];
 
-        try {
-            const url = await imageRef.getDownloadURL();
-            setcourseMealImage(url);
-            console.log(url)
-            return url;
-        } catch (error) {
-            console.error(error)
+        courseMeals.forEach(async(courseMeal, courseIndex) => {
+
+            const courseMealList = courseMeal.courseMeals;
+            courseMealImageInfo.push({mealOptions: []});
+
+            Object.values(courseMealList).forEach(async(mealOption, optionIndex) => {
+
+                courseMealImageInfo[courseIndex].mealOptions.push({
+                    optionIndex,
+                   imageUrl: mealOption.hasImage ? getCourseMealImage(userUid, dietId, courseIndex, optionIndex) : {}
+                })
+
+            });
+
+        });
+
+        setcourseMealImages(courseMealImageInfo);
+
+    }
+
+    const uploadCourseMealImage = async (mealIndex, courseMealIndex) => {
+
+        const imageInput = document.getElementById(`image-${mealIndex}-${courseMealIndex}`);
+        const courseMealImg = imageInput.files[0];
+        const imageIcon = imageInput.previousElementSibling;
+
+        imageIcon.classList = ["fas fa-spinner fa-pulse"];
+
+        new Compressor(courseMealImg, {
+            quality: 0.5,
+            async success(result) {
+
+                await uploadNewCourseMealImage(userUid, dietId, mealIndex, courseMealIndex, result);
+
+                modifyCouseMealImageInfo(userUid, dietId, mealIndex, courseMealIndex, true);
+                imageIcon.classList = ["fa fa fa-camera"];
+                imageIcon.style.backgroundColor = "#16b8f3";
+                const newUrl = await getCourseMealImage(userUid, dietId, mealIndex, courseMealIndex);
+                changeBackgroundImage(mealIndex, courseMealIndex, newUrl);
+        
+                imageInput.value = "";
+
+            },
+            error(error) {
+              console.log("Error compressing the image: " + error);
+            },
+        });
+
+    }
+
+    const cleanCourseMealImage = (mealIndex, courseMealIndex) => {
+        const input = document.getElementById(`image-${mealIndex}-${courseMealIndex}`);
+        input.value = "";
+        input.previousElementSibling.classList = ["fa fa fa-camera"];
+        input.previousElementSibling.style.backgroundColor = "#16b8f3";
+        input.removeEventListener("change", changeUploadImageIcon);
+        if (!!input.nextElementSibling)
+            input.nextElementSibling.classList = [`fa fa-times ${styles['input-clean-image']}`];
+    } 
+
+    const removeCourseImage = async (event, mealIndex, courseMealIndex) => {
+        event.stopPropagation()
+        if (window.confirm('¿Quieres borrar esta imagen?')) {
+            event.target.classList = [`fas fa-spinner fa-pulse ${styles['input-clean-image']}`];
+            modifyCouseMealImageInfo(userUid, dietId, mealIndex, courseMealIndex, false);
+            await deleteCourseMealImage(userUid, dietId, mealIndex, courseMealIndex);
+        } 
+    }
+
+    const changeBackgroundImage = (mealIndex, courseMealIndex, imageUrl) => {
+        document.getElementById(`image-${mealIndex}-${courseMealIndex}`).parentElement.style.backgroundImage = `url(${imageUrl})`
+    }
+
+    const changeUploadImageIcon = event => {
+
+        if (event.target.files[0] !== undefined) {
+            event.target.previousElementSibling.classList = ["fa fa-upload"];
+            event.target.previousElementSibling.style.backgroundColor = "green";
+            if (!!event.target.nextElementSibling)
+                 event.target.nextElementSibling.classList = [styles.hide];
+        }
+
+    }
+
+    const selectCourseMealImage = (event, mealIndex, courseMealIndex) => {
+        event.stopPropagation();
+        const input = document.getElementById(`image-${mealIndex}-${courseMealIndex}`);
+
+        if (input.files[0] !== undefined) {
+            if (window.confirm('¿Quieres subir esta foto?')) {
+                uploadCourseMealImage(mealIndex, courseMealIndex);
+            } else {
+                document.getElementById(`image-${mealIndex}-${courseMealIndex}`).value = "";
+                cleanCourseMealImage(mealIndex, courseMealIndex);
+            }
+        } else {
+            const input = document.getElementById(`image-${mealIndex}-${courseMealIndex}`);
+            input.click();
+            input.addEventListener("change", changeUploadImageIcon);
         }
 
     }
@@ -65,14 +178,44 @@ console.log(props)
                                     {
                                         Object.values(meal.courseMeals).map((course, courseIndex) => {
 
-                                           if (course.hasImage) getCourseMealImage(`${mealIndex}-${courseIndex}`)
-                                           
+                                                if (courseMealImages) {
+                                                    const image = courseMealImages ? courseMealImages[mealIndex].mealOptions[courseIndex].imageUrl : undefined;
+                                                    if (image.toString().includes("Promise")) image.then(url => {
+                                                        changeBackgroundImage(mealIndex, courseIndex, url);
+                                                    })
+                                                    
+                                                } 
+
                                             return (
                                                 <div key={courseIndex} 
-                                                onClick={() => optionClick(mealIndex, courseIndex)} 
-                                                className={styles['meal-option']}
-                                                style={course.hasImage ? {backgroundImage: `url(${courseMealImage})`} : {}}
-                                                >
+                                                onClick={(event) => optionClick(event, mealIndex, courseIndex)} 
+                                                className={styles['meal-option']}>
+
+                                                    { !notLoggedIn ? 
+                                                        
+                                                        <>
+                                                    
+                                                        <i
+                                                        onClick={(event) => selectCourseMealImage(event, mealIndex, courseIndex)}
+                                                        className="fa fa-camera"
+                                                        aria-hidden="true"></i>
+
+                                                        <input id={`image-${mealIndex}-${courseIndex}`}
+                                                        onClick={(event) => event.stopPropagation()}
+                                                        type="file" />    
+
+                                                        { courseMealImages && courseMealImages[mealIndex].mealOptions[courseIndex].imageUrl
+                                                        .toString().includes("Promise") ?
+                                                            <i
+                                                            onClick={(event) => removeCourseImage(event, mealIndex, courseIndex)}
+                                                            className={`fa fa-times ${styles['input-clean-image']}`}
+                                                            aria-hidden="true"></i>
+                                                        : undefined}
+
+                                                        </>
+
+                                                    : undefined}
+
                                                 </div>
                                             )
                                         })
@@ -81,21 +224,24 @@ console.log(props)
 
                                 </div>
                                 
-                                {
+                                <div course-meal-list={`meal${mealIndex}`}>
+                                    {
 
-                                    Object.values(meal.courseMeals).map((course, courseIndex) => {
-                                        return (
-                                            <React.Fragment key={courseIndex}>
-                                                <MealOption
-                                                    courseMeals={course}
-                                                    display={renderCourse(mealIndex, courseIndex)}
-                                                />
-                                            </React.Fragment>
-                                        )
-                                    })
+                                        Object.values(meal.courseMeals).map((course, courseIndex) => {
+                                            return (
+                                                <React.Fragment key={courseIndex}>
+                                                    <MealOption
+                                                        courseMeals={course}
+                                                        mealIndex={mealIndex}
+                                                        courseIndex={courseIndex}
+                                                        display={renderCourse(mealIndex, courseIndex)}
+                                                    />
+                                                </React.Fragment>
+                                            )
+                                        })
 
-                                }
-
+                                    }
+                                </div>
                             </React.Fragment>
                         )
                     })

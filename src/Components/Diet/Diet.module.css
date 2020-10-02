@@ -1,9 +1,9 @@
 .cuerpo {
-    background-color: orange;
+    background-color: var(--body-color);
     width: 80%;
     height: 100%;
     margin: 2rem auto;
-    padding: 2rem 1rem;
+    padding: 2rem 1rem .6rem 1rem;
     border-radius: 1rem;
 }
 
@@ -11,5 +11,49 @@
     margin: .3rem 0rem;
     padding: 1rem 3rem;
     cursor: pointer;
-    background-color: burlywood;
+    background: #fed777;
+    border-radius: .5rem;
+    transition: all .5s;
+    box-shadow: 2px 3px 4px 0px #00000038;
+    font-weight: bold;
+}
+
+.diet-list-item:hover {
+    cursor: pointer;
+    margin-bottom: 1rem;
+    margin-top: .5rem;
+    box-shadow: inset 0px 0px 9px 1px rgb(0 0 0 / 33%);
+}
+
+.create-diet {
+    padding: 1rem;
+    margin: 0 0 1rem 0;
+    display: inline-block;
+    margin-top: 0rem;
+    border-radius: .5rem;
+    background-color: #4455ee;
+    transition: all .5s;
+    border: 1px solid #0000000e;
+    font-weight: bold;
+    color: white;
+}
+
+.create-diet:hover {
+    cursor: pointer;
+    margin-left: 1rem;
+    box-shadow: inset 0px 0px 9px 1px rgb(0 0 0 / 33%);
+    box-shadow: -3px 3px 5px 0px #0000007a;
+}
+
+.my-diets-label {
+    padding: 2rem 0 .5rem 0;
+    margin-bottom: 0;
+    font-size: 2.5rem;
+    
+}
+
+.my-diets-label-border-bottom {
+    background: linear-gradient(90deg, rgba(249,249,249,1) 0%, rgba(122,120,118,1) 50%, rgba(255,255,255,1) 100%);
+    margin-bottom: 1.5rem;
+    height: 1.4px;
 }
