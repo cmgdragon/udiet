@@ -20,15 +20,21 @@ const Login = () => {
     }
 
     return (
+        <>
+        <div className={styles.bgtitle}></div>
+        <div className={styles.title}>YouDiet</div>
+        <div className={styles.loginbox}>
         <div onClick={signInGoogle} >
-           <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-            <div className={styles['google-btn']}>
-            <div className={styles['google-icon-wrapper']}>
-                <img alt="Google login" className={styles['google-icon']} src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
-            </div>
-            <p className={styles['btn-text']}><b>Sign in with google</b></p>
+            <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+                <div className={styles['google-btn']}>
+                <div className={styles['google-icon-wrapper']}>
+                    <img alt="Google login" className={styles['google-icon']} src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
+                </div>
+                <p className={styles['btn-text']}><b>Sign in with google</b></p>
+                </div>
             </div>
         </div>
+        </>
     )
 }
 

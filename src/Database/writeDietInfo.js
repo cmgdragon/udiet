@@ -48,8 +48,40 @@ export const modifyCouseMealImageInfo = async (userId, dietId, mealIndex, course
        await firebase.database()
         .ref(`diets/users/${userId}/${dietName}/mealData/${mealIndex}/courseMeals/${courseMealIndex}`)
         .update({hasImage: action});
+        
     } catch (error) {
         console.error(error);
     }
+
+}
+
+export const deleteUserDiet = async (userId, dietId) => {
+
+    const dietList = await getUserDiets(userId);
+    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
+     : Object.getOwnPropertyNames(await dietList)[dietId];
+
+     try {
+
+        await firebase.database()
+        .ref(`diets/users/${userId}/${dietName}`)
+        .remove();
+
+        const {prefixes} = await firebase.storage()
+        .ref(`coursemeals/${userId}/${dietId}`)
+        .listAll()
+
+        prefixes.forEach(async folder => {
+            const {items} = await folder.listAll();
+            items.forEach(async item => {
+                await firebase.storage()
+                .ref(item.fullPath)
+                .delete();
+            });
+        });
+
+     } catch (error) {
+         console.error(error);
+     }
 
 }

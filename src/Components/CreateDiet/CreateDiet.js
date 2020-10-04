@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styles from './CreateDiet.module.css';
 import MealForm from './mealForm';
 import { addNewUserDiet } from '../../Database/writeDietInfo';
@@ -6,8 +6,12 @@ import { UserContext } from '../../Context/userContext';
 
 const CreateDiet = () => {
     
-    const [mealNumber, setMealNumber] = useState(3);
+    const [mealNumber, setMealNumber] = useState(0);
     const user = useContext(UserContext);
+
+    useEffect(() => {
+        document.getElementById('back-button').classList.add(styles.goback);
+    }, []);
 
     const sendDiet = async e => {
         e.preventDefault()
@@ -72,7 +76,8 @@ const CreateDiet = () => {
         });
 
         console.log(dietObject);
-        addNewUserDiet(user.uid, dietObject);
+        await addNewUserDiet(user.uid, dietObject);
+        window.location = window.location.origin;
 
     }
 
@@ -103,11 +108,8 @@ const CreateDiet = () => {
     return ( 
         <form onSubmit={sendDiet}>
 
-        <input id="imag" type="file" />
-
             <div className={styles['diet-name']}>
-                <label htmlFor="diet-name">Nombre de la dieta:</label>
-                <input type="text" id="diet-name" name="diet-name" />
+                <input type="text" id="diet-name" className={styles['diet-name']} placeholder="Nombre de la dieta" required/>
             </div>
 
             <div className={styles.checkboxes}><input id="isprivate" type="checkbox"/><label onClick={activateCheck}>Hacer privada</label></div>
@@ -124,7 +126,7 @@ const CreateDiet = () => {
 
             </div>
 
-            <input type="submit" value="Submit" />
+            <input className={styles.submit} type="submit" value="Crear dieta" />
         </form> 
 
     )

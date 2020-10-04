@@ -5,7 +5,7 @@ import { auth } from '../../Services/authProviders';
 import { getUserDiets } from '../../Database/readDietInfo';
 import { UserContext } from '../../Context/userContext';
 import CreateDiet from '../CreateDiet'
-import { addNewUserDiet, modifyCouseMealImageInfo } from '../../Database/writeDietInfo';
+import { addNewUserDiet, modifyCouseMealImageInfo, deleteUserDiet } from '../../Database/writeDietInfo';
 
 const dietObjectDB = {
     isPrivate: false,
@@ -1258,7 +1258,8 @@ const Diet = props => {
     const user = userContext ? userContext : {
         uid: props.ids.uid,
         dietId: props.ids.dietId,
-        notLoggedIn: props.ids.notLoggedIn
+        notLoggedIn: props.ids.notLoggedIn,
+        displayName: props.ids.displayName
     };
 
     const backToHome = () => {
@@ -1271,6 +1272,13 @@ const Diet = props => {
 
     const createNewDiet = () => {
         window.location.href = window.location.origin + '/create';
+    }
+
+    const removeDiet = (event, dietId) => {
+        if (window.confirm('¿Quieres borrar esta dieta?')) {
+            event.target.classList = [`fas fa-spinner fa-pulse ${styles['remove-diet']}`];
+            deleteUserDiet(user.uid, dietId).then(re => window.location.reload());
+        }
     }
 
     useEffect(() => {
@@ -1312,7 +1320,12 @@ const Diet = props => {
 
     return (
         <>
-           { user.notLoggedIn ? undefined : <button onClick={signOut}>Sign out</button>}
+           { user.notLoggedIn ? undefined :
+            <div className={styles.userbuttons}>
+                <i id="back-button" onClick={backToHome} className={`fa fa-arrow-left ${styles.goback}`} aria-hidden="true"></i>
+                <button className={styles.logout} onClick={signOut}>Sign out ({user.displayName})</button>
+            </div>
+           }
             <div className={styles.cuerpo}>
 
                 {  dietObject ? <Meal dietObject={dietObject.dietObject} 
@@ -1341,10 +1354,15 @@ const Diet = props => {
 
                                 { !!user.notLoggedIn && ( user.dietId > Object.keys(dietUserList).length-1
                                     || !Number.isInteger(user.dietId) ) ? backToHome() :
-                                    <div 
-                                        className={styles['diet-list-item']} 
-                                        onClick={() => selectDiet(index)} >
-                                            {diet.dietName}
+                                    <div className={styles['diet-list']}>
+                                        <div 
+                                            className={styles['diet-list-item']} 
+                                            onClick={() => selectDiet(index)} >
+                                                {diet.dietName}
+                                        </div>
+                                        <i className={`fa fa-times ${styles['remove-diet']}`}
+                                         aria-hidden="true"
+                                         onClick={(event) => removeDiet(event, index)} ></i>
                                     </div>
                                 }
                             </React.Fragment>

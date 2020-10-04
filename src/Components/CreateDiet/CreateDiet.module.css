@@ -2,8 +2,102 @@ form {
     margin: auto 10%;
 }
 
+input[type=text], textarea {
+    padding: .2rem;
+    margin: .5rem;
+}
+
+input[type=text]:focus, textarea {
+    border: unset;
+    padding: .4rem;
+    outline: none;
+    box-shadow: 0px 0px 9px 1px rgb(0 0 0 / 33%);
+}
+
+textarea {
+    width: 90%;
+}
+
+input[type=checkbox], input[type=checkbox] + label  {
+    cursor: pointer;
+    margin: .3rem;
+}
+
 input, label {
     display: block;
+    width: -moz-available;
+    width: -webkit-fill-available;
+    width: fill-available;
+}
+
+.diet-name {
+    display: block;
+    width: 99%;
+    font-size: 5rem;
+    opacity: .5;
+}
+
+.meal-button {
+    cursor: pointer;
+    padding: .5rem;
+    margin: 1.5rem 0;
+    display: inline-block;
+    border-radius: .5rem;
+    background-color: #4455ee;
+    transition: all .5s;
+    border: 1px solid #0000000e;
+    font-weight: bold;
+    color: white;
+}
+
+.meal-button:hover {
+    background-color: #8691ee;
+}
+
+.coursemeal-button {
+    cursor: pointer;
+    padding: .5rem;
+    margin: .5rem;
+    display: inline-block;
+    border-radius: .5rem;
+    background-color: #ee9f44;
+    transition: all .5s;
+    border: 1px solid #0000000e;
+    font-weight: bold;
+    color: white; 
+}
+
+.coursemeal-button:hover {
+    background-color: #f1bd80;
+}
+
+.ingredient-button {
+    cursor: pointer;
+    padding: .5rem;
+    margin: .5rem;
+    display: inline-block;
+    border-radius: .5rem;
+    background-color: #44c6ee;
+    transition: all .5s;
+    border: 1px solid #0000000e;
+    font-weight: bold;
+    color: white;
+}
+
+.ingredient-button:hover {
+    background-color: #88d1e7;
+}
+
+.meal i {
+    color: rgb(250, 53, 53);
+    font-size: 1.3rem;
+    cursor: pointer;
+}
+
+.meal i:hover {
+    color: rgb(243, 132, 132);
+    font-size: 1.3rem;
+    cursor: pointer;
 }
 
 i {
@@ -17,11 +111,27 @@ i {
 
 .meal {
     padding: 1.5rem 0;
-    background-color: burlywood;
+    box-shadow: 0px 6px 9px 1px rgb(0 0 0 / 33%);
+    background-color: white;
     border-radius: 3px;
-    padding: .5rem;
+    padding: 1rem;
     margin: .5rem;
 }
+
+.course-meal {
+    box-shadow: inset 0px 0px 9px 1px rgb(0 0 0 / 33%);
+    background-color: var(--body-color);
+    padding: 1rem;
+    margin: .5rem;
+}
+
+.ingredient {
+    margin: 1.5rem;
+    box-shadow: 0px 0px 9px 1px rgb(0 0 0 / 33%);
+    background-color: white;
+    padding: 1rem;
+}
+
 
 .meal .name {
     padding: 1rem 0;
@@ -44,12 +154,26 @@ i {
     height: 1.1rem;
 }
 
-.ingredient {
-    margin: 1.5rem;
-    background-color: cadetblue;
-    padding: 1rem;
-}
-
 .ingredient-button {
     margin: .2rem 0 1rem 0;
+}
+
+.submit {
+    cursor: pointer;
+    margin: 1rem 0;
+    padding: 1rem;
+    width: 100%;
+    display: block;
+    border-radius: 5px;
+    font-size: 1.3rem;
+    background-color: yellowgreen;
+    border: unset;
+}
+
+.submit:hover {
+    background-color: rgb(171, 206, 102);
+}
+
+.goback {
+    visibility: unset !important;
 }

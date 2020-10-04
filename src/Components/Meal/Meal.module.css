@@ -101,3 +101,7 @@
 .hide {
     display: none !important;
 }
+
+.goback {
+    visibility: unset !important;
+}

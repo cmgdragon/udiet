@@ -54,15 +54,17 @@ const MealOption = props => {
 
                 <div className={styles['coursemeal-tab-list']}>
                     { properties ? <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'properties')}>Propiedades</div>  : undefined}
-                        <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'ingredients')}>Ingredientes</div>
+                    { ingredients ? <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'ingredients')}>Ingredientes</div> : undefined}
                     { recipe ? <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'recipe')}>Preparación</div> : undefined}
                     { comments ? <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'comments')}>Comentarios</div> : undefined}
                 </div>
 
                 <div className={styles['meal-info']}>
 
-                    <div coursemeal-info="properties" className={styles.courseMealInfo}>{properties}</div>
-                        
+                { properties ? <div coursemeal-info="properties" className={styles.courseMealInfo}>{properties}</div> : undefined}
+
+                { ingredients ? 
+
                     <div coursemeal-info="ingredients" className={styles['ingredient-list']}>
                         
                     {
@@ -82,9 +84,11 @@ const MealOption = props => {
                     }
 
                     </div>
-                        
-                    <div coursemeal-info="recipe" className={styles.courseMealInfo}>{recipe}</div>
-                    <div coursemeal-info="comments" className={styles.courseMealInfo}>{comments}</div>
+
+                  : undefined}      
+                
+                { recipe ? <div coursemeal-info="recipe" className={styles.courseMealInfo}>{recipe}</div> : undefined}
+                { comments ? <div coursemeal-info="comments" className={styles.courseMealInfo}>{comments}</div> : undefined}
 
                 </div>
             </div>

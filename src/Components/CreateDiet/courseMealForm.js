@@ -43,7 +43,7 @@ const CourseMealForm = () => {
     }
 
     return(
-        <div className={styles.meal} coursemeal-object="" >
+        <div className={styles['course-meal']} coursemeal-object="" >
             <i onClick={removeCourseMeal} className="fa fa-minus-square" aria-hidden="true" />
 
             <div className={styles.name}><label>Nombre del plato</label>
@@ -64,19 +64,19 @@ const CourseMealForm = () => {
 
             <div className={styles.checkboxes}><input onChange={updateProperties} type="checkbox"/><label onClick={activateCheck}>Añadir propiedades</label></div>
             { properties ? <>
-            <div coursemeal-input="properties" className={styles['coursemeal-input']}><label>Propiedades</label>
-            <textarea placeholder="Vitaminas, beneficions..." type="text"></textarea></div>
+            <div className={styles['coursemeal-input']}>
+            <textarea coursemeal-input="properties" placeholder="Vitaminas, beneficions..." type="text"></textarea></div>
             </> : undefined}
 
             <div className={styles.checkboxes}><input onChange={updateRecipe} type="checkbox"/><label onClick={activateCheck}>Añadir receta</label></div>
             { recipe ? <>
-            <div className={styles['coursemeal-input']}><label>Receta</label>
+            <div className={styles['coursemeal-input']}>
             <textarea coursemeal-input="recipe" placeholder="¿Cómo se prepara?" type="text"></textarea></div>
             </> : undefined}
 
             <div className={styles.checkboxes}><input onChange={updateComments} type="checkbox"/><label onClick={activateCheck}>Añadir comentarios</label></div>
             { comments ? <>
-            <div className={styles['coursemeal-input']}><label onClick={activateCheck}>Comentarios</label>
+            <div className={styles['coursemeal-input']}>
             <textarea coursemeal-input="comments" placeholder="Comentarios adicionales" type="text"></textarea></div>
             </> : undefined}
 

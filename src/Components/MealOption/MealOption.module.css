@@ -75,7 +75,7 @@
 .meal-info {
     overflow-wrap: anywhere;
     margin: auto;
-    padding-left: 1rem;
+    min-width: 40vw;
 }
 
 .meal-info > div:not(.ingredient-list) {
@@ -96,4 +96,13 @@
 
 .shown-info {
     display: block;
+}
+
+@media (max-width: 750px) {
+    .meal-box {
+      display: inline-block;
+    }
+    .courseMealName {
+        left: 35%;
+    }
 }

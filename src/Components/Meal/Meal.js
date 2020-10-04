@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import styles from './Meal.module.css';
 import MealOption from '../MealOption';
 import { modifyCouseMealImageInfo, uploadNewCourseMealImage, deleteCourseMealImage } from '../../Database/writeDietInfo';
@@ -6,7 +7,6 @@ import { getCourseMealImage } from '../../Database/readDietInfo';
 import Compressor from 'compressorjs';
 
 const Meal = props => {
-console.log(props)
 
     const { dietObject, dietId, userUid, notLoggedIn } = props;
     const { mealData, dietName } = dietObject;
@@ -14,8 +14,9 @@ console.log(props)
     const [courseMealImages, setcourseMealImages] = useState(undefined);
 
     useEffect(() => {
-        getCourseMealImageList()
-    }, [])
+        document.getElementById('back-button').classList.add(styles.goback);
+        getCourseMealImageList();
+    }, []);
 
     const optionClick = (event, mealIndex, courseIndex) => {
 
@@ -66,7 +67,7 @@ console.log(props)
 
                 courseMealImageInfo[courseIndex].mealOptions.push({
                     optionIndex,
-                   imageUrl: mealOption.hasImage ? getCourseMealImage(userUid, dietId, courseIndex, optionIndex) : {}
+                    imageUrl: mealOption.hasImage ? getCourseMealImage(userUid, dietId, courseIndex, optionIndex) : {}
                 })
 
             });
@@ -98,6 +99,7 @@ console.log(props)
                 changeBackgroundImage(mealIndex, courseMealIndex, newUrl);
         
                 imageInput.value = "";
+                imageInput.nextElementSibling.classList = [`fa fa-times ${styles['input-clean-image']}`];
 
             },
             error(error) {
@@ -119,15 +121,21 @@ console.log(props)
 
     const removeCourseImage = async (event, mealIndex, courseMealIndex) => {
         event.stopPropagation()
+        const deleteIcon = event.target;
         if (window.confirm('¿Quieres borrar esta imagen?')) {
             event.target.classList = [`fas fa-spinner fa-pulse ${styles['input-clean-image']}`];
             modifyCouseMealImageInfo(userUid, dietId, mealIndex, courseMealIndex, false);
             await deleteCourseMealImage(userUid, dietId, mealIndex, courseMealIndex);
+            deleteIcon.parentElement.style = "";
+            deleteIcon.classList = [styles.hide];
         } 
     }
 
     const changeBackgroundImage = (mealIndex, courseMealIndex, imageUrl) => {
-        document.getElementById(`image-${mealIndex}-${courseMealIndex}`).parentElement.style.backgroundImage = `url(${imageUrl})`
+        const input = document.getElementById(`image-${mealIndex}-${courseMealIndex}`);
+        input.parentElement.style.backgroundImage = `url(${imageUrl})`;
+        input.nextElementSibling.classList = [`fa fa-times ${styles['input-clean-image']}`];
+
     }
 
     const changeUploadImageIcon = event => {
@@ -204,13 +212,10 @@ console.log(props)
                                                         onClick={(event) => event.stopPropagation()}
                                                         type="file" />    
 
-                                                        { courseMealImages && courseMealImages[mealIndex].mealOptions[courseIndex].imageUrl
-                                                        .toString().includes("Promise") ?
-                                                            <i
-                                                            onClick={(event) => removeCourseImage(event, mealIndex, courseIndex)}
-                                                            className={`fa fa-times ${styles['input-clean-image']}`}
-                                                            aria-hidden="true"></i>
-                                                        : undefined}
+                                                        <i
+                                                        onClick={(event) => removeCourseImage(event, mealIndex, courseIndex)}
+                                                        className={styles.hide}
+                                                        aria-hidden="true"></i>
 
                                                         </>
 
