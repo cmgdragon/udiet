@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './MealOption.module.css';
 import Ingredient from '../Ingredient';
+import DietModal from '../DietModal';
+import IngredientForm from '../CreateDiet/IngredientForm';
+import { modifyCourseMealInfo } from '../../Database/writeDietInfo';
 
 const MealOption = props => {
   
-    const { courseMeals, display, mealIndex, courseIndex } = props;
+    const { courseMeals, display, mealIndex, courseIndex, userUid, dietId, hasPerms } = props;
     const {comments, ingredients, name, properties, recipe} = courseMeals;
+    const [modalShown, setModalShown] = useState(false);
 
     const selectMealInfo = (event, infoType) => {
 
@@ -40,8 +44,71 @@ const MealOption = props => {
 
     }
 
+    const cancelEditOperation = (contentEl, newTextarea, editBox, checkButton, cancelButton, content) => {
+        newTextarea.remove();
+        contentEl.classList.remove(styles.hiddenEl);
+        editBox.classList.remove(styles.visibleEl);
+        editBox.style.bottom = "";
+        editBox.style.left = "92%";
+        contentEl.lastChild.textContent = content;
+        checkButton.remove();
+        cancelButton.remove();
+        editBox.querySelector('i').classList.remove(styles.undisplay);
+    }
+
+    const editMealInfo = event => {
+        const newTextarea = document.createElement('textarea');
+        const contentEl = event.target.parentElement.parentElement;
+        const editBox = event.target.parentElement;
+        const oldText = contentEl.lastChild.textContent;
+        newTextarea.value = oldText;
+        contentEl.lastChild.textContent = "";
+
+        contentEl.appendChild(newTextarea);
+        newTextarea.select();
+        contentEl.classList.add(styles.hiddenEl);
+        editBox.classList.add(styles.visibleEl);
+
+        newTextarea.classList.add(styles.visibleEl);
+        editBox.style.bottom = "4rem";
+        editBox.style.left = "85%";
+
+        const checkButton = document.createElement('i');
+        const cancelButton = document.createElement('i');
+        checkButton.classList = [`fa fa-check ${styles.green}`]
+        checkButton.addEventListener('click', event => sendNewMealInfo(event,
+            contentEl, newTextarea, editBox, checkButton, cancelButton, newTextarea.value));
+
+        cancelButton.classList = [`fa fa-ban ${styles.red}`]
+        cancelButton.addEventListener('click', () => cancelEditOperation(contentEl,
+            newTextarea, editBox, checkButton, cancelButton, oldText));
+
+        event.target.classList.add(styles.undisplay);
+        editBox.prepend(checkButton);
+        editBox.appendChild(cancelButton);
+    }
+
+    const sendNewMealInfo = async (event, contentEl, newTextarea, editBox, checkButton, cancelButton, content) => {
+        const property = Array.from(event.target.parentElement.parentElement.attributes)
+            .find(a => a.name === "coursemeal-info").value;
+        const newContent = event.target.parentElement.nextElementSibling.value;
+        await modifyCourseMealInfo(userUid, dietId, mealIndex, courseIndex, property, newContent);
+        cancelEditOperation(contentEl, newTextarea, editBox, checkButton, cancelButton, content);
+    }
+
+    const showForm = () => setModalShown(true);
+
+    const closeForm = () => {
+        if (window.confirm('¿Quieres cancelar esta acción?')) {
+            setModalShown(false);
+        }
+    }
+
     return (
     <>
+        <DietModal shown={modalShown} closeModal={closeForm}>
+            <IngredientForm initNumber={1}></IngredientForm>
+        </DietModal>
         <div className={
                 !display ? styles.courseMealName : courseIndex === 0 ? styles.courseMealName + " " + styles['courseMealName-displayed']
                 : styles.courseMealName + " " + styles['courseMealName-displayed'] + " " + styles['courseMealName-displayed-top']
@@ -53,43 +120,69 @@ const MealOption = props => {
             <div className={styles['meal-box']}>
 
                 <div className={styles['coursemeal-tab-list']}>
-                    { properties ? <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'properties')}>Propiedades</div>  : undefined}
-                    { ingredients ? <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'ingredients')}>Ingredientes</div> : undefined}
-                    { recipe ? <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'recipe')}>Preparación</div> : undefined}
-                    { comments ? <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'comments')}>Comentarios</div> : undefined}
+                    { !properties && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'properties')}>Propiedades</div> }
+                    { !ingredients && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'ingredients')}>Ingredientes</div> }
+                    { !recipe && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'recipe')}>Preparación</div> }
+                    { !comments && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'comments')}>Comentarios</div> }
                 </div>
 
                 <div className={styles['meal-info']}>
 
-                { properties ? <div coursemeal-info="properties" className={styles.courseMealInfo}>{properties}</div> : undefined}
-
-                { ingredients ? 
+              
+                    <div coursemeal-info="properties" className={styles.courseMealInfo}>
+                    { hasPerms ? <div className={styles['edit-box']}>
+                            <i onClick={editMealInfo} className={`fa fa-pencil`} aria-hidden="true"></i>
+                        </div>
+                    : undefined}
+                     { properties ? properties : undefined}
+                    </div>
+            
 
                     <div coursemeal-info="ingredients" className={styles['ingredient-list']}>
                         
-                    {
+                    { !comments && !hasPerms ? undefined : <div onClick={showForm} className={styles['add-ingredient']}>Añadir</div> }
+
+                    { ingredients ?
                         Object.values(ingredients).map(({name, quantity, brand, location, info}, index) => {
                             return (
                                 <React.Fragment key={index}>
                                     <Ingredient
+                                        userId={userUid}
+                                        dietId={dietId}
+                                        mealIndex={mealIndex}
+                                        courseIndex={courseIndex}
+                                        ingredientIndex={index}
                                         ingredientName={name}
                                         quantity={quantity}
                                         brand={brand}
                                         location={location}
                                         info={info}
+                                        hasPerms={hasPerms}
                                     />
                                 </React.Fragment>
                             )
                         })
-                    }
+                    : undefined}
 
                     </div>
-
-                  : undefined}      
                 
-                { recipe ? <div coursemeal-info="recipe" className={styles.courseMealInfo}>{recipe}</div> : undefined}
-                { comments ? <div coursemeal-info="comments" className={styles.courseMealInfo}>{comments}</div> : undefined}
-
+                
+                <div coursemeal-info="recipe" className={styles.courseMealInfo}>
+                { hasPerms ? <div className={styles['edit-box']}>
+                            <i onClick={editMealInfo} className={`fa fa-pencil`} aria-hidden="true"></i>
+                        </div>
+                    : undefined}
+                { recipe ? recipe : undefined}
+                </div>
+                
+                <div coursemeal-info="comments" className={styles.courseMealInfo}>
+                { hasPerms ? <div className={styles['edit-box']}>
+                            <i onClick={editMealInfo} className={`fa fa-pencil`} aria-hidden="true"></i>
+                        </div>
+                    : undefined}
+                { comments ? comments : undefined}
+                </div>
+                 
                 </div>
             </div>
         </div>

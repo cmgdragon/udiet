@@ -1,0 +1,54 @@
+.diet-modal {
+    background-color: rgba(0, 0, 0, 0.267);
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 100;
+}
+
+.modal-form {
+    margin: 0;
+    position: absolute;
+    width: 100%;
+    top: 25vh;
+    align-self: center;
+}
+
+.button-box {
+    display: flex;
+    text-align: center;
+    margin: 0 1rem;
+    font-weight: bold;
+}
+
+.submit {
+    cursor: pointer;
+    margin: 1rem 0;
+    padding: 1rem;
+    width: 100%;
+    display: block;
+    border-radius: 5px;
+    font-size: 1.3rem;
+    background-color: yellowgreen;
+    border: unset;
+}
+
+.submit:hover {
+    background-color: rgb(171, 206, 102);
+}
+
+.cancel {
+    cursor: pointer;
+    margin: 1rem 0;
+    padding: 1rem;
+    width: 100%;
+    display: block;
+    border-radius: 5px;
+    font-size: 1.3rem;
+    background-color: rgb(238, 66, 66);
+    border: unset;
+}
+
+.cancel:hover {
+    background-color: rgb(228, 127, 127);
+}

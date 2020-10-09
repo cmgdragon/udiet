@@ -1,21 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import styles from './Meal.module.css';
 import MealOption from '../MealOption';
+import { UserContext } from '../../Context/userContext';
 import { modifyCouseMealImageInfo, uploadNewCourseMealImage, deleteCourseMealImage } from '../../Database/writeDietInfo';
 import { getCourseMealImage } from '../../Database/readDietInfo';
+import { userHasEditPermissions } from '../../Database/readDietInfo';
+import DietModal from '../DietModal';
+import CourseMealForm from '../CreateDiet/CourseMealForm';
+import MealForm from '../CreateDiet/MealForm';
 import Compressor from 'compressorjs';
 
 const Meal = props => {
 
+    const permissionRef = useRef();
     const { dietObject, dietId, userUid, notLoggedIn } = props;
     const { mealData, dietName } = dietObject;
     const [mealDisplayed, setMealDisplayed] = useState({meal: undefined, meals: {}});
     const [courseMealImages, setcourseMealImages] = useState(undefined);
+    const [permissionGiven, setPermissionGiven] = useState(false);
+    const [modalMealShown, setModalMealShown] = useState(false);
+    const [modalCourseShown, setModalCourseShown] = useState(false);
+    const userContext = useContext(UserContext);
 
     useEffect(() => {
-        document.getElementById('back-button').classList.add(styles.goback);
+        permissionRef.current = false;
+        if (!!document.getElementById('back-button'))
+            document.getElementById('back-button').classList.add(styles.goback);
         getCourseMealImageList();
+        userHasEditPermissions(userContext.uid, userContext.email, userUid, dietId).then(res => {permissionRef.current = res; setPermissionGiven(true)});
     }, []);
 
     const optionClick = (event, mealIndex, courseIndex) => {
@@ -134,8 +146,8 @@ const Meal = props => {
     const changeBackgroundImage = (mealIndex, courseMealIndex, imageUrl) => {
         const input = document.getElementById(`image-${mealIndex}-${courseMealIndex}`);
         input.parentElement.style.backgroundImage = `url(${imageUrl})`;
-        input.nextElementSibling.classList = [`fa fa-times ${styles['input-clean-image']}`];
-
+        if (!!input.nextElementSibling)
+            input.nextElementSibling.classList = [`fa fa-times ${styles['input-clean-image']}`];
     }
 
     const changeUploadImageIcon = event => {
@@ -168,9 +180,34 @@ const Meal = props => {
 
     }
 
+    const showMealForm = () => setModalMealShown(true);
+
+    const showCourseForm = () => setModalCourseShown(true);
+
+    const closeMealForm = () => {
+        if (window.confirm('¿Quieres cancelar esta acción?')) {
+            setModalMealShown(false);
+        }
+    }
+
+    const closeCourseForm = () => {
+        if (window.confirm('¿Quieres cancelar esta acción?')) {
+            setModalCourseShown(false);
+        }
+    }
+
     return (
-    <>
+    <div ref={permissionRef}>
+        <DietModal shown={modalMealShown} closeModal={closeMealForm}>
+            <MealForm initNumber={1}></MealForm>
+        </DietModal>
+        <DietModal shown={modalCourseShown} closeModal={closeCourseForm}>
+            <CourseMealForm initNumber={1}></CourseMealForm>
+        </DietModal>
         <h1 className={styles['diet-name']}>{dietName}</h1>
+
+        {!permissionRef.current ? undefined : <div onClick={showMealForm} className={styles['add-meal']}>Añadir</div> }
+
         <div className={styles['diet-list']}>
 
             <div className={styles['meal-box']}>
@@ -183,41 +220,43 @@ const Meal = props => {
 
                                     <div className={styles['meal-list']}>
 
-                                    {
-                                        Object.values(meal.courseMeals).map((course, courseIndex) => {
+                                    {!permissionRef.current ? undefined : <div onClick={showCourseForm} className={styles['add-coursemeal']}>Añadir</div> }
 
+                                    {
+                    
+                                        Object.values(meal.courseMeals).map((course, courseIndex) => {
+                                            
                                                 if (courseMealImages) {
-                                                    const image = courseMealImages ? courseMealImages[mealIndex].mealOptions[courseIndex].imageUrl : undefined;
+                                                    const image = courseMealImages[mealIndex].mealOptions[courseIndex].imageUrl;
                                                     if (image.toString().includes("Promise")) image.then(url => {
                                                         changeBackgroundImage(mealIndex, courseIndex, url);
-                                                    })
-                                                    
-                                                } 
+                                                    });
+                                                }
 
                                             return (
                                                 <div key={courseIndex} 
                                                 onClick={(event) => optionClick(event, mealIndex, courseIndex)} 
                                                 className={styles['meal-option']}>
 
-                                                    { !notLoggedIn ? 
-                                                        
-                                                        <>
+                                                    { !notLoggedIn && permissionRef.current? 
                                                     
                                                         <i
                                                         onClick={(event) => selectCourseMealImage(event, mealIndex, courseIndex)}
                                                         className="fa fa-camera"
                                                         aria-hidden="true"></i>
+                                                        
+                                                        : undefined }
 
                                                         <input id={`image-${mealIndex}-${courseIndex}`}
                                                         onClick={(event) => event.stopPropagation()}
-                                                        type="file" />    
+                                                        type="file" />
+
+                                                    { !notLoggedIn && permissionRef.current ? 
 
                                                         <i
                                                         onClick={(event) => removeCourseImage(event, mealIndex, courseIndex)}
                                                         className={styles.hide}
-                                                        aria-hidden="true"></i>
-
-                                                        </>
+                                                        aria-hidden="true"></i>    
 
                                                     : undefined}
 
@@ -239,6 +278,9 @@ const Meal = props => {
                                                         courseMeals={course}
                                                         mealIndex={mealIndex}
                                                         courseIndex={courseIndex}
+                                                        hasPerms={permissionRef.current}
+                                                        userUid={userUid}
+                                                        dietId={dietId}
                                                         display={renderCourse(mealIndex, courseIndex)}
                                                     />
                                                 </React.Fragment>
@@ -255,7 +297,7 @@ const Meal = props => {
 
             </div>
         </div>
-    </>
+    </div>
     )
 }
 

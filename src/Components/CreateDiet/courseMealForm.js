@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './CreateDiet.module.css';
-import IngredientForm from './ingredientForm';
+import IngredientForm from './IngredientForm';
 import { activateCheck } from './CreateDiet';
 
 const CourseMealForm = () => {
@@ -50,8 +50,8 @@ const CourseMealForm = () => {
                 <input coursemeal-input="name" placeholder="Arroz con tomate" type="text" required/>
             </div>
 
-            <div className={styles['ingredient-button']}>
-                <div onClick={addIngredient}>Añadir ingrediente</div>
+            <div onClick={addIngredient} className={styles['ingredient-button']}>
+                Añadir ingrediente
             </div>
 
             <div className={styles['ingredient-box']}>

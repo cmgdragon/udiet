@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styles from './CreateDiet.module.css';
-import MealForm from './mealForm';
+import dietStyles from '../ViewDiet/Diet.module.css';
+import MealForm from './MealForm';
 import { addNewUserDiet } from '../../Database/writeDietInfo';
 import { UserContext } from '../../Context/userContext';
+import { signOut } from '../../Services/authProviders';
+import { Link } from 'react-router-dom';
 
 const CreateDiet = () => {
     
@@ -96,7 +99,7 @@ const CreateDiet = () => {
         for (let i = 0; i < mealNumber; i++) {
             renderMeals.push(
                 <React.Fragment key={i}>
-                    <MealForm />
+                    <MealForm initNumber={0} />
                 </React.Fragment>
             );
         }
@@ -106,6 +109,13 @@ const CreateDiet = () => {
     }
 
     return ( 
+    <>
+        <div className={dietStyles.userbuttons}>
+            <Link to={'/'} id="back-button" className={`fa fa-arrow-left ${dietStyles.goback}`} aria-hidden="true"></Link>
+            <button className={dietStyles.logout} onClick={signOut}>Sign out ({user.displayName})</button>
+        </div>
+
+
         <form onSubmit={sendDiet}>
 
             <div className={styles['diet-name']}>
@@ -114,8 +124,8 @@ const CreateDiet = () => {
 
             <div className={styles.checkboxes}><input id="isprivate" type="checkbox"/><label onClick={activateCheck}>Hacer privada</label></div>
 
-            <div className={styles['meal-button']}>
-                <div onClick={addMeal}>Añadir Comida</div>
+            <div onClick={addMeal} className={styles['meal-button']}>
+                Añadir Comida
             </div>
 
             <div id="mealBox" className={styles['meal-box']}>
@@ -128,7 +138,7 @@ const CreateDiet = () => {
 
             <input className={styles.submit} type="submit" value="Crear dieta" />
         </form> 
-
+    </>
     )
 }
 

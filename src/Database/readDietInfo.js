@@ -13,6 +13,39 @@ export const getUserDiets = async userId => {
      }
 }
 
+export const getDietSharedUsers = async (userId, dietId) => {
+
+    const dietList = await getUserDiets(userId);
+    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
+     : Object.getOwnPropertyNames(await dietList)[dietId];
+
+    try {
+        const data = await firebase.database()
+            .ref(`diets/users/${userId}/${dietName}/sharedWith`)
+            .once('value');
+        return data.exportVal();
+
+     } catch (error) {
+         console.error(error);
+     }
+}
+
+export const userHasEditPermissions = async (userUid, userEmail, dietUserUid, dietId) => {
+
+    try {
+        
+        const hasPerms = userUid === dietUserUid ? true :
+        Object.values( await getDietSharedUsers(dietUserUid, dietId) )
+        .includes(userEmail) ? true : false;
+
+        return hasPerms;
+
+    } catch (error) {
+        
+    }
+
+}
+
 export const getCourseMealImage = async (userUid, dietId, mealIndex, courseMealIndex) => {
 
     const imageRef = firebase.storage().ref().child(`coursemeals/${userUid}/${dietId}/${mealIndex}/${courseMealIndex}`)

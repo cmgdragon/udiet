@@ -9,7 +9,20 @@ const providers = {
     google: new firebase.auth.GoogleAuthProvider()
 }
 
+const signOut = async () => {
+    
+    try {
+        await auth.signOut();
+        console.log('Logged out');
+        window.location.href = '/';
+    } catch (error) {
+        console.log(error.message)
+    }
+
+}
+
 export {
     auth,
-    providers
+    providers,
+    signOut
 }

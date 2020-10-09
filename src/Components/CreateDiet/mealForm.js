@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import styles from './CreateDiet.module.css';
-import CourseMealForm from './courseMealForm';
+import CourseMealForm from './CourseMealForm';
 
 const MealForm = props => {
 
-    const [courseMealNumber, setCourseMealNumber] = useState(0);
+    const { initNumber } = props;
+    const [courseMealNumber, setCourseMealNumber] = useState(initNumber);
 
     const removeMeal = event => {
         event.target.parentElement.remove();
@@ -42,8 +43,8 @@ const MealForm = props => {
                 <input meal-name="" placeholder="Merienda, cena, desayuno, etc." type="text" required/>
             </div>
 
-            <div className={styles['coursemeal-button']}>
-                <div onClick={addCourseMeal}>Añadir plato</div>
+            <div onClick={addCourseMeal} className={styles['coursemeal-button']}>
+                Añadir plato
             </div>
 
             <div className={styles['coursemeal-box']}>

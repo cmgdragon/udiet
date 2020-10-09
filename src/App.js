@@ -1,37 +1,67 @@
 import React, { useContext } from 'react';
-import Diet from './Components/Diet';
+import DietList from './Components/DietList';
+import ViewDiet from './Components/ViewDiet';
 import Login from './Components/login';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { UserContext } from './Context/userContext';
 import CreateDiet from './Components/CreateDiet';
 
 const App = () => {
   const user = useContext(UserContext);
 
-  const getUidAndDietId = () => {
-    const url = window.location.href.replace(window.location.origin+'/', '');
-    const ids = url.split('/');
+  const LoginOrShowDietList = () => {
 
-    if (ids.length !== 2) {
-      return false
-    } else {
-      return ({
-        uid: ids[0],
-        dietId: ids[1],
-        notLoggedIn: true
-      })
-    }
+    return (
+      <>
+      {
+        user ? <DietList /> : <Login />
+      }
+      </>
+    )
+    
+  }
+
+  const LoginOrCreateDiet = () => {
+
+    return (
+      <>
+      {
+        user ? <CreateDiet /> : <Login />
+      }
+      </>
+    )
+    
+  }
+
+  const GetUidAndDietId = ({ match }) => {
+
+    return (
+      <>
+      {
+        match ? <ViewDiet ids={{
+          uid: match.params.uid,
+          dietId: match.params.dietId,
+          displayName: user.displayName,
+          notLoggedIn: user ? false : true
+        }}/> : <DietList />
+      }
+      </>
+    )
     
   }
 
   return (
       <BrowserRouter>
       {console.log("app: "+user.uid)}
-      {
-        user || getUidAndDietId()
-        ? <Diet ids={getUidAndDietId()} />
-        : <Login />
-      }    
+      <Switch>
+
+        <Route exact path='/' render={LoginOrShowDietList} />
+        <Route path='/create' component={LoginOrCreateDiet} />
+        <Route path='/:uid/:dietId' render={GetUidAndDietId} />
+        <Redirect to='/' />
+
+      </Switch>
+         
       </BrowserRouter>
   )
 

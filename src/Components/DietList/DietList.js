@@ -1,15 +1,15 @@
 import React, {useContext, useEffect, useState} from 'react';
-import styles from './Diet.module.css';
-import Meal from '../Meal';
-import { auth } from '../../Services/authProviders';
+import styles from '../ViewDiet/Diet.module.css';
+import { signOut } from '../../Services/authProviders';
 import { getUserDiets } from '../../Database/readDietInfo';
 import { UserContext } from '../../Context/userContext';
-import CreateDiet from '../CreateDiet'
+import { Link } from 'react-router-dom';
 import { addNewUserDiet, modifyCouseMealImageInfo, deleteUserDiet } from '../../Database/writeDietInfo';
 
 const dietObjectDB = {
     isPrivate: false,
     dietName: "testets",
+    sharedWith: ['cmgdragon@uoc.edu'],
     mealData: [
         {
             name: "Merienda",
@@ -1252,26 +1252,12 @@ const dietObjectDB = {
 const Diet = props => {
 
     const [dietUserList, setDietUserList] = useState({});
-    const [dietObject, setDietObject] = useState(undefined);
     const userContext = useContext(UserContext);
 
-    const user = userContext ? userContext : {
-        uid: props.ids.uid,
-        dietId: props.ids.dietId,
-        notLoggedIn: props.ids.notLoggedIn,
-        displayName: props.ids.displayName
-    };
+    const user = userContext;
 
     const backToHome = () => {
         window.location.href = '/';
-    }
-
-    const isCreatePath = () => {
-        return window.location.origin + '/create' === window.location.href ? true : false;
-    }
-
-    const createNewDiet = () => {
-        window.location.href = window.location.origin + '/create';
     }
 
     const removeDiet = (event, dietId) => {
@@ -1284,12 +1270,7 @@ const Diet = props => {
     useEffect(() => {
 
         getUserDiets(user.uid).then(diets => {
-            setDietUserList(diets);
-
-            if (user.notLoggedIn) {
-                setDietObject(Object.values(dietUserList)[user.dietId]);
-            }
-
+            if (diets) setDietUserList(diets);
         });
         
         //only for testing
@@ -1298,53 +1279,15 @@ const Diet = props => {
 
     }, []);
 
-
-    const signOut = async () => {
-    
-        try {
-            await auth.signOut();
-            console.log('Logged out');
-            backToHome();
-        } catch (error) {
-            console.log(error.message)
-        }
-    
-    }
-
-    const selectDiet = index => {
-        setDietObject({dietObject: Object.values(dietUserList)[index], dietId: index});
-    }
-
-    if (!dietUserList) return backToHome();
-
-
     return (
         <>
-           { user.notLoggedIn ? undefined :
             <div className={styles.userbuttons}>
                 <i id="back-button" onClick={backToHome} className={`fa fa-arrow-left ${styles.goback}`} aria-hidden="true"></i>
                 <button className={styles.logout} onClick={signOut}>Sign out ({user.displayName})</button>
             </div>
-           }
             <div className={styles.cuerpo}>
 
-                {  dietObject ? <Meal dietObject={dietObject.dietObject} 
-                    dietId={dietObject.dietId} 
-                    userUid={user.uid} 
-                    notLoggedIn={user.notLoggedIn} /> :
-
-                   Object.values(dietUserList)[user.dietId] &&
-                   Object.values(dietUserList)[user.dietId].isPrivate ? <strong>¡Esta dieta es privada! Pírate subnormal</strong> :
-                    
-                   Object.values(dietUserList)[user.dietId] ? <Meal dietObject={Object.values(dietUserList)[user.dietId]} 
-                    dietId={user.dietId} 
-                    userUid={user.uid} 
-                    notLoggedIn={user.notLoggedIn} /> :
-
-                   isCreatePath() ? <CreateDiet /> :
-
-                   <>
-                    <div id="create-diet" className={styles['create-diet']} onClick={createNewDiet}>Crear una nueva dieta</div>
+                    <Link to={'/create'} id="create-diet" className={styles['create-diet']} >Crear una nueva dieta</Link>
                     <div className={styles['my-diets-label']}>Mis dietas</div>
                     <div className={styles['my-diets-label-border-bottom']}></div>
                    {
@@ -1352,14 +1295,12 @@ const Diet = props => {
                         return (
                             <React.Fragment key={index}>
 
-                                { !!user.notLoggedIn && ( user.dietId > Object.keys(dietUserList).length-1
-                                    || !Number.isInteger(user.dietId) ) ? backToHome() :
+                                {
                                     <div className={styles['diet-list']}>
-                                        <div 
-                                            className={styles['diet-list-item']} 
-                                            onClick={() => selectDiet(index)} >
+                                        <Link to={`/${user.uid}/${index}`}
+                                            className={styles['diet-list-item']} >
                                                 {diet.dietName}
-                                        </div>
+                                        </Link>
                                         <i className={`fa fa-times ${styles['remove-diet']}`}
                                          aria-hidden="true"
                                          onClick={(event) => removeDiet(event, index)} ></i>
@@ -1369,9 +1310,6 @@ const Diet = props => {
                             )
                         })
                     }
-
-                    </>
-                }
 
             </div>
         </>
