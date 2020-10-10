@@ -57,3 +57,22 @@ export const getCourseMealImage = async (userUid, dietId, mealIndex, courseMealI
     }
 
 }
+
+export const getCourseMealIngredientLength = async (userUid, dietId, mealIndex, courseMealIndex) => {
+
+    const dietList = await getUserDiets(userUid);
+    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
+     : Object.getOwnPropertyNames(await dietList)[dietId];
+
+    try {
+        const data = await firebase.database()
+            .ref(`diets/users/${userUid}/${dietName}/mealData/${mealIndex}/courseMeals/${courseMealIndex}/ingredients`)
+            .once('value')
+
+        return data.exportVal();
+
+     } catch (error) {
+         console.error(error);
+     }
+
+}

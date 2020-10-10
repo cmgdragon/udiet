@@ -1,15 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styles from './DietModal.module.css';
-import { modifyCourseMealInfo } from '../../Database/writeDietInfo';
 
 const DietModal = props => {
 
-    const { shown, closeModal } = props;
+    const { shown, closeModal, sendModal } = props;
 
     return !shown ? <></> : ReactDOM.createPortal((
-        <div className={styles['diet-modal']}>
-            <form className={styles['modal-form']}>
+        <div diet-modal=''>
+            <form className={styles['modal-form']} onSubmit={sendModal}>
                 {props.children}
                 <div className={styles['button-box']}>
                     <input className={styles.submit} type="submit" value="Enviar" />

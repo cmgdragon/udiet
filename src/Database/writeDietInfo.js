@@ -1,6 +1,6 @@
 import * as firebase from 'firebase/app';
 import 'firebase/database';
-import { getUserDiets, getDietSharedUsers } from './readDietInfo';
+import { getUserDiets, getCourseMealIngredientLength } from './readDietInfo';
 import 'firebase/storage';
 
 export const addNewUserDiet = async (userId, dietObject) => {
@@ -18,8 +18,6 @@ export const addNewUserDiet = async (userId, dietObject) => {
 export const uploadNewCourseMealImage = async (userUid, dietId, mealIndex, courseMealIndex, file) => {
 
     try {
-
-        
 
         await firebase.storage().ref()
             .child(`coursemeals/${userUid}/${dietId}/${mealIndex}/${courseMealIndex}`)
@@ -142,5 +140,30 @@ export const deleteUserDiet = async (userId, dietId) => {
      } catch (error) {
          console.error(error);
      }
+
+}
+
+export const uploadNewCourseMealIngredient = async (userId, dietId, mealIndex, courseMealIndex, ingredientObject) => {
+
+    const dietList = await getUserDiets(userId);
+    console.log(userId, dietList);
+    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
+     : Object.getOwnPropertyNames(await dietList)[dietId];
+
+    
+    const ingredientIndex =  Object.values(await getCourseMealIngredientLength(userId, dietId, mealIndex, courseMealIndex)).length;
+    const ingredients = {
+        [ingredientIndex]: ingredientObject
+    }
+
+    try {
+
+       await firebase.database()
+        .ref(`diets/users/${userId}/${dietName}/mealData/${mealIndex}/courseMeals/${courseMealIndex}/ingredients`)
+        .update(ingredients)
+        
+    } catch (error) {
+        console.error(error);
+    }
 
 }

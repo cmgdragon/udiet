@@ -3,7 +3,7 @@ import styles from './MealOption.module.css';
 import Ingredient from '../Ingredient';
 import DietModal from '../DietModal';
 import IngredientForm from '../CreateDiet/IngredientForm';
-import { modifyCourseMealInfo } from '../../Database/writeDietInfo';
+import { modifyCourseMealInfo, uploadNewCourseMealIngredient } from '../../Database/writeDietInfo';
 
 const MealOption = props => {
   
@@ -104,9 +104,29 @@ const MealOption = props => {
         }
     }
 
+    const getNewIngredientObject = () => {
+        const ingredient = document.querySelector('[diet-modal]')
+                                .querySelector('[ingredient-object]');
+
+        const currentIngredient = {};
+        const ingredientInputList = ingredient.querySelectorAll('[ingredient-input]');
+
+        ingredientInputList.forEach(ingredientInput => {
+            const key = Array.from(ingredientInput.attributes).find(a => a.name === 'ingredient-input').value;
+            currentIngredient[key] = ingredientInput.value;
+        });
+
+        return currentIngredient;
+    }
+
+    const sendNewIngredient = event => {
+        event.preventDefault();
+        uploadNewCourseMealIngredient(userUid, dietId, mealIndex, courseIndex, getNewIngredientObject());
+    }
+
     return (
     <>
-        <DietModal shown={modalShown} closeModal={closeForm}>
+        <DietModal shown={modalShown} closeModal={closeForm} sendModal={event => sendNewIngredient(event)}>
             <IngredientForm initNumber={1}></IngredientForm>
         </DietModal>
         <div className={

@@ -21,7 +21,7 @@ const Ingredient = props => {
     const cancelEditOperation = (event, ingredientNameEl, ingredientListEl, editButton, removeButton, checkButton, cancelButton) => {
         if (event) event.stopPropagation();
         const oldNameEl = ingredientNameEl.querySelector(`.${styles.undisplay}:last-child`);
-        console.dir(oldNameEl)
+
         oldNameEl.classList.remove(styles.undisplay);
         oldNameEl.value = ingredientNameEl.querySelector('input').value;
         ingredientNameEl.querySelector('input').remove();
@@ -130,33 +130,33 @@ const Ingredient = props => {
 
             <div className={styles['ingredient-list-background']} style={expandedStyle} ref={ingredientContent}>
 
-            {quantity ?
+            {!quantity && !hasPerms ? undefined :
             <div className={styles.quantity} ingredient-box='quantity'>
                 <div className={styles['ingredient-labels']}>Cantidad</div>
                 <div current-value=''>{quantity}</div>
             </div>
-            : undefined }
+            }
 
-            {brand ?
+            {!brand && !hasPerms ? undefined :
             <div className={styles.brand} ingredient-box='brand'>
                 <div className={styles['ingredient-labels']}>Marca</div>
                 <div current-value=''>{brand}</div>
             </div>
-            : undefined }
+            }
 
-            {location ?
+            {!location && !hasPerms ? undefined :
             <div className={styles.location} ingredient-box='location'>
                 <div className={styles['ingredient-labels']}>Localización</div>
                 <div current-value=''>{location}</div>
             </div>
-            : undefined }
+            }
 
-            {info ?
+            {!info && !hasPerms ? undefined :
             <div className={styles.info} ingredient-box='info'>
                 <div className={styles['ingredient-labels']}>Más info</div>
                 <div current-value='masinfo'>{info}</div>
             </div>
-            : undefined }
+            }
             </div>
 
         </div>

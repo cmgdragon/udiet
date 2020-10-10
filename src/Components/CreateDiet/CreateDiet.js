@@ -16,8 +16,8 @@ const CreateDiet = () => {
         document.getElementById('back-button').classList.add(styles.goback);
     }, []);
 
-    const sendDiet = async e => {
-        e.preventDefault()
+    const sendDiet = async event => {
+        event.preventDefault()
         
         const dietObject = {
             dietName:  document.getElementById('diet-name').value,

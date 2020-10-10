@@ -6,32 +6,13 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { UserContext } from './Context/userContext';
 import CreateDiet from './Components/CreateDiet';
 
+const PrivateRoute = ({ auth, ...props }) => {
+  console.log(auth)
+  return auth ? <Route {...props} /> : <Route component={Login}  />
+ }
+
 const App = () => {
   const user = useContext(UserContext);
-
-  const LoginOrShowDietList = () => {
-
-    return (
-      <>
-      {
-        user ? <DietList /> : <Login />
-      }
-      </>
-    )
-    
-  }
-
-  const LoginOrCreateDiet = () => {
-
-    return (
-      <>
-      {
-        user ? <CreateDiet /> : <Login />
-      }
-      </>
-    )
-    
-  }
 
   const GetUidAndDietId = ({ match }) => {
 
@@ -55,8 +36,8 @@ const App = () => {
       {console.log("app: "+user.uid)}
       <Switch>
 
-        <Route exact path='/' render={LoginOrShowDietList} />
-        <Route path='/create' component={LoginOrCreateDiet} />
+        <PrivateRoute exact auth={user} path='/' component={DietList} />
+        <PrivateRoute path='/create' auth={user} component={CreateDiet} />
         <Route path='/:uid/:dietId' render={GetUidAndDietId} />
         <Redirect to='/' />
 
