@@ -105,6 +105,7 @@ const MealOption = props => {
     }
 
     const getNewIngredientObject = () => {
+
         const ingredient = document.querySelector('[diet-modal]')
                                 .querySelector('[ingredient-object]');
 
@@ -119,9 +120,11 @@ const MealOption = props => {
         return currentIngredient;
     }
 
-    const sendNewIngredient = event => {
+    const sendNewIngredient = async event => {
         event.preventDefault();
-        uploadNewCourseMealIngredient(userUid, dietId, mealIndex, courseIndex, getNewIngredientObject());
+        await uploadNewCourseMealIngredient(userUid, dietId, mealIndex, courseIndex, getNewIngredientObject());
+        window.location.reload();
+        
     }
 
     return (

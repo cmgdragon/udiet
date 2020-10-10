@@ -4,13 +4,14 @@
     width: 100%;
     position: fixed;
     z-index: 100;
+    overflow: scroll;
 }
 
 .modal-form {
     margin: 0;
     position: absolute;
     width: 100%;
-    top: 25vh;
+    top: 15vh;
     align-self: center;
 }
 

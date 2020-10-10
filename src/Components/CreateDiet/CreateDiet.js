@@ -78,7 +78,6 @@ const CreateDiet = () => {
 
         });
 
-        console.log(dietObject);
         await addNewUserDiet(user.uid, dietObject);
         window.location = window.location.origin;
 

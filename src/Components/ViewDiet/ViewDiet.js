@@ -1,17 +1,13 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './Diet.module.css';
 import Meal from '../Meal';
 import { signOut } from '../../Services/authProviders';
 import { getUserDiets } from '../../Database/readDietInfo';
-import { UserContext } from '../../Context/userContext';
 import { Link, Redirect } from 'react-router-dom';
 
 const ViewDiet = props => {
     const [dietUserList, setDietUserList] = useState({});
-    const [dietObject, setDietObject] = useState(undefined);
-    const userContext = useContext(UserContext);
 
-    console.log(props, userContext)
     const user = {
         uid: props.ids.uid,
         dietId: props.ids.dietId,
@@ -24,11 +20,6 @@ const ViewDiet = props => {
         getUserDiets(user.uid).then(diets => {
             
             setDietUserList(diets);
-            
-            console.log(props, dietObject)
-            if (user.notLoggedIn)  {
-                setDietObject(Object.values(dietUserList)[user.dietId]);
-            }
 
         });
 

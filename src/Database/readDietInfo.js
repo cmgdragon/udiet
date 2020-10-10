@@ -51,7 +51,7 @@ export const getCourseMealImage = async (userUid, dietId, mealIndex, courseMealI
     const imageRef = firebase.storage().ref().child(`coursemeals/${userUid}/${dietId}/${mealIndex}/${courseMealIndex}`)
 
     try {
-        return await imageRef.getDownloadURL();
+        return imageRef.getDownloadURL();
     } catch (error) {
         console.error(error)
     }
@@ -67,6 +67,44 @@ export const getCourseMealIngredientLength = async (userUid, dietId, mealIndex, 
     try {
         const data = await firebase.database()
             .ref(`diets/users/${userUid}/${dietName}/mealData/${mealIndex}/courseMeals/${courseMealIndex}/ingredients`)
+            .once('value')
+
+        return data.exportVal();
+
+     } catch (error) {
+         console.error(error);
+     }
+
+}
+
+export const getCourseMealLength = async (userUid, dietId, mealIndex) => {
+
+    const dietList = await getUserDiets(userUid);
+    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
+     : Object.getOwnPropertyNames(await dietList)[dietId];
+
+    try {
+        const data = await firebase.database()
+            .ref(`diets/users/${userUid}/${dietName}/mealData/${mealIndex}/courseMeals`)
+            .once('value')
+
+        return data.exportVal();
+
+     } catch (error) {
+         console.error(error);
+     }
+
+}
+
+export const getMealLength = async (userUid, dietId) => {
+
+    const dietList = await getUserDiets(userUid);
+    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
+     : Object.getOwnPropertyNames(await dietList)[dietId];
+
+    try {
+        const data = await firebase.database()
+            .ref(`diets/users/${userUid}/${dietName}/mealData`)
             .once('value')
 
         return data.exportVal();

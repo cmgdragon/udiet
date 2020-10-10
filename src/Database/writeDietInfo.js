@@ -1,6 +1,6 @@
 import * as firebase from 'firebase/app';
 import 'firebase/database';
-import { getUserDiets, getCourseMealIngredientLength } from './readDietInfo';
+import { getUserDiets, getCourseMealIngredientLength, getCourseMealLength, getMealLength } from './readDietInfo';
 import 'firebase/storage';
 
 export const addNewUserDiet = async (userId, dietObject) => {
@@ -161,6 +161,56 @@ export const uploadNewCourseMealIngredient = async (userId, dietId, mealIndex, c
        await firebase.database()
         .ref(`diets/users/${userId}/${dietName}/mealData/${mealIndex}/courseMeals/${courseMealIndex}/ingredients`)
         .update(ingredients)
+        
+    } catch (error) {
+        console.error(error);
+    }
+
+}
+
+export const uploadNewCourseMeal = async (userId, dietId, mealIndex, courseMealObject) => {
+
+    const dietList = await getUserDiets(userId);
+    console.log(userId, dietList);
+    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
+     : Object.getOwnPropertyNames(await dietList)[dietId];
+
+    
+    const courseMealIndex =  Object.values(await getCourseMealLength(userId, dietId, mealIndex)).length;
+    const courseMeals = {
+        [courseMealIndex]: courseMealObject
+    }
+
+    try {
+
+       await firebase.database()
+        .ref(`diets/users/${userId}/${dietName}/mealData/${mealIndex}/courseMeals`)
+        .update(courseMeals)
+        
+    } catch (error) {
+        console.error(error);
+    }
+
+}
+
+export const uploadNewMeal = async (userId, dietId, mealObject) => {
+
+    const dietList = await getUserDiets(userId);
+    console.log(userId, dietList);
+    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
+     : Object.getOwnPropertyNames(await dietList)[dietId];
+
+    
+    const mealIndex =  Object.values(await getMealLength(userId, dietId)).length;
+    const mealData = {
+        [mealIndex]: mealObject
+    }
+
+    try {
+
+       await firebase.database()
+        .ref(`diets/users/${userId}/${dietName}/mealData`)
+        .update(mealData)
         
     } catch (error) {
         console.error(error);
