@@ -160,6 +160,24 @@
     opacity: .7;
 }
 
+.removeCourse {
+    position: absolute;
+    background-color: rgb(230, 105, 105);
+    color: rgb(44, 43, 43);
+    font-size: 1.4rem;
+    transition: all .5s;
+    padding: .2rem;
+    left: 100%;
+    border-radius: 3px;
+    top: 4px;
+    margin-left: .3rem;
+}
+
+.removeCourse:hover {
+    background-color: rgb(202, 144, 144);
+    cursor: pointer;
+}
+
 @media (max-width: 750px) {
     .meal-box {
       display: inline-block;

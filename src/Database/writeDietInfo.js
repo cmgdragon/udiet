@@ -217,3 +217,53 @@ export const uploadNewMeal = async (userId, dietId, mealObject) => {
     }
 
 }
+
+export const deleteDietMeal = async (userId, dietId, mealIndex) => {
+
+    const dietList = await getUserDiets(userId);
+    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
+     : Object.getOwnPropertyNames(await dietList)[dietId];
+
+     try {
+
+        await firebase.database()
+        .ref(`diets/users/${userId}/${dietName}/mealData/${mealIndex}`)
+        .remove();
+
+        const {prefixes} = await firebase.storage()
+        .ref(`coursemeals/${userId}/${dietId}/${mealIndex}`)
+        .listAll()
+
+        prefixes.forEach(async item => {
+            await firebase.storage()
+            .ref(item.fullPath)
+            .delete();
+        });
+
+     } catch (error) {
+         console.error(error);
+     }
+
+}
+
+export const deleteDietCourseMeal = async (userId, dietId, mealIndex, courseMealIndex) => {
+
+    const dietList = await getUserDiets(userId);
+    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
+     : Object.getOwnPropertyNames(await dietList)[dietId];
+
+     try {
+
+        await firebase.database()
+        .ref(`diets/users/${userId}/${dietName}/mealData/${mealIndex}/couseMeals/${courseMealIndex}`)
+        .remove();
+
+        await firebase.storage()
+        .ref(`coursemeals/${userId}/${dietId}/${mealIndex}/${courseMealIndex}`)
+        .delete();
+
+     } catch (error) {
+         console.error(error);
+     }
+
+}

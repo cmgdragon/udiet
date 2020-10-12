@@ -2,13 +2,14 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import styles from './Meal.module.css';
 import MealOption from '../MealOption';
 import { UserContext } from '../../Context/userContext';
-import { modifyCouseMealImageInfo, uploadNewCourseMealImage, deleteCourseMealImage, uploadNewCourseMeal, uploadNewMeal } from '../../Database/writeDietInfo';
+import { modifyCouseMealImageInfo, uploadNewCourseMealImage, deleteCourseMealImage, deleteDietMeal } from '../../Database/writeDietInfo';
 import { getCourseMealImage } from '../../Database/readDietInfo';
 import { userHasEditPermissions } from '../../Database/readDietInfo';
 import DietModal from '../DietModal';
 import CourseMealForm from '../CreateDiet/CourseMealForm';
 import MealForm from '../CreateDiet/MealForm';
 import Skeleton from 'react-loading-skeleton';
+import { sendNewMeal, sendNewCourseMeal } from '../CreateDiet/addDietFunctions';
 import Compressor from 'compressorjs';
 
 const Meal = props => {
@@ -200,107 +201,21 @@ const Meal = props => {
         }
     }
 
-    const sendCourseMeal = async (event, mealIndex) => {
-        event.preventDefault();
-        const meal = document.querySelector('[diet-modal]')
-                                .querySelector('[coursemeal-object]');
-
-            const courseMealInputList = meal.querySelectorAll('[coursemeal-input]');
-            const currentCourseMeal = {};
-                            
-            courseMealInputList.forEach(courseMealInput => {
-
-                const key = Array.from(courseMealInput.attributes).find(a => a.name === 'coursemeal-input').value;
-                currentCourseMeal[key] = courseMealInput.value;
-
-            });
-
-            currentCourseMeal['hasImage'] = false;
-
-            const ingredientList = meal.querySelectorAll('[ingredient-object]');
-            const courseMealIngredients = [];
-
-            ingredientList.forEach(ingredient => {
-
-                const currentIngredient = {};
-
-                const ingredientInputList = ingredient.querySelectorAll('[ingredient-input]');
-
-                ingredientInputList.forEach(ingredientInput => {
-
-                    const key = Array.from(ingredientInput.attributes).find(a => a.name === 'ingredient-input').value;
-                    currentIngredient[key] = ingredientInput.value;
-
-                });
-
-                courseMealIngredients.push(currentIngredient);
-
-            });
-
-            currentCourseMeal['ingredients'] = courseMealIngredients;
-            await uploadNewCourseMeal(userUid, dietId, mealIndex, currentCourseMeal);
-            window.location.reload();
-    }
-
-    const sendNewMeal = event => {
-        event.preventDefault();
-        const meal = document.querySelector('[diet-modal]')
-                                .querySelector('[meal-object]');
-
-            const courseMeals = [];
-            const courseMealList = meal.querySelectorAll('[coursemeal-object]');
-
-            courseMealList.forEach(async courseMeal => {
-
-                const courseMealInputList = meal.querySelectorAll('[coursemeal-input]');
-                const currentCourseMeal = {};
-                                
-                courseMealInputList.forEach(courseMealInput => {
-
-                    const key = Array.from(courseMealInput.attributes).find(a => a.name === 'coursemeal-input').value;
-                    currentCourseMeal[key] = courseMealInput.value;
-    
-                });
-
-                currentCourseMeal['hasImage'] = false;
-
-                const ingredientList = courseMeal.querySelectorAll('[ingredient-object]');
-                const courseMealIngredients = [];
-
-                ingredientList.forEach(ingredient => {
-
-                    const currentIngredient = {};
-
-                    const ingredientInputList = ingredient.querySelectorAll('[ingredient-input]');
-
-                    ingredientInputList.forEach(ingredientInput => {
-
-                        const key = Array.from(ingredientInput.attributes).find(a => a.name === 'ingredient-input').value;
-                        currentIngredient[key] = ingredientInput.value;
-
-                    });
-
-                    courseMealIngredients.push(currentIngredient);
-
-                });
-
-                currentCourseMeal['ingredients'] = courseMealIngredients;
-                courseMeals.push(currentCourseMeal);
-
-            const newMeal = {
-                name: meal.querySelector('[diet-modal] [meal-name]').value,
-                courseMeals
-            };
-            console.log(newMeal);
-            await uploadNewMeal(userUid, dietId, newMeal);
-            window.location.reload();
-
-        });
+    const removeMeal = async (event, mealIndex) => {
+        const mealNameEl = event.target.parentElement;
+        const mealListEl = mealNameEl.nextElementSibling;
+        const mealCourseListEl = mealListEl.nextElementSibling;
+        if (window.confirm('¿Quieres borrar esta comida?')) {
+            await deleteDietMeal(userUid, dietId, mealIndex);
+            mealCourseListEl.remove();
+            mealListEl.remove();
+            mealNameEl.remove();
+        }
     }
 
     return (
     <div ref={permissionRef}>
-        <DietModal shown={modalMealShown} sendModal={sendNewMeal} closeModal={closeMealForm}>
+        <DietModal shown={modalMealShown} sendModal={event => sendNewMeal(event, userUid, dietId)} closeModal={closeMealForm}>
             <MealForm initNumber={1}></MealForm>
         </DietModal>
         <h1 className={styles['diet-name']}>{dietName}</h1>
@@ -310,21 +225,21 @@ const Meal = props => {
         <div className={styles['diet-list']}>
 
             <div className={styles['meal-box']}>
-            
+
                 {
                     Object.values(mealData).map((meal, mealIndex) => {
                         return (
                             <React.Fragment key={mealIndex}>
                                 { mealIndex <= 0 ?
-                                <DietModal shown={modalCourseShown} sendModal={event => sendCourseMeal(event, mealIndex)} closeModal={closeCourseForm}>
+                                <DietModal shown={modalCourseShown} sendModal={event => sendNewCourseMeal(event, userUid, dietId, mealIndex)} closeModal={closeCourseForm}>
                                     <CourseMealForm initNumber={1}></CourseMealForm>
                                 </DietModal> : '' }
-                                <h2 className={styles['meal-name']}>{meal.name}</h2>
+                                <h2 className={styles['meal-name']}>{meal.name}<i onClick={event => removeMeal(event, mealIndex)} className={`fa fa-trash ${styles.removeMeal}`} aria-hidden="true"></i></h2>
 
                                     <div className={styles['meal-list']}>
 
                                     {!permissionRef.current ? undefined : <div onClick={showCourseForm} className={styles['add-coursemeal']}>Añadir</div> }
-
+                                    
                                     {
                     
                                         Object.values(meal.courseMeals).map((course, courseIndex) => {
@@ -333,7 +248,7 @@ const Meal = props => {
 
                                                 !courseMealImages ? <Skeleton key={courseIndex} height={100} width={100} duration={.3} circle={true} />  :
                                                 
-                                                <div key={courseIndex} 
+                                                <div key={courseIndex}
                                                 onClick={(event) => optionClick(event, mealIndex, courseIndex)} 
                                                 className={styles['meal-option']}
                                                 style={{backgroundImage: `url(${courseMealImages[mealIndex]?.mealOptions[courseIndex]?.imageUrl})`}}

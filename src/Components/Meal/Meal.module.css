@@ -134,6 +134,22 @@
     opacity: .7;
 }
 
+.removeMeal {
+    position: absolute;
+    background-color: rgb(230, 105, 105);
+    color: rgb(44, 43, 43);
+    font-size: 1.4rem;
+    transition: all .5s;
+    padding: .2rem;
+    border-radius: 3px;
+    margin-left: .5rem;
+}
+
+.removeMeal:hover {
+    background-color: rgb(202, 144, 144);
+    cursor: pointer;
+}
+
 @media (max-width: 750px) {
     .meal-box {
       margin: 0;

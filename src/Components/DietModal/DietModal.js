@@ -12,7 +12,10 @@ const DietModal = props => {
 
     return !shown ? '' : ReactDOM.createPortal((
         <div diet-modal=''>
-            <form className={styles['modal-form']} onSubmit={sendModal}>
+            <form className={styles['modal-form']} onSubmit={event => {
+                event.preventDefault();
+                if (window.confirm('¿Quieres enviar estos datos?')) sendModal();
+            }}>
                 {props.children}
                 <div className={styles['button-box']}>
                     <input className={styles.submit} type="submit" value="Enviar" />

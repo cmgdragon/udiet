@@ -6,10 +6,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { UserContext } from './Context/userContext';
 import CreateDiet from './Components/CreateDiet';
 
-const PrivateRoute = ({ auth, ...props }) => {
-  console.log(auth)
-  return auth ? <Route {...props} /> : <Route component={Login}  />
- }
+const PrivateRoute = ({ auth, ...props }) => auth ? <Route {...props} /> : <Route component={Login} />
 
 const App = () => {
   const user = useContext(UserContext);

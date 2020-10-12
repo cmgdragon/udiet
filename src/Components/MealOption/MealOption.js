@@ -3,7 +3,8 @@ import styles from './MealOption.module.css';
 import Ingredient from '../Ingredient';
 import DietModal from '../DietModal';
 import IngredientForm from '../CreateDiet/IngredientForm';
-import { modifyCourseMealInfo, uploadNewCourseMealIngredient } from '../../Database/writeDietInfo';
+import { modifyCourseMealInfo, deleteDietCourseMeal } from '../../Database/writeDietInfo';
+import { sendNewIngredient } from '../CreateDiet/addDietFunctions';
 
 const MealOption = props => {
   
@@ -104,38 +105,25 @@ const MealOption = props => {
         }
     }
 
-    const getNewIngredientObject = () => {
-
-        const ingredient = document.querySelector('[diet-modal]')
-                                .querySelector('[ingredient-object]');
-
-        const currentIngredient = {};
-        const ingredientInputList = ingredient.querySelectorAll('[ingredient-input]');
-
-        ingredientInputList.forEach(ingredientInput => {
-            const key = Array.from(ingredientInput.attributes).find(a => a.name === 'ingredient-input').value;
-            currentIngredient[key] = ingredientInput.value;
-        });
-
-        return currentIngredient;
-    }
-
-    const sendNewIngredient = async event => {
-        event.preventDefault();
-        await uploadNewCourseMealIngredient(userUid, dietId, mealIndex, courseIndex, getNewIngredientObject());
-        window.location.reload();
-        
+    const removeCourseMeal = async () => {
+        const courseMealListEl = document.querySelector(`[course-meal-list=meal${mealIndex}] [course-meal=${courseIndex}]`);
+        const courseMealImage = document.getElementById(`image-${mealIndex}-${courseIndex}`);
+        if (window.confirm('¿Quieres borrar este plato?')) {
+            await deleteDietCourseMeal(userUid, dietId, mealIndex, courseIndex);
+            courseMealListEl.remove();
+            courseMealImage.remove();
+        }
     }
 
     return (
-    <>
-        <DietModal shown={modalShown} closeModal={closeForm} sendModal={event => sendNewIngredient(event)}>
+    <div course-meal={`course${courseIndex}`}>
+        <DietModal shown={modalShown} closeModal={closeForm} sendModal={event => sendNewIngredient(event, userUid, dietId, mealIndex, courseIndex)}>
             <IngredientForm initNumber={1}></IngredientForm>
         </DietModal>
         <div className={
                 !display ? styles.courseMealName : courseIndex === 0 ? styles.courseMealName + " " + styles['courseMealName-displayed']
                 : styles.courseMealName + " " + styles['courseMealName-displayed'] + " " + styles['courseMealName-displayed-top']
-            }>{name}</div>
+            }>{name}<i onClick={removeCourseMeal} className={`fa fa-trash ${styles.removeCourse}`} aria-hidden="true"></i></div>
         <div  className={
         !display ? styles['options-box'] : styles['options-box'] + " " + styles.displayed
         }>
@@ -209,7 +197,7 @@ const MealOption = props => {
                 </div>
             </div>
         </div>
-    </>
+    </div>
     )
 }
 
