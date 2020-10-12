@@ -15,12 +15,12 @@ export const addNewUserDiet = async (userId, dietObject) => {
 
 }
 
-export const uploadNewCourseMealImage = async (userUid, dietId, mealIndex, courseMealIndex, file) => {
+export const uploadNewCourseMealImage = async (userUid, dietId, mealKey, courseMealKey, file) => {
 
     try {
 
         await firebase.storage().ref()
-            .child(`coursemeals/${userUid}/${dietId}/${mealIndex}/${courseMealIndex}`)
+            .child(`coursemeals/${userUid}/${dietId}/${mealKey}/${courseMealKey}`)
             .put(file)
 
     } catch (error) {
@@ -28,19 +28,7 @@ export const uploadNewCourseMealImage = async (userUid, dietId, mealIndex, cours
     }
 }
 
-export const deleteCourseMealImage = async (userUid, dietId, mealIndex, courseMealIndex) => {
-    try {
-        await firebase.storage().ref()
-            .child(`coursemeals/${userUid}/${dietId}/${mealIndex}/${courseMealIndex}`)
-            .delete();
-
-    } catch (error) {
-        console.error("Error deleting the image: " + error)
-    }
-}
-
-
-export const modifyCouseMealImageInfo = async (userId, dietId, mealIndex, courseMealIndex, action) => {
+export const modifyCouseMealImageInfo = async (userId, dietId, mealKey, courseMealKey, action) => {
 
     const dietList = await getUserDiets(userId);
     const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
@@ -48,7 +36,7 @@ export const modifyCouseMealImageInfo = async (userId, dietId, mealIndex, course
 
     try {
        await firebase.database()
-        .ref(`diets/users/${userId}/${dietName}/mealData/${mealIndex}/courseMeals/${courseMealIndex}`)
+        .ref(`diets/users/${userId}/${dietName}/mealData/${mealKey}/courseMeals/${courseMealKey}`)
         .update({hasImage: action});
         
     } catch (error) {
@@ -57,15 +45,15 @@ export const modifyCouseMealImageInfo = async (userId, dietId, mealIndex, course
 
 }
 
-export const modifyCourseMealInfo = async (userId, dietId, mealIndex, courseMealIndex, property, newInfo) => {
+export const modifyCourseMealInfo = async (userId, dietId, mealKey, courseMealKey, property, newInfo) => {
 
     const dietList = await getUserDiets(userId);
     const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
      : Object.getOwnPropertyNames(await dietList)[dietId];
-
+console.log({[property]: newInfo})
     try {
        await firebase.database()
-        .ref(`diets/users/${userId}/${dietName}/mealData/${mealIndex}/courseMeals/${courseMealIndex}`)
+        .ref(`diets/users/${userId}/${dietName}/mealData/${mealKey}/courseMeals/${courseMealKey}`)
         .update({[property]: newInfo});
         
     } catch (error) {
@@ -74,7 +62,7 @@ export const modifyCourseMealInfo = async (userId, dietId, mealIndex, courseMeal
 
 }
 
-export const modifyIngredientInfo = async (userId, dietId, mealIndex, courseMealIndex, ingredientIndex, newObject) => {
+export const modifyIngredientInfo = async (userId, dietId, mealKey, courseMealKey, ingredientKey, newObject) => {
 
     const dietList = await getUserDiets(userId);
     console.log(userId, dietList);
@@ -84,7 +72,7 @@ export const modifyIngredientInfo = async (userId, dietId, mealIndex, courseMeal
     try {
 
        await firebase.database()
-        .ref(`diets/users/${userId}/${dietName}/mealData/${mealIndex}/courseMeals/${courseMealIndex}/ingredients/${ingredientIndex}`)
+        .ref(`diets/users/${userId}/${dietName}/mealData/${mealKey}/courseMeals/${courseMealKey}/ingredients/${ingredientKey}`)
         .update(newObject);
         
     } catch (error) {
@@ -93,57 +81,7 @@ export const modifyIngredientInfo = async (userId, dietId, mealIndex, courseMeal
 
 }
 
-export const deleteCourseMealIngredient = async (userId, dietId, mealIndex, courseMealIndex, ingredientIndex) => {
-
-    const dietList = await getUserDiets(userId);
-    console.log(userId, dietList);
-    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
-     : Object.getOwnPropertyNames(await dietList)[dietId];
-
-    try {
-
-       await firebase.database()
-        .ref(`diets/users/${userId}/${dietName}/mealData/${mealIndex}/courseMeals/${courseMealIndex}/ingredients/${ingredientIndex}`)
-        .remove();
-        
-    } catch (error) {
-        console.error(error);
-    }
-
-}
-
-export const deleteUserDiet = async (userId, dietId) => {
-
-    const dietList = await getUserDiets(userId);
-    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
-     : Object.getOwnPropertyNames(await dietList)[dietId];
-
-     try {
-
-        await firebase.database()
-        .ref(`diets/users/${userId}/${dietName}`)
-        .remove();
-
-        const {prefixes} = await firebase.storage()
-        .ref(`coursemeals/${userId}/${dietId}`)
-        .listAll()
-
-        prefixes.forEach(async folder => {
-            const {items} = await folder.listAll();
-            items.forEach(async item => {
-                await firebase.storage()
-                .ref(item.fullPath)
-                .delete();
-            });
-        });
-
-     } catch (error) {
-         console.error(error);
-     }
-
-}
-
-export const uploadNewCourseMealIngredient = async (userId, dietId, mealIndex, courseMealIndex, ingredientObject) => {
+export const uploadNewCourseMealIngredient = async (userId, dietId, mealKey, courseMealKey, ingredientObject) => {
 
     const dietList = await getUserDiets(userId);
     console.log(userId, dietList);
@@ -151,15 +89,15 @@ export const uploadNewCourseMealIngredient = async (userId, dietId, mealIndex, c
      : Object.getOwnPropertyNames(await dietList)[dietId];
 
     
-    const ingredientIndex =  Object.values(await getCourseMealIngredientLength(userId, dietId, mealIndex, courseMealIndex)).length;
+    const ingredientKey =  Object.values(await getCourseMealIngredientLength(userId, dietId, mealKey, courseMealKey)).length;
     const ingredients = {
-        [ingredientIndex]: ingredientObject
+        [ingredientKey]: ingredientObject
     }
 
     try {
 
        await firebase.database()
-        .ref(`diets/users/${userId}/${dietName}/mealData/${mealIndex}/courseMeals/${courseMealIndex}/ingredients`)
+        .ref(`diets/users/${userId}/${dietName}/mealData/${mealKey}/courseMeals/${courseMealKey}/ingredients`)
         .update(ingredients)
         
     } catch (error) {
@@ -168,7 +106,7 @@ export const uploadNewCourseMealIngredient = async (userId, dietId, mealIndex, c
 
 }
 
-export const uploadNewCourseMeal = async (userId, dietId, mealIndex, courseMealObject) => {
+export const uploadNewCourseMeal = async (userId, dietId, mealKey, courseMealObject) => {
 
     const dietList = await getUserDiets(userId);
     console.log(userId, dietList);
@@ -176,15 +114,15 @@ export const uploadNewCourseMeal = async (userId, dietId, mealIndex, courseMealO
      : Object.getOwnPropertyNames(await dietList)[dietId];
 
     
-    const courseMealIndex =  Object.values(await getCourseMealLength(userId, dietId, mealIndex)).length;
+    const courseMealKey =  Object.values(await getCourseMealLength(userId, dietId, mealKey)).length;
     const courseMeals = {
-        [courseMealIndex]: courseMealObject
+        [courseMealKey]: courseMealObject
     }
 
     try {
 
        await firebase.database()
-        .ref(`diets/users/${userId}/${dietName}/mealData/${mealIndex}/courseMeals`)
+        .ref(`diets/users/${userId}/${dietName}/mealData/${mealKey}/courseMeals`)
         .update(courseMeals)
         
     } catch (error) {
@@ -201,9 +139,9 @@ export const uploadNewMeal = async (userId, dietId, mealObject) => {
      : Object.getOwnPropertyNames(await dietList)[dietId];
 
     
-    const mealIndex =  Object.values(await getMealLength(userId, dietId)).length;
+    const mealKey =  Object.values(await getMealLength(userId, dietId)).length;
     const mealData = {
-        [mealIndex]: mealObject
+        [mealKey]: mealObject
     }
 
     try {
@@ -215,55 +153,5 @@ export const uploadNewMeal = async (userId, dietId, mealObject) => {
     } catch (error) {
         console.error(error);
     }
-
-}
-
-export const deleteDietMeal = async (userId, dietId, mealIndex) => {
-
-    const dietList = await getUserDiets(userId);
-    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
-     : Object.getOwnPropertyNames(await dietList)[dietId];
-
-     try {
-
-        await firebase.database()
-        .ref(`diets/users/${userId}/${dietName}/mealData/${mealIndex}`)
-        .remove();
-
-        const {prefixes} = await firebase.storage()
-        .ref(`coursemeals/${userId}/${dietId}/${mealIndex}`)
-        .listAll()
-
-        prefixes.forEach(async item => {
-            await firebase.storage()
-            .ref(item.fullPath)
-            .delete();
-        });
-
-     } catch (error) {
-         console.error(error);
-     }
-
-}
-
-export const deleteDietCourseMeal = async (userId, dietId, mealIndex, courseMealIndex) => {
-
-    const dietList = await getUserDiets(userId);
-    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
-     : Object.getOwnPropertyNames(await dietList)[dietId];
-
-     try {
-
-        await firebase.database()
-        .ref(`diets/users/${userId}/${dietName}/mealData/${mealIndex}/couseMeals/${courseMealIndex}`)
-        .remove();
-
-        await firebase.storage()
-        .ref(`coursemeals/${userId}/${dietId}/${mealIndex}/${courseMealIndex}`)
-        .delete();
-
-     } catch (error) {
-         console.error(error);
-     }
 
 }

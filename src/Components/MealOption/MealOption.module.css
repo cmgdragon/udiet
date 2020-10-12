@@ -178,6 +178,10 @@
     cursor: pointer;
 }
 
+[coursemeal-info] > p {
+    margin: 0;
+}
+
 @media (max-width: 750px) {
     .meal-box {
       display: inline-block;

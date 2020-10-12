@@ -18,7 +18,6 @@ const ViewDiet = props => {
     useEffect(() => {
     
         getUserDiets(user.uid).then(diets => {
-            
             setDietUserList(diets);
 
         });

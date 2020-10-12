@@ -46,9 +46,9 @@ export const userHasEditPermissions = async (userUid, userEmail, dietUserUid, di
 
 }
 
-export const getCourseMealImage = async (userUid, dietId, mealIndex, courseMealIndex) => {
+export const getCourseMealImage = async (userUid, dietId, mealKey, courseMealKey) => {
 
-    const imageRef = firebase.storage().ref().child(`coursemeals/${userUid}/${dietId}/${mealIndex}/${courseMealIndex}`)
+    const imageRef = firebase.storage().ref().child(`coursemeals/${userUid}/${dietId}/${mealKey}/${courseMealKey}`)
 
     try {
         return imageRef.getDownloadURL();
@@ -58,7 +58,7 @@ export const getCourseMealImage = async (userUid, dietId, mealIndex, courseMealI
 
 }
 
-export const getCourseMealIngredientLength = async (userUid, dietId, mealIndex, courseMealIndex) => {
+export const getCourseMealIngredientLength = async (userUid, dietId, mealKey, courseMealKey) => {
 
     const dietList = await getUserDiets(userUid);
     const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
@@ -66,7 +66,7 @@ export const getCourseMealIngredientLength = async (userUid, dietId, mealIndex, 
 
     try {
         const data = await firebase.database()
-            .ref(`diets/users/${userUid}/${dietName}/mealData/${mealIndex}/courseMeals/${courseMealIndex}/ingredients`)
+            .ref(`diets/users/${userUid}/${dietName}/mealData/${mealKey}/courseMeals/${courseMealKey}/ingredients`)
             .once('value')
 
         return data.exportVal();
@@ -77,7 +77,7 @@ export const getCourseMealIngredientLength = async (userUid, dietId, mealIndex, 
 
 }
 
-export const getCourseMealLength = async (userUid, dietId, mealIndex) => {
+export const getCourseMealLength = async (userUid, dietId, mealKey) => {
 
     const dietList = await getUserDiets(userUid);
     const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
@@ -85,7 +85,7 @@ export const getCourseMealLength = async (userUid, dietId, mealIndex) => {
 
     try {
         const data = await firebase.database()
-            .ref(`diets/users/${userUid}/${dietName}/mealData/${mealIndex}/courseMeals`)
+            .ref(`diets/users/${userUid}/${dietName}/mealData/${mealKey}/courseMeals`)
             .once('value')
 
         return data.exportVal();

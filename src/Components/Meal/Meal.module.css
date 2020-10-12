@@ -33,6 +33,17 @@
     position: relative;
     flex-wrap: wrap;
     justify-content: space-around;
+    padding: 3rem 0 3rem 0;
+    margin-bottom: 5rem;
+    background-color: white;
+    box-shadow: inset 0px 0px 9px 1px rgb(0 0 0 / 33%);
+}
+
+.meal-list-padding {
+    display: flex;
+    position: relative;
+    flex-wrap: wrap;
+    justify-content: space-around;
     padding: 4.5rem 0 3rem 0;
     margin-bottom: 5rem;
     background-color: white;

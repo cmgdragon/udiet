@@ -58,6 +58,26 @@
     box-shadow: inset 0px 0px 9px 1px rgb(0 0 0 / 33%);
 }
 
+.share-diet {
+    position: absolute;
+    margin: .3rem;
+    padding: .5rem;
+    cursor: pointer;
+    background: #58adfc;
+    border-radius: .5rem;
+    transition: all .5s;
+    box-shadow: 2px 3px 4px 0px #00000038;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    right: 15vw;
+}
+
+.share-diet:hover {
+    cursor: pointer;
+    box-shadow: inset 0px 0px 9px 1px rgb(0 0 0 / 33%);
+}
+
 .create-diet {
     padding: 1rem;
     margin: 0 0 1rem 0;
@@ -143,5 +163,8 @@ a.goback {
 @media (max-width: 750px) {
     .cuerpo {
       width: auto;
+    }
+    .share-diet {
+        right: 19vw;
     }
 }

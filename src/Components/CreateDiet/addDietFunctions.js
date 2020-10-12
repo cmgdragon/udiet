@@ -1,7 +1,6 @@
 import { uploadNewCourseMeal, uploadNewMeal, uploadNewCourseMealIngredient } from '../../Database/writeDietInfo';
 
-export const sendNewMeal = (event, userUid, dietId) => {
-    event.preventDefault();
+export const sendNewMeal = (userUid, dietId) => {
     const meal = document.querySelector('[diet-modal]')
                             .querySelector('[meal-object]');
 
@@ -56,8 +55,7 @@ export const sendNewMeal = (event, userUid, dietId) => {
     });
 }
 
-export const sendNewCourseMeal = async (event, userUid, dietId, mealIndex) => {
-    event.preventDefault();
+export const sendNewCourseMeal = async (userUid, dietId, mealIndex) => {
     const meal = document.querySelector('[diet-modal]')
                             .querySelector('[coursemeal-object]');
 
@@ -98,8 +96,7 @@ export const sendNewCourseMeal = async (event, userUid, dietId, mealIndex) => {
         window.location.reload();
 }
 
-export const sendNewIngredient = async (event, userUid, dietId, mealIndex, courseIndex) => {
-    event.preventDefault();
+export const sendNewIngredient = async (userUid, dietId, mealIndex, courseIndex) => {
     const ingredient = document.querySelector('[diet-modal]')
                             .querySelector('[ingredient-object]');
 

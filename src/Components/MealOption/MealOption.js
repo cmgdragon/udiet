@@ -3,25 +3,26 @@ import styles from './MealOption.module.css';
 import Ingredient from '../Ingredient';
 import DietModal from '../DietModal';
 import IngredientForm from '../CreateDiet/IngredientForm';
-import { modifyCourseMealInfo, deleteDietCourseMeal } from '../../Database/writeDietInfo';
+import { modifyCourseMealInfo } from '../../Database/writeDietInfo';
+import { deleteDietCourseMeal } from '../../Database/deleteDietInfo';
 import { sendNewIngredient } from '../CreateDiet/addDietFunctions';
 
 const MealOption = props => {
   
-    const { courseMeals, display, mealIndex, courseIndex, userUid, dietId, hasPerms } = props;
+    const { courseMeals, display, mealKey, courseKey, courseIndex, userUid, dietId, hasPerms } = props;
     const {comments, ingredients, name, properties, recipe} = courseMeals;
     const [modalShown, setModalShown] = useState(false);
 
     const selectMealInfo = (event, infoType) => {
 
-        const mealElement = document.querySelectorAll(`[course-meal-list=meal${mealIndex}] > .${styles['options-box']}`);
-        const selectedElement = mealElement[courseIndex].querySelector(`[coursemeal-info=${infoType}]`);
+        const mealElement = document.querySelectorAll(`[course-meal-list=meal${mealKey}] .${styles['options-box']}`);
+        const selectedElement = mealElement[courseKey].querySelector(`[coursemeal-info=${infoType}]`);
 
-        const selectedElementIndex = Array.from(mealElement[courseIndex].querySelectorAll(`[coursemeal-info]`)).findIndex(
+        const selectedElementIndex = Array.from(mealElement[courseKey].querySelectorAll(`[coursemeal-info]`)).findIndex(
             element => element.attributes[0].value === infoType
         );
 
-        mealElement[courseIndex].querySelectorAll(`[coursemeal-info]`).forEach((element, index) => {
+        mealElement[courseKey].querySelectorAll(`[coursemeal-info]`).forEach((element, index) => {
            switch(index) {
                 case selectedElementIndex:
                     selectedElement.classList.contains(styles['shown-info'])
@@ -51,7 +52,7 @@ const MealOption = props => {
         editBox.classList.remove(styles.visibleEl);
         editBox.style.bottom = "";
         editBox.style.left = "92%";
-        contentEl.lastChild.textContent = content;
+        contentEl.querySelector('p').innerText = content;
         checkButton.remove();
         cancelButton.remove();
         editBox.querySelector('i').classList.remove(styles.undisplay);
@@ -92,8 +93,8 @@ const MealOption = props => {
     const sendNewMealInfo = async (event, contentEl, newTextarea, editBox, checkButton, cancelButton, content) => {
         const property = Array.from(event.target.parentElement.parentElement.attributes)
             .find(a => a.name === "coursemeal-info").value;
-        const newContent = event.target.parentElement.nextElementSibling.value;
-        await modifyCourseMealInfo(userUid, dietId, mealIndex, courseIndex, property, newContent);
+        const newContent = event.target.parentElement.nextElementSibling.nextElementSibling.value;
+        await modifyCourseMealInfo(userUid, dietId, mealKey, courseKey, property, newContent);
         cancelEditOperation(contentEl, newTextarea, editBox, checkButton, cancelButton, content);
     }
 
@@ -106,24 +107,28 @@ const MealOption = props => {
     }
 
     const removeCourseMeal = async () => {
-        const courseMealListEl = document.querySelector(`[course-meal-list=meal${mealIndex}] [course-meal=${courseIndex}]`);
-        const courseMealImage = document.getElementById(`image-${mealIndex}-${courseIndex}`);
+        const courseMealListEl = document.querySelector(`[course-meal-list=meal${mealKey}] [course-meal=course${courseKey}]`);
+        const courseMealImage = document.getElementById(`image-${mealKey}-${courseKey}`).parentElement;
         if (window.confirm('¿Quieres borrar este plato?')) {
-            await deleteDietCourseMeal(userUid, dietId, mealIndex, courseIndex);
+            await deleteDietCourseMeal(userUid, dietId, mealKey, courseKey);
             courseMealListEl.remove();
             courseMealImage.remove();
         }
     }
 
     return (
-    <div course-meal={`course${courseIndex}`}>
-        <DietModal shown={modalShown} closeModal={closeForm} sendModal={event => sendNewIngredient(event, userUid, dietId, mealIndex, courseIndex)}>
+    <div course-meal={`course${courseKey}`}>
+        <DietModal shown={modalShown} closeModal={closeForm} sendModal={() => sendNewIngredient(userUid, dietId, mealKey, courseKey)}>
             <IngredientForm initNumber={1}></IngredientForm>
         </DietModal>
         <div className={
                 !display ? styles.courseMealName : courseIndex === 0 ? styles.courseMealName + " " + styles['courseMealName-displayed']
                 : styles.courseMealName + " " + styles['courseMealName-displayed'] + " " + styles['courseMealName-displayed-top']
-            }>{name}<i onClick={removeCourseMeal} className={`fa fa-trash ${styles.removeCourse}`} aria-hidden="true"></i></div>
+            }>{name}
+
+            { !hasPerms ? undefined : <i onClick={removeCourseMeal} className={`fa fa-trash ${styles.removeCourse}`} aria-hidden="true"></i> }
+            
+            </div>
         <div  className={
         !display ? styles['options-box'] : styles['options-box'] + " " + styles.displayed
         }>
@@ -145,24 +150,25 @@ const MealOption = props => {
                             <i onClick={editMealInfo} className={`fa fa-pencil`} aria-hidden="true"></i>
                         </div>
                     : undefined}
-                     { properties ? properties : undefined}
+                    <p> { properties ? properties : undefined} </p>
                     </div>
             
 
                     <div coursemeal-info="ingredients" className={styles['ingredient-list']}>
                         
-                    { !comments && !hasPerms ? undefined : <div onClick={showForm} className={styles['add-ingredient']}>Añadir</div> }
+                    { !hasPerms ? undefined : <div onClick={showForm} className={styles['add-ingredient']}>Añadir</div> }
 
                     { ingredients ?
                         Object.values(ingredients).map(({name, quantity, brand, location, info}, index) => {
+                            const ingredientKey = Object.keys(ingredients)[index];
                             return (
                                 <React.Fragment key={index}>
                                     <Ingredient
                                         userId={userUid}
                                         dietId={dietId}
-                                        mealIndex={mealIndex}
-                                        courseIndex={courseIndex}
-                                        ingredientIndex={index}
+                                        mealKey={mealKey}
+                                        courseKey={courseKey}
+                                        ingredientKey={ingredientKey}
                                         ingredientName={name}
                                         quantity={quantity}
                                         brand={brand}
@@ -183,7 +189,7 @@ const MealOption = props => {
                             <i onClick={editMealInfo} className={`fa fa-pencil`} aria-hidden="true"></i>
                         </div>
                     : undefined}
-                { recipe ? recipe : undefined}
+                <p> { recipe ? recipe : undefined} </p>
                 </div>
                 
                 <div coursemeal-info="comments" className={styles.courseMealInfo}>
@@ -191,7 +197,7 @@ const MealOption = props => {
                             <i onClick={editMealInfo} className={`fa fa-pencil`} aria-hidden="true"></i>
                         </div>
                     : undefined}
-                { comments ? comments : undefined}
+                <p> { comments ? comments : undefined} </p>
                 </div>
                  
                 </div>

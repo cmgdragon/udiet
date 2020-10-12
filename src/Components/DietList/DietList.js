@@ -4,7 +4,8 @@ import { signOut } from '../../Services/authProviders';
 import { getUserDiets } from '../../Database/readDietInfo';
 import { UserContext } from '../../Context/userContext';
 import { Link } from 'react-router-dom';
-import { addNewUserDiet, modifyCouseMealImageInfo, deleteUserDiet } from '../../Database/writeDietInfo';
+import { addNewUserDiet, modifyCouseMealImageInfo } from '../../Database/writeDietInfo';
+import { deleteUserDiet } from '../../Database/deleteDietInfo';
 
 const dietObjectDB = {
     isPrivate: false,
@@ -1301,6 +1302,9 @@ const Diet = props => {
                                             className={styles['diet-list-item']} >
                                                 {diet.dietName}
                                         </Link>
+                                        <i className={`fa fa-user ${styles['share-diet']}`}
+                                         aria-hidden="true"
+                                         onClick={(event) => removeDiet(event, index)} ></i>
                                         <i className={`fa fa-times ${styles['remove-diet']}`}
                                          aria-hidden="true"
                                          onClick={(event) => removeDiet(event, index)} ></i>

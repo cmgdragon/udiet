@@ -1,11 +1,12 @@
 import React, {useState, useRef} from 'react';
 import styles from './Ingredient.module.css';
-import { modifyIngredientInfo, deleteCourseMealIngredient } from '../../Database/writeDietInfo';
+import { modifyIngredientInfo } from '../../Database/writeDietInfo';
+import { deleteCourseMealIngredient } from '../../Database/deleteDietInfo';
 
 const Ingredient = props => {
 
     const { ingredientName, quantity, brand, location, info, userId,
-         dietId, mealIndex, courseIndex, ingredientIndex, hasPerms } = props;
+         dietId, mealKey, courseKey, ingredientKey, hasPerms } = props;
     const [expanded, setExpanded] = useState(false);
     const ingredientContent = useRef();
 
@@ -14,9 +15,7 @@ const Ingredient = props => {
         padding: expanded ? '0.7rem' : '0px'
     }
 
-    const expand = () => {
-        setExpanded(!expanded);
-    }
+    const expand = () => setExpanded(!expanded);
 
     const cancelEditOperation = (event, ingredientNameEl, ingredientListEl, editButton, removeButton, checkButton, cancelButton) => {
         if (event) event.stopPropagation();
@@ -49,7 +48,7 @@ const Ingredient = props => {
         event.stopPropagation();
         const ingredient = event.target.parentElement.parentElement.parentElement;
         if (window.confirm('¿Quieres borrar este ingrediente?')) {
-            await deleteCourseMealIngredient(userId, dietId, mealIndex, courseIndex, ingredientIndex);
+            await deleteCourseMealIngredient(userId, dietId, mealKey, courseKey, ingredientKey);
             ingredient.remove();
         }
     }
@@ -111,7 +110,7 @@ const Ingredient = props => {
             newObject[ingredient.getAttribute('edit-ingredient')] = ingredient.value;
         })
 
-        await modifyIngredientInfo(userId, dietId, mealIndex, courseIndex, ingredientIndex, newObject);
+        await modifyIngredientInfo(userId, dietId, mealKey, courseKey, ingredientKey, newObject);
         cancelEditOperation(undefined, ingredientNameEl, ingredientListEl, editButton, removeButton, checkButton, cancelButton);
 
     }
