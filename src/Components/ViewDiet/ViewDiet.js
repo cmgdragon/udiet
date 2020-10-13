@@ -4,6 +4,8 @@ import Meal from '../Meal';
 import { signOut } from '../../Services/authProviders';
 import { getUserDiets } from '../../Database/readDietInfo';
 import { Link, Redirect } from 'react-router-dom';
+import Header from '../Header';
+import Addthis from "react-load-script";
 
 const ViewDiet = props => {
     const [dietUserList, setDietUserList] = useState({});
@@ -19,19 +21,27 @@ const ViewDiet = props => {
     
         getUserDiets(user.uid).then(diets => {
             setDietUserList(diets);
-
         });
-
+        
     }, []);
+
+    const updateAddthis = () => {
+        if (typeof window?.addthis?.layers?.refresh === 'function') {
+            window.addthis.layers.refresh();
+            if (window?.addthis_share?.title) {
+                window.addthis_share.title = Object.values(dietUserList)[user.dietId] ? Object.values(dietUserList)[user.dietId].dietName : "uDiet";
+            }
+        }
+    }
 
     return (
         <>
-           
-            <div className={styles.userbuttons}>
-                <Link to={'/'} id="back-button" className={`fa fa-arrow-left ${styles.goback}`} aria-hidden="true"></Link>
-                <button className={styles.logout} onClick={signOut}>Sign out ({user.displayName})</button>
-            </div>
+           <Addthis url='//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f85dd0fa7c0fa0d'
+            onLoad={updateAddthis()} />
+            <Header user={user} signOut={signOut}/>
             <div className={styles.cuerpo}>
+
+            <div className={`addthis_inline_share_toolbox ${styles['addthis-element']}`}></div>
 
                 {
                   !dietUserList ? <Redirect to='/' /> :

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './CreateDiet.module.css';
 import { activateCheck } from './CreateDiet';
 
-const IngredientForm = () => {
+const IngredientForm = ({canRemove = true}) => {
 
     const [quantity, setQuantity] = useState(false);
     const [location, setLocation] = useState(false);
@@ -14,13 +14,13 @@ const IngredientForm = () => {
     const updateBrand = () => setBrand(!brand)
     const updateInfo = () => setInfo(!info)
 
-    const removeIngredint = event => {
+    const removeIngredient = event => {
         event.target.parentElement.remove();
     }
 
     return (
         <div className={styles.ingredient} ingredient-object="">
-            <i onClick={removeIngredint} className="fa fa-minus-square" aria-hidden="true" />
+            { canRemove ? <i onClick={removeIngredient} className="fa fa-minus-square" aria-hidden="true" /> : undefined }
 
             <div className={styles['ingredient-name']}><label>Nombre del ingrediente</label>
             <input ingredient-input="name" placeholder="Arroz" type="text" required/></div>

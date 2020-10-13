@@ -1,5 +1,6 @@
 form {
     margin: auto 10%;
+    min-height: calc(78vh);
 }
 
 input[type=text], textarea {
@@ -88,13 +89,13 @@ input, label {
     background-color: #88d1e7;
 }
 
-.meal i {
+.meal i, .ingredient i {
     color: rgb(250, 53, 53);
     font-size: 1.3rem;
     cursor: pointer;
 }
 
-.meal i:hover {
+.meal i:hover, .ingredient i:hover {
     color: rgb(243, 132, 132);
     font-size: 1.3rem;
     cursor: pointer;

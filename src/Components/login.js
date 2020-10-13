@@ -22,7 +22,7 @@ const Login = () => {
     return (
         <>
         <div className={styles.bgtitle}></div>
-        <div className={styles.title}>YouDiet</div>
+        <div className={styles.title}>uDiet</div>
         <div className={styles.loginbox}>
         <div onClick={signInGoogle} >
             <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />

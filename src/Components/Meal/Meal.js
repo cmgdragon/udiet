@@ -214,7 +214,7 @@ const Meal = props => {
     return (
     <div ref={permissionRef}>
         <DietModal shown={modalMealShown} sendModal={() => sendNewMeal(userUid, dietId)} closeModal={closeMealForm}>
-            <MealForm initNumber={1}></MealForm>
+            <MealForm canRemove={false} initNumber={1}></MealForm>
         </DietModal>
         <h1 className={styles['diet-name']}>{dietName}</h1>
 
@@ -231,7 +231,7 @@ const Meal = props => {
                             <React.Fragment key={mealKey}>
                                 { mealKey <= 0 ?
                                 <DietModal shown={modalCourseShown} sendModal={() => sendNewCourseMeal(userUid, dietId, mealKey)} closeModal={closeCourseForm}>
-                                    <CourseMealForm initNumber={1}></CourseMealForm>
+                                    <CourseMealForm canRemove={false} initNumber={1}></CourseMealForm>
                                 </DietModal> : '' }
                                 <h2 className={styles['meal-name']}>{meal.name}
                                     {!permissionRef.current ? undefined : <i onClick={event => removeMeal(event, mealKey)} className={`fa fa-trash ${styles.removeMeal}`} aria-hidden="true"></i> }

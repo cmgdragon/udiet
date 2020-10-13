@@ -98,3 +98,35 @@ body  {
   margin: auto 50vw 0;
   top: 15vh;
 }
+
+footer {
+  display: flex;
+  margin-top: 2rem;
+  height: 6.5rem;
+  align-items: center;
+  background-color: #ebebeb;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0px 0px 9px 1px rgb(0 0 0 / 33%);
+}
+
+footer > div {
+  padding-bottom: .5rem;
+  font-weight: bold;
+}
+
+footer > a {
+  font-size: 2rem;
+  background-color: white;
+  border-radius: 50%;
+}
+
+footer > a:visited {
+  color: inherit;
+}
+
+footer > a:hover {
+  cursor: pointer;
+  color: #1669F2;
+}

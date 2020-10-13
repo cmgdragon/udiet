@@ -50,7 +50,7 @@ export const modifyCourseMealInfo = async (userId, dietId, mealKey, courseMealKe
     const dietList = await getUserDiets(userId);
     const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
      : Object.getOwnPropertyNames(await dietList)[dietId];
-console.log({[property]: newInfo})
+
     try {
        await firebase.database()
         .ref(`diets/users/${userId}/${dietName}/mealData/${mealKey}/courseMeals/${courseMealKey}`)
@@ -65,7 +65,6 @@ console.log({[property]: newInfo})
 export const modifyIngredientInfo = async (userId, dietId, mealKey, courseMealKey, ingredientKey, newObject) => {
 
     const dietList = await getUserDiets(userId);
-    console.log(userId, dietList);
     const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
      : Object.getOwnPropertyNames(await dietList)[dietId];
 
@@ -84,12 +83,12 @@ export const modifyIngredientInfo = async (userId, dietId, mealKey, courseMealKe
 export const uploadNewCourseMealIngredient = async (userId, dietId, mealKey, courseMealKey, ingredientObject) => {
 
     const dietList = await getUserDiets(userId);
-    console.log(userId, dietList);
     const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
      : Object.getOwnPropertyNames(await dietList)[dietId];
 
-    
-    const ingredientKey =  Object.values(await getCourseMealIngredientLength(userId, dietId, mealKey, courseMealKey)).length;
+    const ingredientList = await getCourseMealIngredientLength(userId, dietId, mealKey, courseMealKey);
+
+    const ingredientKey =  ingredientList ? Object.values(ingredientList).length : 0;
     const ingredients = {
         [ingredientKey]: ingredientObject
     }
@@ -109,12 +108,12 @@ export const uploadNewCourseMealIngredient = async (userId, dietId, mealKey, cou
 export const uploadNewCourseMeal = async (userId, dietId, mealKey, courseMealObject) => {
 
     const dietList = await getUserDiets(userId);
-    console.log(userId, dietList);
     const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
      : Object.getOwnPropertyNames(await dietList)[dietId];
 
-    
-    const courseMealKey =  Object.values(await getCourseMealLength(userId, dietId, mealKey)).length;
+     const courseMealList = await getCourseMealLength(userId, dietId, mealKey);
+
+    const courseMealKey = courseMealList ? Object.values(courseMealList).length : 0;
     const courseMeals = {
         [courseMealKey]: courseMealObject
     }
@@ -134,12 +133,12 @@ export const uploadNewCourseMeal = async (userId, dietId, mealKey, courseMealObj
 export const uploadNewMeal = async (userId, dietId, mealObject) => {
 
     const dietList = await getUserDiets(userId);
-    console.log(userId, dietList);
     const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
      : Object.getOwnPropertyNames(await dietList)[dietId];
 
     
-    const mealKey =  Object.values(await getMealLength(userId, dietId)).length;
+     const mealList = await getMealLength(userId, dietId);
+    const mealKey =  mealList ? Object.values(mealList).length : 0;
     const mealData = {
         [mealKey]: mealObject
     }
@@ -149,6 +148,26 @@ export const uploadNewMeal = async (userId, dietId, mealObject) => {
        await firebase.database()
         .ref(`diets/users/${userId}/${dietName}/mealData`)
         .update(mealData)
+        
+    } catch (error) {
+        console.error(error);
+    }
+
+}
+
+export const modifyDietSharedUsers = async (userId, dietId, sharedUsersDiet) => {
+
+    const dietList = await getUserDiets(userId);
+    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
+     : Object.getOwnPropertyNames(await dietList)[dietId];
+
+    console.log(userId, dietId, dietName, sharedUsersDiet)
+
+    try {
+
+       await firebase.database()
+        .ref(`diets/users/${userId}/${dietName}/sharedWith`)
+        .set(sharedUsersDiet);
         
     } catch (error) {
         console.error(error);

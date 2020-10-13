@@ -3,7 +3,7 @@ import styles from './CreateDiet.module.css';
 import IngredientForm from './IngredientForm';
 import { activateCheck } from './CreateDiet';
 
-const CourseMealForm = () => {
+const CourseMealForm = ({canRemove = true}) => {
 
     const [ingredientNumber, setIngredientNumber] = useState(0);
     const [properties, setProperties] = useState(false);
@@ -44,7 +44,7 @@ const CourseMealForm = () => {
 
     return(
         <div className={styles['course-meal']} coursemeal-object="" >
-            <i onClick={removeCourseMeal} className="fa fa-minus-square" aria-hidden="true" />
+            { canRemove ? <i onClick={removeCourseMeal} className="fa fa-minus-square" aria-hidden="true" /> : undefined}
 
             <div className={styles.name}><label>Nombre del plato</label>
                 <input coursemeal-input="name" placeholder="Arroz con tomate" type="text" required/>

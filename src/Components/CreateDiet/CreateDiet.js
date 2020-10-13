@@ -6,6 +6,7 @@ import { addNewUserDiet } from '../../Database/writeDietInfo';
 import { UserContext } from '../../Context/userContext';
 import { signOut } from '../../Services/authProviders';
 import { Link } from 'react-router-dom';
+import Header from '../Header';
 
 const CreateDiet = () => {
     
@@ -109,12 +110,7 @@ const CreateDiet = () => {
 
     return ( 
     <>
-        <div className={dietStyles.userbuttons}>
-            <Link to={'/'} id="back-button" className={`fa fa-arrow-left ${dietStyles.goback}`} aria-hidden="true"></Link>
-            <button className={dietStyles.logout} onClick={signOut}>Sign out ({user.displayName})</button>
-        </div>
-
-
+        <Header user={user} signOut={signOut}/>
         <form onSubmit={sendDiet}>
 
             <div className={styles['diet-name']}>

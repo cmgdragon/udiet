@@ -119,7 +119,7 @@ const MealOption = props => {
     return (
     <div course-meal={`course${courseKey}`}>
         <DietModal shown={modalShown} closeModal={closeForm} sendModal={() => sendNewIngredient(userUid, dietId, mealKey, courseKey)}>
-            <IngredientForm initNumber={1}></IngredientForm>
+            <IngredientForm canRemove={false} initNumber={1}></IngredientForm>
         </DietModal>
         <div className={
                 !display ? styles.courseMealName : courseIndex === 0 ? styles.courseMealName + " " + styles['courseMealName-displayed']

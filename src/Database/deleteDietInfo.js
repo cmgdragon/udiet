@@ -17,7 +17,6 @@ export const deleteCourseMealImage = async (userUid, dietId, mealKey, courseMeal
 export const deleteCourseMealIngredient = async (userId, dietId, mealKey, courseMealKey, ingredientKey) => {
 
     const dietList = await getUserDiets(userId);
-    console.log(userId, dietList);
     const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
      : Object.getOwnPropertyNames(await dietList)[dietId];
 

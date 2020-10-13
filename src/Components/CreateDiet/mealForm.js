@@ -4,7 +4,7 @@ import CourseMealForm from './CourseMealForm';
 
 const MealForm = props => {
 
-    const { initNumber } = props;
+    const { initNumber, canRemove = true } = props;
     const [courseMealNumber, setCourseMealNumber] = useState(initNumber);
 
     const removeMeal = event => {
@@ -35,9 +35,10 @@ const MealForm = props => {
 
     }
 
+
     return (
         <div className={styles.meal} meal-object="" >
-            <i onClick={removeMeal} className="fa fa-minus-square" aria-hidden="true" />
+            { canRemove ? <i onClick={removeMeal} className="fa fa-minus-square" aria-hidden="true" /> : undefined }
 
             <div className={styles.name}><label>Nombre de la comida</label>
                 <input meal-name="" placeholder="Merienda, cena, desayuno, etc." type="text" required/>

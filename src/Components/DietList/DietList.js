@@ -1,11 +1,14 @@
 import React, {useContext, useEffect, useState} from 'react';
 import styles from '../ViewDiet/Diet.module.css';
 import { signOut } from '../../Services/authProviders';
-import { getUserDiets } from '../../Database/readDietInfo';
+import { getUserDiets, getDietSharedUsers } from '../../Database/readDietInfo';
 import { UserContext } from '../../Context/userContext';
 import { Link } from 'react-router-dom';
-import { addNewUserDiet, modifyCouseMealImageInfo } from '../../Database/writeDietInfo';
+import { addNewUserDiet, modifyCouseMealImageInfo, modifyDietSharedUsers } from '../../Database/writeDietInfo';
 import { deleteUserDiet } from '../../Database/deleteDietInfo';
+import { DietUsersModal } from '../DietModal';
+import modalStyles from '../DietModal/DietModal.module.css';
+import Header from '../Header';
 
 const dietObjectDB = {
     isPrivate: false,
@@ -1253,6 +1256,8 @@ const dietObjectDB = {
 const Diet = props => {
 
     const [dietUserList, setDietUserList] = useState({});
+    const [sharedUsersDiet, setSharedUsersDiet] = useState(undefined);
+    const [modalShown, setModalShown] = useState(false);
     const userContext = useContext(UserContext);
 
     const user = userContext;
@@ -1280,34 +1285,89 @@ const Diet = props => {
 
     }, []);
 
+    const closeSharedUsersModal = () => setModalShown(false);
+
+    const showSharedUsersModal = async dietId => {
+        const sharedUsers = await getDietSharedUsers(user.uid, dietId);
+        setSharedUsersDiet(sharedUsers);
+        setModalShown(true);
+    }
+
+    const addNewSharedUserDiet = async (userId, dietId) => {
+        const dialog = window.prompt("Introduce el email del usuario con el que quieres compartir esta dieta");
+
+        const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        if (dialog && emailRegex.test(dialog)) {
+            const newList = sharedUsersDiet ? Object.values(sharedUsersDiet) : [];
+            newList.push(dialog);
+            await modifyDietSharedUsers(userId, dietId, newList);
+            const modalBoxEl = document.createElement('div');
+            const modalItemEl = document.createElement('div');
+            const modalDeleteEl = document.createElement('i');
+            modalBoxEl.classList = [`${modalStyles['modal-users-list']}`];
+            modalItemEl.classList = [`${modalStyles['modal-user-list-item']}`];
+            modalItemEl.innerText = dialog;
+            modalDeleteEl.classList = [`fa fa-trash ${modalStyles['remove-user']}`];
+            modalDeleteEl.addEventListener('click', event => removeSharedUserDiet(event, user.uid, dietId));
+            modalBoxEl.appendChild(modalItemEl);
+            modalBoxEl.appendChild(modalDeleteEl);
+            console.log(`.${modalStyles['modal-users-list']}`);
+            document.querySelector(`.${modalStyles['modal-users']}`).appendChild(modalBoxEl);
+
+        } else {
+            alert('Email inválido')
+        }
+
+    }
+
+    const removeSharedUserDiet = async (event, userId, dietId) => {
+
+        const email = event.target.previousElementSibling.innerText;
+        const currenItem = event.target.parentElement;
+        if (window.confirm(`¿Quieres eliminar a ${email} de la lista de editores?`)) {
+            const newList = sharedUsersDiet ? Object.values(sharedUsersDiet) : [];
+            const userIndex = newList.findIndex(u => u === email);
+            newList.splice(userIndex, 1);
+            await modifyDietSharedUsers(userId, dietId, newList);
+            currenItem.remove();
+        }
+
+    }
+
     return (
         <>
-            <div className={styles.userbuttons}>
-                <i id="back-button" onClick={backToHome} className={`fa fa-arrow-left ${styles.goback}`} aria-hidden="true"></i>
-                <button className={styles.logout} onClick={signOut}>Sign out ({user.displayName})</button>
-            </div>
+            <Header user={user} signOut={signOut}/>
             <div className={styles.cuerpo}>
 
                     <Link to={'/create'} id="create-diet" className={styles['create-diet']} >Crear una nueva dieta</Link>
                     <div className={styles['my-diets-label']}>Mis dietas</div>
                     <div className={styles['my-diets-label-border-bottom']}></div>
                    {
-                    Object.values(dietUserList).map((diet, index) => {
+                    Object.values(dietUserList).map((diet, dietId) => {
                         return (
-                            <React.Fragment key={index}>
-
+                            <React.Fragment key={dietId}>
+                                <DietUsersModal 
+                                    shown={modalShown}
+                                    closeModal={closeSharedUsersModal}
+                                    sharedUsersDiet={sharedUsersDiet}
+                                    promptModal={() => addNewSharedUserDiet(user.uid, dietId)}
+                                    removeUser={event => removeSharedUserDiet(event, user.uid, dietId)}
+                                />
                                 {
                                     <div className={styles['diet-list']}>
-                                        <Link to={`/${user.uid}/${index}`}
+                                        <Link to={`/${user.uid}/${dietId}`}
                                             className={styles['diet-list-item']} >
                                                 {diet.dietName}
                                         </Link>
-                                        <i className={`fa fa-user ${styles['share-diet']}`}
-                                         aria-hidden="true"
-                                         onClick={(event) => removeDiet(event, index)} ></i>
-                                        <i className={`fa fa-times ${styles['remove-diet']}`}
-                                         aria-hidden="true"
-                                         onClick={(event) => removeDiet(event, index)} ></i>
+                                        <div className={styles['diet-item-buttons']}>
+                                            <i className={`fa fa-user ${styles['share-diet']}`}
+                                            aria-hidden="true"
+                                            onClick={() => showSharedUsersModal(dietId)} ></i>
+                                            <i className={`fa fa-trash ${styles['remove-diet']}`}
+                                            aria-hidden="true"
+                                            onClick={(event) => removeDiet(event, dietId)} ></i>
+                                         </div>
                                     </div>
                                 }
                             </React.Fragment>
