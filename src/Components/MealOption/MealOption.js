@@ -9,20 +9,22 @@ import { sendNewIngredient } from '../CreateDiet/addDietFunctions';
 
 const MealOption = props => {
   
-    const { courseMeals, display, mealKey, courseKey, courseIndex, userUid, dietId, hasPerms } = props;
-    const {comments, ingredients, name, properties, recipe} = courseMeals;
+    const { mealList, courseMeal, display, mealKey, courseKey, courseIndex, userUid, dietId,
+         hasPerms, updateCourseMeal } = props;
+    const {comments, ingredients, name, properties, recipe, hasImage} = courseMeal;
+    const [ingredientList, setIngredientList] = useState(ingredients);
     const [modalShown, setModalShown] = useState(false);
 
     const selectMealInfo = (event, infoType) => {
 
         const mealElement = document.querySelectorAll(`[course-meal-list=meal${mealKey}] .${styles['options-box']}`);
-        const selectedElement = mealElement[courseKey].querySelector(`[coursemeal-info=${infoType}]`);
+        const selectedElement = mealElement[courseIndex].querySelector(`[coursemeal-info=${infoType}]`);
 
-        const selectedElementIndex = Array.from(mealElement[courseKey].querySelectorAll(`[coursemeal-info]`)).findIndex(
+        const selectedElementIndex = Array.from(mealElement[courseIndex].querySelectorAll(`[coursemeal-info]`)).findIndex(
             element => element.attributes[0].value === infoType
         );
 
-        mealElement[courseKey].querySelectorAll(`[coursemeal-info]`).forEach((element, index) => {
+        mealElement[courseIndex].querySelectorAll(`[coursemeal-info]`).forEach((element, index) => {
            switch(index) {
                 case selectedElementIndex:
                     selectedElement.classList.contains(styles['shown-info'])
@@ -98,6 +100,8 @@ const MealOption = props => {
         cancelEditOperation(contentEl, newTextarea, editBox, checkButton, cancelButton, content);
     }
 
+    const updateIngredients = newIngredientList => setIngredientList(newIngredientList);
+
     const showForm = () => setModalShown(true);
 
     const closeForm = () => {
@@ -107,18 +111,18 @@ const MealOption = props => {
     }
 
     const removeCourseMeal = async () => {
-        const courseMealListEl = document.querySelector(`[course-meal-list=meal${mealKey}] [course-meal=course${courseKey}]`);
         const courseMealImage = document.getElementById(`image-${mealKey}-${courseKey}`).parentElement;
         if (window.confirm('¿Quieres borrar este plato?')) {
-            await deleteDietCourseMeal(userUid, dietId, mealKey, courseKey);
-            courseMealListEl.remove();
-            courseMealImage.remove();
+            await deleteDietCourseMeal(userUid, dietId, mealKey, courseKey, hasImage);
+            delete mealList[mealKey].courseMeals[courseKey];
+            updateCourseMeal(mealList);
+            courseMealImage.click();
         }
     }
 
     return (
     <div course-meal={`course${courseKey}`}>
-        <DietModal shown={modalShown} closeModal={closeForm} sendModal={() => sendNewIngredient(userUid, dietId, mealKey, courseKey)}>
+        <DietModal shown={modalShown} closeModal={closeForm} sendModal={() => sendNewIngredient(userUid, dietId, mealKey, courseKey, ingredientList, setIngredientList)}>
             <IngredientForm canRemove={false} initNumber={1}></IngredientForm>
         </DietModal>
         <div className={
@@ -136,10 +140,10 @@ const MealOption = props => {
             <div className={styles['meal-box']}>
 
                 <div className={styles['coursemeal-tab-list']}>
-                    { !properties && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'properties')}>Propiedades</div> }
-                    { !ingredients && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'ingredients')}>Ingredientes</div> }
-                    { !recipe && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'recipe')}>Preparación</div> }
-                    { !comments && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={(event) => selectMealInfo(event, 'comments')}>Comentarios</div> }
+                    { !properties && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={event => selectMealInfo(event, 'properties')}>Propiedades</div> }
+                    { !ingredients && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={event => selectMealInfo(event, 'ingredients')}>Ingredientes</div> }
+                    { !recipe && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={event => selectMealInfo(event, 'recipe')}>Preparación</div> }
+                    { !comments && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={event => selectMealInfo(event, 'comments')}>Comentarios</div> }
                 </div>
 
                 <div className={styles['meal-info']}>
@@ -158,12 +162,14 @@ const MealOption = props => {
                         
                     { !hasPerms ? undefined : <div onClick={showForm} className={styles['add-ingredient']}>Añadir</div> }
 
-                    { ingredients ?
-                        Object.values(ingredients).map(({name, quantity, brand, location, info}, index) => {
-                            const ingredientKey = Object.keys(ingredients)[index];
+                    { ingredientList ?
+                        Object.values(ingredientList).map(({name, quantity, brand, location, info}, index) => {
+                            const ingredientKey = Object.keys(ingredientList)[index];
                             return (
                                 <React.Fragment key={index}>
                                     <Ingredient
+                                        updateIngredients={updateIngredients}
+                                        ingredientList={ingredientList}
                                         userId={userUid}
                                         dietId={dietId}
                                         mealKey={mealKey}

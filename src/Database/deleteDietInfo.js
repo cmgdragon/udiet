@@ -91,7 +91,7 @@ export const deleteDietMeal = async (userId, dietId, mealKey) => {
 
 }
 
-export const deleteDietCourseMeal = async (userId, dietId, mealKey, courseMealKey) => {
+export const deleteDietCourseMeal = async (userId, dietId, mealKey, courseMealKey, hasImage) => {
 
     const dietList = await getUserDiets(userId);
     const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
@@ -103,7 +103,7 @@ export const deleteDietCourseMeal = async (userId, dietId, mealKey, courseMealKe
         .ref(`diets/users/${userId}/${dietName}/mealData/${mealKey}/courseMeals/${courseMealKey}`)
         .remove();
 
-        deleteCourseMealImage(userId, dietId, mealKey, courseMealKey);
+        if (hasImage) deleteCourseMealImage(userId, dietId, mealKey, courseMealKey);
 
      } catch (error) {
          console.error(error);

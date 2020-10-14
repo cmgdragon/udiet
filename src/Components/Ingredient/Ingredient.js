@@ -6,7 +6,8 @@ import { deleteCourseMealIngredient } from '../../Database/deleteDietInfo';
 const Ingredient = props => {
 
     const { ingredientName, quantity, brand, location, info, userId,
-         dietId, mealKey, courseKey, ingredientKey, hasPerms } = props;
+         dietId, mealKey, courseKey, ingredientKey, hasPerms,
+         ingredientList, updateIngredients } = props;
     const [expanded, setExpanded] = useState(false);
     const ingredientContent = useRef();
 
@@ -49,6 +50,8 @@ const Ingredient = props => {
         const ingredient = event.target.parentElement.parentElement.parentElement;
         if (window.confirm('¿Quieres borrar este ingrediente?')) {
             await deleteCourseMealIngredient(userId, dietId, mealKey, courseKey, ingredientKey);
+            delete ingredientList[ingredientKey];
+            updateIngredients(ingredientList);
             ingredient.remove();
         }
     }

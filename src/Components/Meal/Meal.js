@@ -18,6 +18,7 @@ const Meal = props => {
     const permissionRef = useRef();
     const { dietObject, dietId, userUid, notLoggedIn } = props;
     const { mealData, dietName } = dietObject;
+    const [mealList, setMealList] = useState(mealData);
     const [mealDisplayed, setMealDisplayed] = useState({meal: undefined, meals: {}});
     const [courseMealImages, setcourseMealImages] = useState(undefined);
     const [permissionGiven, setPermissionGiven] = useState(false);
@@ -43,7 +44,8 @@ const Meal = props => {
                     ...mealDisplayed.meals,
                     [mealKey]: mealDisplayed.meals[mealKey] === courseKey ? undefined : courseKey      
                      
-                 }
+                 },
+                mealKey
             }
         );
 
@@ -90,7 +92,7 @@ const Meal = props => {
         }
 
         setcourseMealImages(courseMealImageInfo);
-
+console.log(courseMealImageInfo)
     }
 
     const uploadCourseMealImage = async (mealIndex, courseMealIndex) => {
@@ -183,21 +185,16 @@ const Meal = props => {
 
     }
 
-    const showMealForm = () => setModalMealShown(true);
+    const showForm = form => form(true);
 
-    const showCourseForm = () => setModalCourseShown(true);
-
-    const closeMealForm = () => {
+    const closeForm = form => {
         if (window.confirm('¿Quieres cancelar esta acción?')) {
-            setModalMealShown(false);
+            form(false);
         }
     }
 
-    const closeCourseForm = () => {
-        if (window.confirm('¿Quieres cancelar esta acción?')) {
-            setModalCourseShown(false);
-        }
-    }
+    const updateCourseMeal = newMealList => { setMealList(newMealList); console.log(mealList)}
+
 
     const removeMeal = async (event, mealIndex) => {
         const mealNameEl = event.target.parentElement;
@@ -205,6 +202,9 @@ const Meal = props => {
         const mealCourseListEl = mealListEl.nextElementSibling;
         if (window.confirm('¿Quieres borrar esta comida?')) {
             await deleteDietMeal(userUid, dietId, mealIndex);
+            delete mealList[mealIndex];
+            delete courseMealImages[mealIndex];
+            setMealList(mealList);
             mealCourseListEl.remove();
             mealListEl.remove();
             mealNameEl.remove();
@@ -212,34 +212,37 @@ const Meal = props => {
     }
 
     return (
-    <div ref={permissionRef}>
-        <DietModal shown={modalMealShown} sendModal={() => sendNewMeal(userUid, dietId)} closeModal={closeMealForm}>
+    <div ref={permissionRef} test="s">
+        <DietModal shown={modalMealShown} sendModal={() => sendNewMeal(userUid, dietId, mealList, setMealList, getCourseMealImageList)} closeModal={() => closeForm(setModalMealShown)}>
             <MealForm canRemove={false} initNumber={1}></MealForm>
+        </DietModal>
+        <DietModal shown={modalCourseShown} sendModal={() => sendNewCourseMeal(userUid, dietId, mealDisplayed.mealKey, mealList, setMealList)} closeModal={() => closeForm(setModalCourseShown)}>
+            <CourseMealForm canRemove={false} initNumber={1}></CourseMealForm>
         </DietModal>
         <h1 className={styles['diet-name']}>{dietName}</h1>
 
-        {!permissionRef.current ? undefined : <div onClick={showMealForm} className={styles['add-meal']}>Añadir</div> }
+        {!permissionRef.current ? undefined : <div onClick={() => showForm(setModalMealShown)} className={styles['add-meal']}>AñadirTF</div> }
 
         <div className={styles['diet-list']}>
 
             <div className={styles['meal-box']}>
 
                 {
-                    Object.values(mealData).map((meal, mealIndex) => {
-                        const mealKey = Object.keys(mealData)[mealIndex];
+                    Object.values(mealList).map((meal, mealIndex) => {
+                        const mealKey = Object.keys(mealList)[mealIndex];
                         return (
                             <React.Fragment key={mealKey}>
-                                { mealKey <= 0 ?
-                                <DietModal shown={modalCourseShown} sendModal={() => sendNewCourseMeal(userUid, dietId, mealKey)} closeModal={closeCourseForm}>
-                                    <CourseMealForm canRemove={false} initNumber={1}></CourseMealForm>
-                                </DietModal> : '' }
                                 <h2 className={styles['meal-name']}>{meal.name}
                                     {!permissionRef.current ? undefined : <i onClick={event => removeMeal(event, mealKey)} className={`fa fa-trash ${styles.removeMeal}`} aria-hidden="true"></i> }
                                 </h2>
 
                                     <div className={permissionRef.current ? styles['meal-list-padding'] : styles['meal-list']}>
 
-                                    {!permissionRef.current ? undefined : <div onClick={showCourseForm} className={styles['add-coursemeal']}>Añadir</div> }
+                                    {!permissionRef.current ? undefined : <div onClick={() => {
+                                        mealDisplayed.mealKey = mealKey;
+                                        setMealDisplayed(mealDisplayed);
+                                        showForm(setModalCourseShown);
+                                    }} className={styles['add-coursemeal']}>Añadir</div> }
                                     
                                     {
                     
@@ -252,7 +255,12 @@ const Meal = props => {
                                                 <div key={courseKey}
                                                 onClick={(event) => optionClick(event, mealKey, courseKey, courseIndex)} 
                                                 className={styles['meal-option']}
-                                                style={{backgroundImage: `url(${courseMealImages[mealIndex]?.mealOptions[courseIndex]?.imageUrl})`}}
+                                                
+                                                style={ courseMealImages[mealIndex]?.mealOptions[courseIndex]?.imageUrl ?
+                                                    {backgroundImage: `url(${courseMealImages[mealIndex]?.mealOptions[courseIndex]?.imageUrl})`}
+                                                : ''}
+
+                                                
                                                 >
                                                     { !notLoggedIn && permissionRef.current? 
                                                     
@@ -290,13 +298,15 @@ const Meal = props => {
                                 
                                 <div course-meal-list={`meal${mealKey}`}>
                                     {
-                                        Object.values(meal.courseMeals).map((course, courseIndex) => {
+                                        Object.values(meal.courseMeals).map((courseMeal, courseIndex) => {
                                             const courseKey = Object.keys(meal.courseMeals)[courseIndex];
                                             return (
                                                 <React.Fragment key={courseKey}>
                                                     <MealOption
-                                                        courseMeals={course}
+                                                        updateCourseMeal={updateCourseMeal}
+                                                        mealList={mealList}
                                                         mealKey={mealKey}
+                                                        courseMeal={courseMeal}
                                                         courseKey={courseKey}
                                                         courseIndex={courseIndex}
                                                         hasPerms={permissionRef.current}

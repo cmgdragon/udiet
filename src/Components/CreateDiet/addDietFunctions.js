@@ -1,6 +1,6 @@
 import { uploadNewCourseMeal, uploadNewMeal, uploadNewCourseMealIngredient } from '../../Database/writeDietInfo';
 
-export const sendNewMeal = (userUid, dietId) => {
+export const sendNewMeal = (userUid, dietId, mealList, setMealList, getCourseMealImageList) => {
     const meal = document.querySelector('[diet-modal]')
                             .querySelector('[meal-object]');
 
@@ -48,14 +48,20 @@ export const sendNewMeal = (userUid, dietId) => {
             name: meal.querySelector('[diet-modal] [meal-name]').value,
             courseMeals
         };
+        console.log(mealList);
+        const maxKeyList = mealList ? Math.max(...Object.keys(mealList)) : 0;
+        const mealData = {...mealList, [maxKeyList]: newMeal};
+
         console.log(newMeal);
-        await uploadNewMeal(userUid, dietId, newMeal);
-        window.location.reload();
+        await uploadNewMeal(userUid, dietId, mealData);
+        
+        setMealList(mealData);
 
     });
 }
 
-export const sendNewCourseMeal = async (userUid, dietId, mealIndex) => {
+export const sendNewCourseMeal = async (userUid, dietId, mealKey, mealList, setMealList) => {
+    console.log("WAYT", mealKey)
     const meal = document.querySelector('[diet-modal]')
                             .querySelector('[coursemeal-object]');
 
@@ -92,11 +98,22 @@ export const sendNewCourseMeal = async (userUid, dietId, mealIndex) => {
         });
 
         currentCourseMeal['ingredients'] = courseMealIngredients;
-        await uploadNewCourseMeal(userUid, dietId, mealIndex, currentCourseMeal);
-        window.location.reload();
+
+        const oldCourseMeal = mealList[mealKey]?.courseMeals;
+        const courseMealKey =  oldCourseMeal ? Object.values(mealList[mealKey].courseMeals).length : 0;
+        const courseMeals = {
+            ...oldCourseMeal,
+            [courseMealKey]: currentCourseMeal
+        }
+
+        mealList[mealKey].courseMeals = courseMeals;
+        console.log(mealKey, courseMeals)
+        await uploadNewCourseMeal(userUid, dietId, mealKey, courseMeals);
+        setMealList(mealList);
+        //window.location.reload();
 }
 
-export const sendNewIngredient = async (userUid, dietId, mealIndex, courseIndex) => {
+export const sendNewIngredient = async (userUid, dietId, mealIndex, courseIndex, ingredientList, setIngredientList) => {
     const ingredient = document.querySelector('[diet-modal]')
                             .querySelector('[ingredient-object]');
 
@@ -108,6 +125,12 @@ export const sendNewIngredient = async (userUid, dietId, mealIndex, courseIndex)
         currentIngredient[key] = ingredientInput.value;
     });
 
-    await uploadNewCourseMealIngredient(userUid, dietId, mealIndex, courseIndex, currentIngredient);
-    window.location.reload();
+    const ingredientListLength = Object.values(ingredientList).length;
+    const ingredients = {
+        ...ingredientList,
+        [ingredientListLength]: currentIngredient
+    }
+
+    await uploadNewCourseMealIngredient(userUid, dietId, mealIndex, courseIndex, ingredients);
+    setIngredientList(ingredients);
 }

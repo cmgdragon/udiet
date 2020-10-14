@@ -13,6 +13,10 @@
     align-items: center;
 }
 
+div.diet-list:first-of-type {
+    margin-bottom: 3rem;
+}
+
 .diet-list-item {
     position: relative;
     width: 100%;
@@ -117,6 +121,10 @@
     background: linear-gradient(90deg, rgba(249,249,249,1) 0%, rgba(122,120,118,1) 50%, rgba(255,255,255,1) 100%);
     margin-bottom: 1.5rem;
     height: 1.4px;
+}
+
+.my-shared-label {
+    margin-top: 5rem;
 }
 
 .logout {

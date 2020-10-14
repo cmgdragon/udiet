@@ -11,8 +11,10 @@ const UserAuthContext = (props) => {
 
         auth.onAuthStateChanged(newUser => {
             try {
+
                 const { displayName, email, uid } = newUser;
                 setUser({ displayName, email, uid });
+
             } catch (error) {}
         });
         

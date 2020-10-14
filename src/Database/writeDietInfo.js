@@ -88,16 +88,16 @@ export const uploadNewCourseMealIngredient = async (userId, dietId, mealKey, cou
 
     const ingredientList = await getCourseMealIngredientLength(userId, dietId, mealKey, courseMealKey);
 
-    const ingredientKey =  ingredientList ? Object.values(ingredientList).length : 0;
+    /*const ingredientKey =  ingredientList ? Object.values(ingredientList).length : 0;
     const ingredients = {
         [ingredientKey]: ingredientObject
-    }
+    }*/
 
     try {
 
        await firebase.database()
         .ref(`diets/users/${userId}/${dietName}/mealData/${mealKey}/courseMeals/${courseMealKey}/ingredients`)
-        .update(ingredients)
+        .set(ingredientObject)
         
     } catch (error) {
         console.error(error);
@@ -113,16 +113,11 @@ export const uploadNewCourseMeal = async (userId, dietId, mealKey, courseMealObj
 
      const courseMealList = await getCourseMealLength(userId, dietId, mealKey);
 
-    const courseMealKey = courseMealList ? Object.values(courseMealList).length : 0;
-    const courseMeals = {
-        [courseMealKey]: courseMealObject
-    }
-
     try {
 
        await firebase.database()
         .ref(`diets/users/${userId}/${dietName}/mealData/${mealKey}/courseMeals`)
-        .update(courseMeals)
+        .set(courseMealObject)
         
     } catch (error) {
         console.error(error);
@@ -137,17 +132,14 @@ export const uploadNewMeal = async (userId, dietId, mealObject) => {
      : Object.getOwnPropertyNames(await dietList)[dietId];
 
     
-     const mealList = await getMealLength(userId, dietId);
-    const mealKey =  mealList ? Object.values(mealList).length : 0;
-    const mealData = {
-        [mealKey]: mealObject
-    }
+    const mealList = await getMealLength(userId, dietId);
+
 
     try {
 
        await firebase.database()
         .ref(`diets/users/${userId}/${dietName}/mealData`)
-        .update(mealData)
+        .set(mealObject)
         
     } catch (error) {
         console.error(error);

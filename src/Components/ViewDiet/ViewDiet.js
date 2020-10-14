@@ -51,10 +51,10 @@ const ViewDiet = props => {
                     
                    Object.values(dietUserList)[user.dietId] ?
                     <Meal dietObject={Object.values(dietUserList)[user.dietId]} 
-                    dietId={user.dietId} 
-                    userUid={user.uid} 
-                    notLoggedIn={user.notLoggedIn}
-                     />
+                        dietId={user.dietId} 
+                        userUid={user.uid} 
+                        notLoggedIn={user.notLoggedIn}
+                    />
 
                 : undefined}
 

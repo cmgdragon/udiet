@@ -13,6 +13,21 @@ export const getUserDiets = async userId => {
      }
 }
 
+export const getSharedDiets = async () => {
+
+    try {
+        const data = await firebase.database()
+            .ref(`sharedDiets`)
+            .once('value')
+
+        return data.exportVal();
+
+     } catch (error) {
+         console.error(error);
+     }
+
+}
+
 export const getDietSharedUsers = async (userId, dietId) => {
 
     const dietList = await getUserDiets(userId);

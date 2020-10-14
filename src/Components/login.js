@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { auth, providers } from '../Services/authProviders';
 import { UserContext } from '../Context/userContext';
+import { createNewUser } from '../Database/writeDietInfo';
 import styles from '../App.module.css';
 
 const Login = () => {
@@ -11,8 +12,7 @@ const Login = () => {
     const signInGoogle = async () => {
 
         try {
-            const response = await auth.signInWithPopup(providers.google);
-            console.log(response.user);        
+            await auth.signInWithPopup(providers.google);
         } catch (error) {
             console.log(error.message);
         }
