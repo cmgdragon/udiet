@@ -32,7 +32,6 @@ const App = () => {
 
   return (
       <BrowserRouter>
-        {console.log("app: "+user.uid)}
         <Switch>
 
           <PrivateRoute exact auth={user} path='/' component={DietList} />

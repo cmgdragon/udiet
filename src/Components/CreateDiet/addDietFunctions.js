@@ -1,6 +1,6 @@
 import { uploadNewCourseMeal, uploadNewMeal, uploadNewCourseMealIngredient } from '../../Database/writeDietInfo';
 
-export const sendNewMeal = (userUid, dietId, mealList, setMealList, getCourseMealImageList) => {
+export const sendNewMeal = (userUid, dietId, mealList, setMealList) => {
     const meal = document.querySelector('[diet-modal]')
                             .querySelector('[meal-object]');
 
@@ -48,20 +48,18 @@ export const sendNewMeal = (userUid, dietId, mealList, setMealList, getCourseMea
             name: meal.querySelector('[diet-modal] [meal-name]').value,
             courseMeals
         };
-        console.log(mealList);
-        const maxKeyList = mealList ? Math.max(...Object.keys(mealList)) : 0;
-        const mealData = {...mealList, [maxKeyList]: newMeal};
 
-        console.log(newMeal);
+        const maxKeyList = mealList ? Math.max(...Object.keys(mealList)) : 0;
+        const newKey = maxKeyList === 0 ? 1 : maxKeyList + 1;
+        const mealData = {...mealList, [newKey]: newMeal};
+
         await uploadNewMeal(userUid, dietId, mealData);
-        
         setMealList(mealData);
 
     });
 }
 
 export const sendNewCourseMeal = async (userUid, dietId, mealKey, mealList, setMealList) => {
-    console.log("WAYT", mealKey)
     const meal = document.querySelector('[diet-modal]')
                             .querySelector('[coursemeal-object]');
 
@@ -107,10 +105,8 @@ export const sendNewCourseMeal = async (userUid, dietId, mealKey, mealList, setM
         }
 
         mealList[mealKey].courseMeals = courseMeals;
-        console.log(mealKey, courseMeals)
         await uploadNewCourseMeal(userUid, dietId, mealKey, courseMeals);
         setMealList(mealList);
-        //window.location.reload();
 }
 
 export const sendNewIngredient = async (userUid, dietId, mealIndex, courseIndex, ingredientList, setIngredientList) => {
@@ -125,7 +121,7 @@ export const sendNewIngredient = async (userUid, dietId, mealIndex, courseIndex,
         currentIngredient[key] = ingredientInput.value;
     });
 
-    const ingredientListLength = Object.values(ingredientList).length;
+    const ingredientListLength = ingredientList ? Object.values(ingredientList).length : 0;
     const ingredients = {
         ...ingredientList,
         [ingredientListLength]: currentIngredient

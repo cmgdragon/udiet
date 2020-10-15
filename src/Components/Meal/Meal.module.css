@@ -3,6 +3,9 @@
     margin: 0;
     margin-bottom: 5rem;
     overflow-wrap: break-word;
+    width: fit-content;
+    align-self: center;
+    margin: 3rem auto;
 }
 
 .diet-list {
@@ -159,6 +162,48 @@
 .removeMeal:hover {
     background-color: rgb(202, 144, 144);
     cursor: pointer;
+}
+
+.edit-box {
+    display: flex;
+    position: absolute;
+    left: 92%;
+}
+
+.edit-box > i {
+    margin-left: .4rem;
+    padding: .2rem;
+    border-radius: 5px;
+    transition: opacity .5s;
+}
+
+.edit-box > i:hover {
+    cursor: pointer;
+    opacity: .6;
+}
+
+.edit-box > i:first-child {
+    background-color: rgb(120, 168, 240);
+}
+
+.hiddenEl {
+    visibility: hidden;
+}
+
+.undisplay {
+    display: none;
+}
+
+.visibleEl {
+    visibility: visible;
+}
+
+.green {
+    background-color: rgb(70, 196, 70) !important;
+}
+
+.red {
+    background-color: rgb(230, 105, 105) !important;
 }
 
 @media (max-width: 750px) {

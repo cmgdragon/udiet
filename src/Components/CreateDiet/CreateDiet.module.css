@@ -33,7 +33,6 @@ input, label {
 
 .diet-name {
     display: block;
-    width: 99%;
     font-size: 5rem;
     opacity: .5;
 }
@@ -155,6 +154,17 @@ i {
     height: 1.1rem;
 }
 
+.is-private {
+    margin-top: 1.5rem;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+}
+
+.is-private > input {
+    width: 2rem;
+}
+
 .ingredient-button {
     margin: .2rem 0 1rem 0;
 }
@@ -177,4 +187,22 @@ i {
 
 .goback {
     visibility: unset !important;
+}
+
+@media (max-width: 750px) {
+    form {
+        margin: 1rem 0;
+    }
+    .course-meal {
+        margin: 1rem 0;
+    }
+    .ingredient {
+        margin: 1rem 0;
+    }
+    .meal-button {
+        margin-left: 1rem;
+    }
+    .is-private {
+        margin-left: 1rem;
+    }
 }

@@ -54,10 +54,6 @@
     margin-top: 1.2rem;
 }
 
-.coursemeal-tab-list {
-   
-}
-
 .coursemeal-tab {
     padding: .3rem .6rem;
     margin-bottom: .7rem;
@@ -103,7 +99,6 @@
 .edit-box {
     display: flex;
     position: absolute;
-    bottom: 90%;
     left: 92%;
 }
 
@@ -133,6 +128,7 @@
 
 .visibleEl {
     visibility: visible;
+    resize: vertical;
 }
 
 .green {

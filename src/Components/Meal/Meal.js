@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import styles from './Meal.module.css';
 import MealOption from '../MealOption';
 import { UserContext } from '../../Context/userContext';
-import { modifyCouseMealImageInfo, uploadNewCourseMealImage } from '../../Database/writeDietInfo';
+import { modifyCouseMealImageInfo, uploadNewCourseMealImage, changeDietName, changeMealName } from '../../Database/writeDietInfo';
 import { deleteCourseMealImage, deleteDietMeal } from '../../Database/deleteDietInfo';
 import { getCourseMealImage } from '../../Database/readDietInfo';
 import { userHasEditPermissions } from '../../Database/readDietInfo';
@@ -19,26 +19,24 @@ const Meal = props => {
     const { dietObject, dietId, userUid, notLoggedIn } = props;
     const { mealData, dietName } = dietObject;
     const [mealList, setMealList] = useState(mealData);
-    const [mealDisplayed, setMealDisplayed] = useState({meal: undefined, meals: {}});
+    const [mealDisplayed, setMealDisplayed] = useState({meal: undefined, meals: {}, mealKey: undefined});
     const [courseMealImages, setcourseMealImages] = useState(undefined);
-    const [permissionGiven, setPermissionGiven] = useState(false);
     const [modalMealShown, setModalMealShown] = useState(false);
     const [modalCourseShown, setModalCourseShown] = useState(false);
     const userContext = useContext(UserContext);
 
     useEffect(() => {
-        permissionRef.current = false;
+        userHasEditPermissions(userContext.uid, userContext.email, userUid, dietId).then(res => permissionRef.current = res);
         if (!!document.getElementById('back-button'))
             document.getElementById('back-button').classList.add(styles.goback);
-        getCourseMealImageList();
-        userHasEditPermissions(userContext.uid, userContext.email, userUid, dietId).then(res => {permissionRef.current = res; setPermissionGiven(true)});
-    }, []);
+        if (mealList) getCourseMealImageList();
+    }, [mealList]);
 
     const optionClick = (event, mealKey, courseKey, courseIndex) => {
 
         setMealDisplayed(
             {
-                meal: mealData[mealKey].courseMeals[courseKey],
+                meal: mealList[mealKey].courseMeals[courseKey],
                 meals:
                  {
                     ...mealDisplayed.meals,
@@ -75,7 +73,7 @@ const Meal = props => {
         const courseMealImageInfo = [];
         let mealIndex = 0;
 
-        for (const [mealKey, { courseMeals }] of Object.entries(mealData)) {
+        for (const [mealKey, { courseMeals }] of Object.entries(mealList)) {
 
             courseMealImageInfo.push({mealOptions: []});
 
@@ -83,7 +81,7 @@ const Meal = props => {
 
                 courseMealImageInfo[mealIndex].mealOptions.push({
                     courseKey,
-                    imageUrl: mealOption.hasImage ? await getCourseMealImage(userUid, dietId, mealKey, courseKey) : {}
+                    imageUrl: mealOption.hasImage ? await getCourseMealImage(userUid, dietId, mealKey, courseKey) : undefined
                 })            
             }
 
@@ -92,7 +90,6 @@ const Meal = props => {
         }
 
         setcourseMealImages(courseMealImageInfo);
-console.log(courseMealImageInfo)
     }
 
     const uploadCourseMealImage = async (mealIndex, courseMealIndex) => {
@@ -159,7 +156,7 @@ console.log(courseMealImageInfo)
 
         if (event.target.files[0] !== undefined) {
             event.target.previousElementSibling.classList = ["fa fa-upload"];
-            event.target.previousElementSibling.style.backgroundColor = "green";
+            event.target.previousElementSibling.style.backgroundColor = "#89ea89";
             if (!!event.target.nextElementSibling)
                  event.target.nextElementSibling.classList = [styles.hide];
         }
@@ -187,53 +184,85 @@ console.log(courseMealImageInfo)
 
     const showForm = form => form(true);
 
-    const closeForm = form => {
-        if (window.confirm('¿Quieres cancelar esta acción?')) {
-            form(false);
-        }
-    }
+    const updateCourseMeal = newMealList => setMealList(newMealList);
 
-    const updateCourseMeal = newMealList => { setMealList(newMealList); console.log(mealList)}
-
-
-    const removeMeal = async (event, mealIndex) => {
-        const mealNameEl = event.target.parentElement;
-        const mealListEl = mealNameEl.nextElementSibling;
-        const mealCourseListEl = mealListEl.nextElementSibling;
+    const removeMeal = async mealIndex => {
         if (window.confirm('¿Quieres borrar esta comida?')) {
             await deleteDietMeal(userUid, dietId, mealIndex);
             delete mealList[mealIndex];
-            delete courseMealImages[mealIndex];
             setMealList(mealList);
-            mealCourseListEl.remove();
-            mealListEl.remove();
-            mealNameEl.remove();
+            setMealDisplayed({meal: undefined, meals: {}, mealKey: undefined})
         }
     }
 
+    const cancelEditOperation = (elementToShow, elementToDelete, text, mealIndex) => {
+        elementToDelete.remove();
+        elementToShow.classList.remove(styles.hiddenEl);
+        elementToShow.firstChild.innerText = text;
+    }
+
+    const editDietName = (event, userId, dietId) => {
+        
+        const currentTitle = event.target.parentElement;
+        const parentEl = event.target.parentElement.parentElement;
+        const newInput = document.createElement('input');
+
+        const inputWrapper = document.createElement('div');
+        const editBox = document.createElement('div');
+        editBox.classList.add(styles['edit-box']);
+        const oldText = parentEl.firstChild.innerText;
+
+        const checkButton = document.createElement('i');
+        const cancelButton = document.createElement('i');
+        checkButton.classList = [`fa fa-check ${styles.green}`]
+        checkButton.addEventListener('click', async () => changeDietName(userId, dietId, "newName"));
+
+        cancelButton.classList = [`fa fa-ban ${styles.red}`]
+        cancelButton.addEventListener('click', () => cancelEditOperation(currentTitle,
+            editBox, oldText));
+
+        editBox.prepend(checkButton);
+        editBox.appendChild(cancelButton);
+
+        inputWrapper.appendChild(newInput);
+        inputWrapper.appendChild(editBox);
+        newInput.value = oldText;
+        newInput.select();
+        parentEl.prepend(inputWrapper);
+        
+        currentTitle.classList.add(styles.hiddenEl);
+        inputWrapper.classList.add(styles.visibleEl);
+
+newInput.select();
+
+
+    }
+
     return (
-    <div ref={permissionRef} test="s">
-        <DietModal shown={modalMealShown} sendModal={() => sendNewMeal(userUid, dietId, mealList, setMealList, getCourseMealImageList)} closeModal={() => closeForm(setModalMealShown)}>
+    <div ref={permissionRef}>
+        <DietModal shown={modalMealShown} sendModal={() => sendNewMeal(userUid, dietId, mealList, setMealList)} closeFn={setModalMealShown}>
             <MealForm canRemove={false} initNumber={1}></MealForm>
         </DietModal>
-        <DietModal shown={modalCourseShown} sendModal={() => sendNewCourseMeal(userUid, dietId, mealDisplayed.mealKey, mealList, setMealList)} closeModal={() => closeForm(setModalCourseShown)}>
+        <DietModal shown={modalCourseShown} sendModal={() => sendNewCourseMeal(userUid, dietId, mealDisplayed.mealKey, mealList, setMealList)} closeFn={setModalCourseShown}>
             <CourseMealForm canRemove={false} initNumber={1}></CourseMealForm>
         </DietModal>
-        <h1 className={styles['diet-name']}>{dietName}</h1>
 
-        {!permissionRef.current ? undefined : <div onClick={() => showForm(setModalMealShown)} className={styles['add-meal']}>AñadirTF</div> }
+        <h1 className={styles['diet-name']}><span>{dietName}</span>
+        <i onClick={event => editDietName(event, userUid, dietId)} className="fa fa-pencil" aria-hidden="true"></i></h1>
+
+        {!permissionRef.current ? undefined : <div onClick={() => showForm(setModalMealShown)} className={styles['add-meal']}>Añadir comida</div> }
 
         <div className={styles['diet-list']}>
 
             <div className={styles['meal-box']}>
 
-                {
+                { mealList ?
                     Object.values(mealList).map((meal, mealIndex) => {
                         const mealKey = Object.keys(mealList)[mealIndex];
                         return (
                             <React.Fragment key={mealKey}>
-                                <h2 className={styles['meal-name']}>{meal.name}
-                                    {!permissionRef.current ? undefined : <i onClick={event => removeMeal(event, mealKey)} className={`fa fa-trash ${styles.removeMeal}`} aria-hidden="true"></i> }
+                                <h2 className={styles['meal-name']} onClick={()=>console.log("caca")}>{meal.name}
+                                    {!permissionRef.current ? undefined : <i onClick={() => removeMeal(mealKey)} className={`fa fa-trash ${styles.removeMeal}`} aria-hidden="true"></i> }
                                 </h2>
 
                                     <div className={permissionRef.current ? styles['meal-list-padding'] : styles['meal-list']}>
@@ -242,7 +271,7 @@ console.log(courseMealImageInfo)
                                         mealDisplayed.mealKey = mealKey;
                                         setMealDisplayed(mealDisplayed);
                                         showForm(setModalCourseShown);
-                                    }} className={styles['add-coursemeal']}>Añadir</div> }
+                                    }} className={styles['add-coursemeal']}>Añadir plato</div> }
                                     
                                     {
                     
@@ -258,7 +287,7 @@ console.log(courseMealImageInfo)
                                                 
                                                 style={ courseMealImages[mealIndex]?.mealOptions[courseIndex]?.imageUrl ?
                                                     {backgroundImage: `url(${courseMealImages[mealIndex]?.mealOptions[courseIndex]?.imageUrl})`}
-                                                : ''}
+                                                : {}}
 
                                                 
                                                 >
@@ -280,7 +309,7 @@ console.log(courseMealImageInfo)
                                                         <i
                                                         onClick={(event) => removeCourseImage(event, mealKey, courseKey)}
                                                         className={`fa fa-times ${styles['input-clean-image']} ${
-                                                                typeof courseMealImages[mealIndex]?.mealOptions[courseIndex]?.imageUrl === 'object' ? styles.hide : ''
+                                                                !courseMealImages[mealIndex]?.mealOptions[courseIndex]?.imageUrl ? styles.hide : ''
                                                             }` 
                                                         }
 
@@ -323,7 +352,7 @@ console.log(courseMealImageInfo)
                             </React.Fragment>
                         )
                     })
-                }
+                : undefined}
 
 
             </div>

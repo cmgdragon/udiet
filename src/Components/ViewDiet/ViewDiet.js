@@ -3,7 +3,7 @@ import styles from './Diet.module.css';
 import Meal from '../Meal';
 import { signOut } from '../../Services/authProviders';
 import { getUserDiets } from '../../Database/readDietInfo';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import Header from '../Header';
 import Addthis from "react-load-script";
 

@@ -74,8 +74,6 @@ const MealOption = props => {
         editBox.classList.add(styles.visibleEl);
 
         newTextarea.classList.add(styles.visibleEl);
-        editBox.style.bottom = "4rem";
-        editBox.style.left = "85%";
 
         const checkButton = document.createElement('i');
         const cancelButton = document.createElement('i');
@@ -104,12 +102,6 @@ const MealOption = props => {
 
     const showForm = () => setModalShown(true);
 
-    const closeForm = () => {
-        if (window.confirm('¿Quieres cancelar esta acción?')) {
-            setModalShown(false);
-        }
-    }
-
     const removeCourseMeal = async () => {
         const courseMealImage = document.getElementById(`image-${mealKey}-${courseKey}`).parentElement;
         if (window.confirm('¿Quieres borrar este plato?')) {
@@ -122,7 +114,7 @@ const MealOption = props => {
 
     return (
     <div course-meal={`course${courseKey}`}>
-        <DietModal shown={modalShown} closeModal={closeForm} sendModal={() => sendNewIngredient(userUid, dietId, mealKey, courseKey, ingredientList, setIngredientList)}>
+        <DietModal shown={modalShown} closeFn={setModalShown} sendModal={() => sendNewIngredient(userUid, dietId, mealKey, courseKey, ingredientList, setIngredientList)}>
             <IngredientForm canRemove={false} initNumber={1}></IngredientForm>
         </DietModal>
         <div className={
@@ -160,7 +152,7 @@ const MealOption = props => {
 
                     <div coursemeal-info="ingredients" className={styles['ingredient-list']}>
                         
-                    { !hasPerms ? undefined : <div onClick={showForm} className={styles['add-ingredient']}>Añadir</div> }
+                    { !hasPerms ? undefined : <div onClick={showForm} className={styles['add-ingredient']}>Añadir ingrediente</div> }
 
                     { ingredientList ?
                         Object.values(ingredientList).map(({name, quantity, brand, location, info}, index) => {

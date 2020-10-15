@@ -1,13 +1,11 @@
 import React, { useContext } from 'react';
 import { auth, providers } from '../Services/authProviders';
 import { UserContext } from '../Context/userContext';
-import { createNewUser } from '../Database/writeDietInfo';
 import styles from '../App.module.css';
 
 const Login = () => {
 
     const user = useContext(UserContext);
-    console.log("uid: "+user.uid);
 
     const signInGoogle = async () => {
 

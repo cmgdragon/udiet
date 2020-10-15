@@ -1,0 +1,34 @@
+{
+    "diets" : {
+      "users" : {
+        "wsFsr4sLsEVszzsk2t574vpNLY9" : {
+          "-MJcprDyOWdnzH_rLkP4" : {
+            "dietName" : "My diet Name",
+            "isPrivate" : false,
+            "mealData" : [ {
+              "courseMeals" : [ {
+                "hasImage" : false,
+                "ingredients" : [ {
+                  "brand" : "brand",
+                  "info" : "more info",
+                  "location" : "location",
+                  "name" : "ingredient name",
+                  "quantity" : "quantity"
+                } ],
+                "name" : "course name"
+              } ],
+              "name" : "meal name"
+            } ],
+            "sharedWith" : [ "shared@email.com" ]
+          }
+        }
+      }
+    },
+    "sharedDiets" : [ null, {
+      "dietId" : 0,
+      "dietName" : "My diet Name",
+      "dietUserUid" : "wsFsr4sLsEVszzsk2t574vpNLY9",
+      "email" : "shared@email.com"
+    } ]
+  }
+  

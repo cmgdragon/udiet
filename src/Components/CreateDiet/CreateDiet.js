@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styles from './CreateDiet.module.css';
-import dietStyles from '../ViewDiet/Diet.module.css';
 import MealForm from './MealForm';
 import { addNewUserDiet } from '../../Database/writeDietInfo';
 import { UserContext } from '../../Context/userContext';
 import { signOut } from '../../Services/authProviders';
-import { Link } from 'react-router-dom';
 import Header from '../Header';
 
 const CreateDiet = () => {
@@ -117,7 +115,10 @@ const CreateDiet = () => {
                 <input type="text" id="diet-name" className={styles['diet-name']} placeholder="Nombre de la dieta" required/>
             </div>
 
-            <div className={styles.checkboxes}><input id="isprivate" type="checkbox"/><label onClick={activateCheck}>Hacer privada</label></div>
+            <div className={`${styles.checkboxes} ${styles['is-private']}`}>
+                <input id="isprivate" type="checkbox"/>
+                <label onClick={activateCheck}>Hacer privada</label>
+            </div>
 
             <div onClick={addMeal} className={styles['meal-button']}>
                 Añadir Comida

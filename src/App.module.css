@@ -122,7 +122,7 @@ footer > a {
   border-radius: 50%;
 }
 
-footer > a:visited {
+footer > a:visited, footer > a:link {
   color: inherit;
 }
 

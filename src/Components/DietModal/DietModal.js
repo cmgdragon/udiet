@@ -4,7 +4,7 @@ import styles from './DietModal.module.css';
 
 const DietModal = props => {
 
-    const { shown, closeModal, sendModal } = props;
+    const { shown, sendModal, closeFn } = props;
 
     if (shown)
         document.body.setAttribute('style', 'overflow:hidden;')
@@ -14,15 +14,22 @@ const DietModal = props => {
         <div diet-modal=''>
             <form className={styles['modal-form']} onSubmit={event => {
                 event.preventDefault();
-                if (window.confirm('¿Quieres enviar estos datos?')) sendModal();
+                if (window.confirm('¿Quieres enviar estos datos?')) { 
+                    sendModal();
+                    document.body.removeAttribute('style');
+                    closeFn(false);
+                }
             }}>
                 {props.children}
                 <div className={styles['button-box']}>
                     <input className={styles.submit} type="submit" value="Enviar" />
-                    <div onClick={() => { 
-                        document.body.removeAttribute('style');
-                        closeModal(); 
-                    }} className={styles.cancel}>Cancelar</div>
+                    <div onClick={() => {
+                        if (window.confirm('¿Quieres cancelar esta acción?')) { 
+                            document.body.removeAttribute('style');
+                            closeFn(false);
+                        }
+                    }}
+                    className={styles.cancel}>Cancelar</div>
                 </div>
             </form>
         </div>
