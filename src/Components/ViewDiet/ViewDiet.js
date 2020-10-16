@@ -6,6 +6,8 @@ import { getUserDiets } from '../../Database/readDietInfo';
 import { Redirect } from 'react-router-dom';
 import Header from '../Header';
 import Addthis from "react-load-script";
+import firebase from 'firebase';
+import 'firebase/auth';
 
 const ViewDiet = props => {
     const [dietUserList, setDietUserList] = useState({});
@@ -18,7 +20,6 @@ const ViewDiet = props => {
     };
 
     useEffect(() => {
-    
         getUserDiets(user.uid).then(diets => {
             setDietUserList(diets);
         });

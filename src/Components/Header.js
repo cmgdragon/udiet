@@ -6,7 +6,7 @@ const Header = ({user, signOut}) => {
     return(
     <header className={styles.userbuttons}>
         <Link to={'/'} id="back-button" className={`fa fa-arrow-left ${styles.goback}`} aria-hidden="true"></Link>
-        <button className={styles.logout} onClick={signOut}>Salir ({user.displayName})</button>
+        { !user.notLoggedIn ? <button className={styles.logout} onClick={signOut}>Salir ({user.displayName})</button> : undefined }
     </header>
     )
 }

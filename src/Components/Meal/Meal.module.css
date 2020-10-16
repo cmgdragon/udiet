@@ -2,10 +2,11 @@
     text-align: center;
     margin: 0;
     margin-bottom: 5rem;
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
     width: fit-content;
     align-self: center;
     margin: 3rem auto;
+    position: relative;
 }
 
 .diet-list {
@@ -18,17 +19,28 @@
     width: 100%;
 }
 
-
 .meal-name {
-    position: absolute;
     margin-top: -3rem;
-    margin-bottom: 5rem;
+    display: flex;
+    position: relative;
+    align-items: center;
 }
 
 .meal-box {
     border-radius: .2rem;
     margin: 0rem 1rem;
     padding: 0rem 1rem;
+}
+
+.meal-name i {
+    max-height: 1.2rem;
+    padding: .2rem;
+    border-radius: 5px;
+    font-size: 1.3rem;
+}
+
+.meal-name > span {
+    order: 1;
 }
 
 .meal-list {
@@ -128,7 +140,7 @@
     border-radius: 3px;
     border: 1px solid #7e7e7e;
     float: right;
-    margin: 0 2rem 2rem 0;
+    margin: 0 2rem 4rem 0;
 }
 
 .add-coursemeal {
@@ -149,14 +161,13 @@
 }
 
 .removeMeal {
-    position: absolute;
     background-color: rgb(230, 105, 105);
     color: rgb(44, 43, 43);
-    font-size: 1.4rem;
+    font-size: 1rem !important;
+    padding: .3rem !important;
+    margin-left: .1rem;
     transition: all .5s;
-    padding: .2rem;
-    border-radius: 3px;
-    margin-left: .5rem;
+    order: 3;
 }
 
 .removeMeal:hover {
@@ -164,38 +175,66 @@
     cursor: pointer;
 }
 
-.edit-box {
+.meal-input-wrapper {
+    width: fit-content;
+    position: relative;
     display: flex;
-    position: absolute;
-    left: 92%;
+    margin-bottom: 1rem;
+    margin-top: -2rem;
+    font-size: 1.3rem;
 }
 
-.edit-box > i {
+.meal-input-wrapper > div {
+    display: flex;
+}
+
+.diet-input-wrapper {
+    margin: 3rem 50%;
+    transform: translateX(-50%);
+    width: fit-content;
+    font-size: 1.3rem;
+}
+
+.diet-input-wrapper i, .meal-input-wrapper i {
     margin-left: .4rem;
     padding: .2rem;
     border-radius: 5px;
     transition: opacity .5s;
 }
 
-.edit-box > i:hover {
+.diet-name-edit {
+    background-color: rgb(120, 168, 240);
+    margin-left: .3rem;
+    border-radius: 5px;
+    transition: opacity .5s;
+    position: absolute;
+    font-size: 1.1rem;
+    padding: .3rem;
+    bottom: 2rem;
+    left: 95%;
+    order: 2;
+}
+
+.meal-name-edit {
+    background-color: rgb(120, 168, 240);
+    font-size: 1rem !important;
+    bottom: inherit;
+    padding: .3rem !important;
+    border-radius: 3px;
+    margin-left: .3rem;
+    transition: opacity .5s;
+    position: relative;
+    order: 1;
+}
+
+.diet-input-wrapper i:hover, .diet-name-edit:hover,
+.meal-name-edit:hover, .meal-input-wrapper i:hover {
     cursor: pointer;
     opacity: .6;
 }
 
-.edit-box > i:first-child {
-    background-color: rgb(120, 168, 240);
-}
-
-.hiddenEl {
-    visibility: hidden;
-}
-
 .undisplay {
     display: none;
-}
-
-.visibleEl {
-    visibility: visible;
 }
 
 .green {

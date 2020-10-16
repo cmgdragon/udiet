@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import styles from './Meal.module.css';
 import MealOption from '../MealOption';
 import { UserContext } from '../../Context/userContext';
-import { modifyCouseMealImageInfo, uploadNewCourseMealImage, changeDietName, changeMealName } from '../../Database/writeDietInfo';
+import { modifyCouseMealImageInfo, uploadNewCourseMealImage } from '../../Database/writeDietInfo';
 import { deleteCourseMealImage, deleteDietMeal } from '../../Database/deleteDietInfo';
 import { getCourseMealImage } from '../../Database/readDietInfo';
 import { userHasEditPermissions } from '../../Database/readDietInfo';
@@ -11,7 +11,11 @@ import CourseMealForm from '../CreateDiet/CourseMealForm';
 import MealForm from '../CreateDiet/MealForm';
 import Skeleton from 'react-loading-skeleton';
 import { sendNewMeal, sendNewCourseMeal } from '../CreateDiet/addDietFunctions';
+import { editDietName, editMealName } from './mealEditFunctions';
 import Compressor from 'compressorjs';
+import * as admin from 'firebase-admin';
+
+admin.initializeApp();
 
 const Meal = props => {
 
@@ -26,6 +30,13 @@ const Meal = props => {
     const userContext = useContext(UserContext);
 
     useEffect(() => {
+        /*admin.auth().createCustomToken(userContext.uid)
+        .then(function(customToken) {
+          // Send token back to client
+        })
+        .catch(function(error) {
+          console.log('Error creating custom token:', error);
+        });*/
         userHasEditPermissions(userContext.uid, userContext.email, userUid, dietId).then(res => permissionRef.current = res);
         if (!!document.getElementById('back-button'))
             document.getElementById('back-button').classList.add(styles.goback);
@@ -195,49 +206,6 @@ const Meal = props => {
         }
     }
 
-    const cancelEditOperation = (elementToShow, elementToDelete, text, mealIndex) => {
-        elementToDelete.remove();
-        elementToShow.classList.remove(styles.hiddenEl);
-        elementToShow.firstChild.innerText = text;
-    }
-
-    const editDietName = (event, userId, dietId) => {
-        
-        const currentTitle = event.target.parentElement;
-        const parentEl = event.target.parentElement.parentElement;
-        const newInput = document.createElement('input');
-
-        const inputWrapper = document.createElement('div');
-        const editBox = document.createElement('div');
-        editBox.classList.add(styles['edit-box']);
-        const oldText = parentEl.firstChild.innerText;
-
-        const checkButton = document.createElement('i');
-        const cancelButton = document.createElement('i');
-        checkButton.classList = [`fa fa-check ${styles.green}`]
-        checkButton.addEventListener('click', async () => changeDietName(userId, dietId, "newName"));
-
-        cancelButton.classList = [`fa fa-ban ${styles.red}`]
-        cancelButton.addEventListener('click', () => cancelEditOperation(currentTitle,
-            editBox, oldText));
-
-        editBox.prepend(checkButton);
-        editBox.appendChild(cancelButton);
-
-        inputWrapper.appendChild(newInput);
-        inputWrapper.appendChild(editBox);
-        newInput.value = oldText;
-        newInput.select();
-        parentEl.prepend(inputWrapper);
-        
-        currentTitle.classList.add(styles.hiddenEl);
-        inputWrapper.classList.add(styles.visibleEl);
-
-newInput.select();
-
-
-    }
-
     return (
     <div ref={permissionRef}>
         <DietModal shown={modalMealShown} sendModal={() => sendNewMeal(userUid, dietId, mealList, setMealList)} closeFn={setModalMealShown}>
@@ -248,7 +216,10 @@ newInput.select();
         </DietModal>
 
         <h1 className={styles['diet-name']}><span>{dietName}</span>
-        <i onClick={event => editDietName(event, userUid, dietId)} className="fa fa-pencil" aria-hidden="true"></i></h1>
+        { !permissionRef.current ? undefined :
+        <i onClick={event => editDietName(event, userUid, dietId)} className={`fa fa-pencil ${styles['diet-name-edit']}`} aria-hidden="true"></i>
+        }
+        </h1>
 
         {!permissionRef.current ? undefined : <div onClick={() => showForm(setModalMealShown)} className={styles['add-meal']}>Añadir comida</div> }
 
@@ -260,9 +231,13 @@ newInput.select();
                     Object.values(mealList).map((meal, mealIndex) => {
                         const mealKey = Object.keys(mealList)[mealIndex];
                         return (
-                            <React.Fragment key={mealKey}>
-                                <h2 className={styles['meal-name']} onClick={()=>console.log("caca")}>{meal.name}
-                                    {!permissionRef.current ? undefined : <i onClick={() => removeMeal(mealKey)} className={`fa fa-trash ${styles.removeMeal}`} aria-hidden="true"></i> }
+                            <div key={mealKey}>
+                                <h2 className={styles['meal-name']}><span>{meal.name}</span>
+                                {!permissionRef.current ? undefined : <>
+                                    <i onClick={event => editMealName(event, userUid, dietId, mealKey)} className={`fa fa-pencil ${styles['meal-name-edit']}`} aria-hidden="true"></i>
+                                    <i onClick={() => removeMeal(mealKey)} className={`fa fa-trash ${styles.removeMeal}`} aria-hidden="true"></i>
+                                    </>
+                                }
                                 </h2>
 
                                     <div className={permissionRef.current ? styles['meal-list-padding'] : styles['meal-list']}>
@@ -349,7 +324,7 @@ newInput.select();
 
                                     }
                                 </div>
-                            </React.Fragment>
+                            </div>
                         )
                     })
                 : undefined}

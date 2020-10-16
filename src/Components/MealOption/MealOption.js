@@ -3,9 +3,9 @@ import styles from './MealOption.module.css';
 import Ingredient from '../Ingredient';
 import DietModal from '../DietModal';
 import IngredientForm from '../CreateDiet/IngredientForm';
-import { modifyCourseMealInfo } from '../../Database/writeDietInfo';
 import { deleteDietCourseMeal } from '../../Database/deleteDietInfo';
 import { sendNewIngredient } from '../CreateDiet/addDietFunctions';
+import { editCourseMealName, editMealInfo } from './mealOptionEditFunctions';
 
 const MealOption = props => {
   
@@ -48,56 +48,6 @@ const MealOption = props => {
 
     }
 
-    const cancelEditOperation = (contentEl, newTextarea, editBox, checkButton, cancelButton, content) => {
-        newTextarea.remove();
-        contentEl.classList.remove(styles.hiddenEl);
-        editBox.classList.remove(styles.visibleEl);
-        editBox.style.bottom = "";
-        editBox.style.left = "92%";
-        contentEl.querySelector('p').innerText = content;
-        checkButton.remove();
-        cancelButton.remove();
-        editBox.querySelector('i').classList.remove(styles.undisplay);
-    }
-
-    const editMealInfo = event => {
-        const newTextarea = document.createElement('textarea');
-        const contentEl = event.target.parentElement.parentElement;
-        const editBox = event.target.parentElement;
-        const oldText = contentEl.lastChild.textContent;
-        newTextarea.value = oldText;
-        contentEl.lastChild.textContent = "";
-
-        contentEl.appendChild(newTextarea);
-        newTextarea.select();
-        contentEl.classList.add(styles.hiddenEl);
-        editBox.classList.add(styles.visibleEl);
-
-        newTextarea.classList.add(styles.visibleEl);
-
-        const checkButton = document.createElement('i');
-        const cancelButton = document.createElement('i');
-        checkButton.classList = [`fa fa-check ${styles.green}`]
-        checkButton.addEventListener('click', event => sendNewMealInfo(event,
-            contentEl, newTextarea, editBox, checkButton, cancelButton, newTextarea.value));
-
-        cancelButton.classList = [`fa fa-ban ${styles.red}`]
-        cancelButton.addEventListener('click', () => cancelEditOperation(contentEl,
-            newTextarea, editBox, checkButton, cancelButton, oldText));
-
-        event.target.classList.add(styles.undisplay);
-        editBox.prepend(checkButton);
-        editBox.appendChild(cancelButton);
-    }
-
-    const sendNewMealInfo = async (event, contentEl, newTextarea, editBox, checkButton, cancelButton, content) => {
-        const property = Array.from(event.target.parentElement.parentElement.attributes)
-            .find(a => a.name === "coursemeal-info").value;
-        const newContent = event.target.parentElement.nextElementSibling.nextElementSibling.value;
-        await modifyCourseMealInfo(userUid, dietId, mealKey, courseKey, property, newContent);
-        cancelEditOperation(contentEl, newTextarea, editBox, checkButton, cancelButton, content);
-    }
-
     const updateIngredients = newIngredientList => setIngredientList(newIngredientList);
 
     const showForm = () => setModalShown(true);
@@ -120,10 +70,13 @@ const MealOption = props => {
         <div className={
                 !display ? styles.courseMealName : courseIndex === 0 ? styles.courseMealName + " " + styles['courseMealName-displayed']
                 : styles.courseMealName + " " + styles['courseMealName-displayed'] + " " + styles['courseMealName-displayed-top']
-            }>{name}
+            }><div><span>{name}</span>
 
-            { !hasPerms ? undefined : <i onClick={removeCourseMeal} className={`fa fa-trash ${styles.removeCourse}`} aria-hidden="true"></i> }
-            
+                { !hasPerms ? undefined : <div className={styles['meal-name-buttons-div']}>
+                    <i onClick={event => editCourseMealName(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil ${styles['coursemeal-name-edit']}`} aria-hidden="true"></i>
+                    <i onClick={removeCourseMeal} className={`fa fa-trash ${styles.removeCourse}`} aria-hidden="true"></i>
+                </div>}
+            </div>
             </div>
         <div  className={
         !display ? styles['options-box'] : styles['options-box'] + " " + styles.displayed
@@ -143,7 +96,7 @@ const MealOption = props => {
               
                     <div coursemeal-info="properties" className={styles.courseMealInfo}>
                     { hasPerms ? <div className={styles['edit-box']}>
-                            <i onClick={editMealInfo} className={`fa fa-pencil`} aria-hidden="true"></i>
+                            <i onClick={event => editMealInfo(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil`} aria-hidden="true"></i>
                         </div>
                     : undefined}
                     <p> { properties ? properties : undefined} </p>
@@ -184,7 +137,7 @@ const MealOption = props => {
                 
                 <div coursemeal-info="recipe" className={styles.courseMealInfo}>
                 { hasPerms ? <div className={styles['edit-box']}>
-                            <i onClick={editMealInfo} className={`fa fa-pencil`} aria-hidden="true"></i>
+                            <i onClick={event => editMealInfo(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil`} aria-hidden="true"></i>
                         </div>
                     : undefined}
                 <p> { recipe ? recipe : undefined} </p>
@@ -192,7 +145,7 @@ const MealOption = props => {
                 
                 <div coursemeal-info="comments" className={styles.courseMealInfo}>
                 { hasPerms ? <div className={styles['edit-box']}>
-                            <i onClick={editMealInfo} className={`fa fa-pencil`} aria-hidden="true"></i>
+                            <i onClick={event => editMealInfo(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil`} aria-hidden="true"></i>
                         </div>
                     : undefined}
                 <p> { comments ? comments : undefined} </p>

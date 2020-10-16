@@ -33,11 +33,12 @@
     top: -1.2rem;
     background: white;
     transition: all .5s ease-in;
+    display: flex;
 }
 
 .courseMealName-displayed {
-    transform: scale(1);
-    left: 45%;
+    transform: scale(1) translateX(-50%);
+    left: 50%;
 }
 
 .courseMealName-displayed-top {
@@ -118,6 +119,64 @@
     background-color: rgb(120, 168, 240);
 }
 
+.coursemeal-input-wrapper {
+    width: fit-content;
+    position: relative;
+    display: flex;
+}
+
+.coursemeal-input-wrapper > div {
+    display: flex;
+}
+
+.coursemeal-input-wrapper i {
+    margin-left: .4rem;
+    padding: .2rem;
+    border-radius: 5px;
+    transition: opacity .5s;
+}
+
+.coursemeal-name-edit {
+    background-color: rgb(120, 168, 240);
+    font-size: 1rem;
+    transition: all .5s;
+    bottom: inherit;
+    padding: .3rem;
+    border-radius: 3px;
+    left: 100%;
+    margin-left: .3rem;
+}
+
+.removeCourse {
+    background-color: rgb(230, 105, 105);
+    color: rgb(44, 43, 43);
+    font-size: 1rem;
+    transition: all .5s;
+    padding: .3rem;
+    left: 100%;
+    border-radius: 3px;
+    top: 4px;
+    margin-left: .3rem;
+}
+
+.removeCourse:hover {
+    background-color: rgb(202, 144, 144);
+    cursor: pointer;
+}
+
+.meal-name-buttons-div {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: -.5rem;
+    left: 100%;
+}
+
+.coursemeal-name-edit:hover, .coursemeal-input-wrapper i:hover {
+    cursor: pointer;
+    opacity: .6;
+}
+
 .hiddenEl {
     visibility: hidden;
 }
@@ -156,24 +215,6 @@
     opacity: .7;
 }
 
-.removeCourse {
-    position: absolute;
-    background-color: rgb(230, 105, 105);
-    color: rgb(44, 43, 43);
-    font-size: 1.4rem;
-    transition: all .5s;
-    padding: .2rem;
-    left: 100%;
-    border-radius: 3px;
-    top: 4px;
-    margin-left: .3rem;
-}
-
-.removeCourse:hover {
-    background-color: rgb(202, 144, 144);
-    cursor: pointer;
-}
-
 [coursemeal-info] > p {
     margin: 0;
 }
@@ -181,9 +222,6 @@
 @media (max-width: 750px) {
     .meal-box {
       display: inline-block;
-    }
-    .courseMealName {
-        left: 35%;
     }
     .coursemeal-tab-list {
         margin-top: 2.5rem;
