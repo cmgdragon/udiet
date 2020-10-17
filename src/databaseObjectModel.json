@@ -24,11 +24,11 @@
         }
       }
     },
-    "sharedDiets" : [ null, {
+    "sharedDiets" : [ {
       "dietId" : 0,
       "dietName" : "My diet Name",
       "dietUserUid" : "wsFsr4sLsEVszzsk2t574vpNLY9",
-      "email" : "shared@email.com"
+      "email" : "collaborator@email.com"
     } ]
   }
   
