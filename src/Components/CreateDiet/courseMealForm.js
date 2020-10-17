@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import styles from './CreateDiet.module.css';
-import IngredientForm from './IngredientForm';
+import IngredientForm from './ingredientForm';
 import { activateCheck } from './CreateDiet';
 
-const CourseMealForm = ({canRemove = true}) => {
+const CourseMealForm = ({ canRemove = true }) => {
 
     const [ingredientNumber, setIngredientNumber] = useState(0);
     const [properties, setProperties] = useState(false);
     const [recipe, setRecipe] = useState(false);
-    const [comments, setComments] = useState(false);  
+    const [comments, setComments] = useState(false);
 
     const updateProperties = () => setProperties(!properties)
     const updateRecipe = () => setRecipe(!recipe)
@@ -42,12 +42,12 @@ const CourseMealForm = ({canRemove = true}) => {
 
     }
 
-    return(
+    return (
         <div className={styles['course-meal']} coursemeal-object="" >
             { canRemove ? <i onClick={removeCourseMeal} className="fa fa-minus-square" aria-hidden="true" /> : undefined}
 
             <div className={styles.name}><label>Nombre del plato</label>
-                <input coursemeal-input="name" placeholder="Arroz con tomate" type="text" required/>
+                <input coursemeal-input="name" placeholder="Arroz con tomate" type="text" required />
             </div>
 
             <div onClick={addIngredient} className={styles['ingredient-button']}>
@@ -62,25 +62,25 @@ const CourseMealForm = ({canRemove = true}) => {
 
             </div>
 
-            <div className={styles.checkboxes}><input onChange={updateProperties} type="checkbox"/><label onClick={activateCheck}>Añadir propiedades</label></div>
+            <div className={styles.checkboxes}><input onChange={updateProperties} type="checkbox" /><label onClick={activateCheck}>Añadir propiedades</label></div>
             { properties ? <>
-            <div className={styles['coursemeal-input']}>
-            <textarea coursemeal-input="properties" placeholder="Vitaminas, beneficions..." type="text"></textarea></div>
+                <div className={styles['coursemeal-input']}>
+                    <textarea coursemeal-input="properties" placeholder="Vitaminas, beneficions..." type="text"></textarea></div>
             </> : undefined}
 
-            <div className={styles.checkboxes}><input onChange={updateRecipe} type="checkbox"/><label onClick={activateCheck}>Añadir receta</label></div>
+            <div className={styles.checkboxes}><input onChange={updateRecipe} type="checkbox" /><label onClick={activateCheck}>Añadir receta</label></div>
             { recipe ? <>
-            <div className={styles['coursemeal-input']}>
-            <textarea coursemeal-input="recipe" placeholder="¿Cómo se prepara?" type="text"></textarea></div>
+                <div className={styles['coursemeal-input']}>
+                    <textarea coursemeal-input="recipe" placeholder="¿Cómo se prepara?" type="text"></textarea></div>
             </> : undefined}
 
-            <div className={styles.checkboxes}><input onChange={updateComments} type="checkbox"/><label onClick={activateCheck}>Añadir comentarios</label></div>
+            <div className={styles.checkboxes}><input onChange={updateComments} type="checkbox" /><label onClick={activateCheck}>Añadir comentarios</label></div>
             { comments ? <>
-            <div className={styles['coursemeal-input']}>
-            <textarea coursemeal-input="comments" placeholder="Comentarios adicionales" type="text"></textarea></div>
+                <div className={styles['coursemeal-input']}>
+                    <textarea coursemeal-input="comments" placeholder="Comentarios adicionales" type="text"></textarea></div>
             </> : undefined}
 
-        </div>   
+        </div>
     )
 
 }

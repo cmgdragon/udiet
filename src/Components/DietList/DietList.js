@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from '../ViewDiet/Diet.module.css';
 import { signOut } from '../../Services/authProviders';
 import { getUserDiets, getDietSharedUsers, getSharedDiets } from '../../Database/readDietInfo';
@@ -37,7 +37,7 @@ const Diet = props => {
 
     useEffect(() => {
 
-        getDietUserList(user.uid); 
+        getDietUserList(user.uid);
         getSharedDietsByEmail(user.email);
 
     }, []);
@@ -52,7 +52,7 @@ const Diet = props => {
     const closeSharedUsersModal = () => setModalShown(false);
 
     const showSharedUsersModal = async dietId => {
-        const sharedUsers = await getDietSharedUsers(user.uid, dietId);
+        const sharedUsers = await getDietSharedUsers(user.uid, dietId) || {};
         setSharedUsersDiet(sharedUsers);
         setModalShown(true);
     }
@@ -64,7 +64,7 @@ const Diet = props => {
 
         if (Object.values(sharedUsersDiet).includes(email)) {
             alert('¡Este usuario ya tiene acceso!');
-            
+
         } else if (email && emailRegex.test(email)) {
             const newList = sharedUsersDiet ? Object.values(sharedUsersDiet) : [];
             newList.push(email);
@@ -74,8 +74,8 @@ const Diet = props => {
             const sharedDietLength = Object.values(oldSharedDiets).length;
 
             const newKey = sharedDietLength === 0 ? 0 :
-            Object.keys(oldSharedDiets).includes(`${sharedDietLength}`) ? sharedDietLength + 1 :
-            sharedDietLength;
+                Object.keys(oldSharedDiets).includes(`${sharedDietLength}`) ? sharedDietLength + 1 :
+                    sharedDietLength;
 
             await modifyDietSharedUsers({
                 ...oldSharedDiets,
@@ -106,7 +106,7 @@ const Diet = props => {
 
             const sharedDiets = Object.values(await getSharedDiets()) || [];
 
-            const deleteIndex = sharedDiets.findIndex(shared => 
+            const deleteIndex = sharedDiets.findIndex(shared =>
                 shared.email === email &&
                 shared.dietUserUid === userId &&
                 shared.dietId === dietId
@@ -125,16 +125,16 @@ const Diet = props => {
 
     return (
         <>
-            <Header user={user} signOut={signOut}/>
+            <Header user={user} signOut={signOut} />
             <div className={styles.cuerpo}>
-                    <Link to={'/create'} id="create-diet" className={styles['create-diet']} >Crear una nueva dieta</Link>
-                    <div className={styles['my-diets-label']}>Mis dietas</div>
-                    <div className={styles['my-diets-label-border-bottom']}></div>
-                   { dietUserList === 'loading' ? <Skeleton height={100} duration={.3} /> : !dietUserList ? undefined :
-                    Object.values(dietUserList).map(({dietName}, dietId) => {
+                <Link to={'/create'} id="create-diet" className={styles['create-diet']} >Crear una nueva dieta</Link>
+                <div className={styles['my-diets-label']}>Mis dietas</div>
+                <div className={styles['my-diets-label-border-bottom']}></div>
+                {dietUserList === 'loading' ? <Skeleton height={100} duration={.3} /> : !dietUserList ? undefined :
+                    Object.values(dietUserList).map(({ dietName }, dietId) => {
                         return (
                             <React.Fragment key={dietId}>
-                                <DietUsersModal 
+                                <DietUsersModal
                                     shown={modalShown}
                                     closeModal={closeSharedUsersModal}
                                     sharedUsersDiet={sharedUsersDiet}
@@ -145,45 +145,45 @@ const Diet = props => {
                                     <div className={styles['diet-list']}>
                                         <Link to={`/${user.uid}/${dietId}`}
                                             className={styles['diet-list-item']} >
-                                                {dietName}
+                                            {dietName}
                                         </Link>
                                         <div className={styles['diet-item-buttons']}>
                                             <i className={`fa fa-user ${styles['share-diet']}`}
-                                            aria-hidden="true"
-                                            onClick={() => showSharedUsersModal(dietId)} ></i>
+                                                aria-hidden="true"
+                                                onClick={() => showSharedUsersModal(dietId)} ></i>
                                             <i className={`fa fa-trash ${styles['remove-diet']}`}
-                                            aria-hidden="true"
-                                            onClick={(event) => removeDiet(event, dietId)} ></i>
-                                         </div>
+                                                aria-hidden="true"
+                                                onClick={(event) => removeDiet(event, dietId)} ></i>
+                                        </div>
                                     </div>
                                 }
                             </React.Fragment>
-                            )
-                        })
-                    }
+                        )
+                    })
+                }
 
-                    <div className={`${styles['my-diets-label']} ${styles['my-shared-label']}`}>Compartidas conmigo</div>
-                    <div className={styles['my-diets-label-border-bottom']}></div>
-                   { dietSharedList === 'loading' ? <Skeleton height={100} duration={.3} /> : !dietSharedList ? undefined :
-                    Object.values(dietSharedList).map(({dietName, dietUserUid, dietId}, index) => {
+                <div className={`${styles['my-diets-label']} ${styles['my-shared-label']}`}>Compartidas conmigo</div>
+                <div className={styles['my-diets-label-border-bottom']}></div>
+                {dietSharedList === 'loading' ? <Skeleton height={100} duration={.3} /> : !dietSharedList ? undefined :
+                    Object.values(dietSharedList).map(({ dietName, dietUserUid, dietId }, index) => {
                         return (
                             <React.Fragment key={index}>
                                 {
                                     <div className={styles['diet-list']}>
                                         <Link to={`/${dietUserUid}/${dietId}`}
                                             className={styles['diet-list-item']} >
-                                                {dietName}
+                                            {dietName}
                                         </Link>
                                     </div>
                                 }
                             </React.Fragment>
-                            )
-                        })
-                    }
+                        )
+                    })
+                }
 
             </div>
         </>
-    ) 
+    )
 
 }
 

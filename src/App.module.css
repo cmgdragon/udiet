@@ -1,5 +1,6 @@
 /* Google button from https://codepen.io/jimjammc/pen/PMOVZB */
 @import url('https://fonts.googleapis.com/css?family=Roboto:300');
+@import url('https://fonts.googleapis.com/css2?family=Mali&display=swap');
 
 :root{
   --white: #fff;
@@ -97,6 +98,7 @@ body  {
   font-size: 5rem;
   margin: auto 50vw 0;
   top: 15vh;
+  font-family: 'Mali';
 }
 
 footer {
@@ -129,4 +131,9 @@ footer > a:visited, footer > a:link {
 footer > a:hover {
   cursor: pointer;
   color: #1669F2;
+}
+
+.addthis-element {
+  display: flex;
+  justify-content: center;
 }

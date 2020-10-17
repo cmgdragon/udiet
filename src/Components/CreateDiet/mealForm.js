@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './CreateDiet.module.css';
-import CourseMealForm from './CourseMealForm';
+import CourseMealForm from './courseMealForm';
 
 const MealForm = props => {
 
@@ -38,10 +38,10 @@ const MealForm = props => {
 
     return (
         <div className={styles.meal} meal-object="" >
-            { canRemove ? <i onClick={removeMeal} className="fa fa-minus-square" aria-hidden="true" /> : undefined }
+            { canRemove ? <i onClick={removeMeal} className="fa fa-minus-square" aria-hidden="true" /> : undefined}
 
             <div className={styles.name}><label>Nombre de la comida</label>
-                <input meal-name="" placeholder="Merienda, cena, desayuno, etc." type="text" required/>
+                <input meal-name="" placeholder="Merienda, cena, desayuno, etc." type="text" required />
             </div>
 
             <div onClick={addCourseMeal} className={styles['coursemeal-button']}>

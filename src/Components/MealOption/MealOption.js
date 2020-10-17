@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import styles from './MealOption.module.css';
 import Ingredient from '../Ingredient';
 import DietModal from '../DietModal';
-import IngredientForm from '../CreateDiet/IngredientForm';
+import IngredientForm from '../CreateDiet/ingredientForm';
 import { deleteDietCourseMeal } from '../../Database/deleteDietInfo';
 import { sendNewIngredient } from '../CreateDiet/addDietFunctions';
 import { editCourseMealName, editMealInfo } from './mealOptionEditFunctions';
 
 const MealOption = props => {
-  
+
     const { mealList, courseMeal, display, mealKey, courseKey, courseIndex, userUid, dietId,
-         hasPerms, updateCourseMeal } = props;
-    const {comments, ingredients, name, properties, recipe, hasImage} = courseMeal;
+        hasPerms, updateCourseMeal } = props;
+    const { comments, ingredients, name, properties, recipe, hasImage } = courseMeal;
     const [ingredientList, setIngredientList] = useState(ingredients);
     const [modalShown, setModalShown] = useState(false);
 
@@ -25,18 +25,18 @@ const MealOption = props => {
         );
 
         mealElement[courseIndex].querySelectorAll(`[coursemeal-info]`).forEach((element, index) => {
-           switch(index) {
+            switch (index) {
                 case selectedElementIndex:
                     selectedElement.classList.contains(styles['shown-info'])
-                     ? element.classList.remove(styles['shown-info'])
-                     : element.classList.add(styles['shown-info']);
+                        ? element.classList.remove(styles['shown-info'])
+                        : element.classList.add(styles['shown-info']);
                     break;
                 default:
-                    element.classList.remove(styles['shown-info']);    
+                    element.classList.remove(styles['shown-info']);
             }
         });
 
-        if (event.target.classList.contains(styles['coursemeal-tab-selected'])){
+        if (event.target.classList.contains(styles['coursemeal-tab-selected'])) {
             event.target.classList.remove(styles['coursemeal-tab-selected']);
         }
         else {
@@ -63,98 +63,98 @@ const MealOption = props => {
     }
 
     return (
-    <div course-meal={`course${courseKey}`}>
-        <DietModal shown={modalShown} closeFn={setModalShown} sendModal={() => sendNewIngredient(userUid, dietId, mealKey, courseKey, ingredientList, setIngredientList)}>
-            <IngredientForm canRemove={false} initNumber={1}></IngredientForm>
-        </DietModal>
-        <div className={
+        <div course-meal={`course${courseKey}`}>
+            <DietModal shown={modalShown} closeFn={setModalShown} sendModal={() => sendNewIngredient(userUid, dietId, mealKey, courseKey, ingredientList, setIngredientList)}>
+                <IngredientForm canRemove={false} initNumber={1}></IngredientForm>
+            </DietModal>
+            <div className={
                 !display ? styles.courseMealName : courseIndex === 0 ? styles.courseMealName + " " + styles['courseMealName-displayed']
-                : styles.courseMealName + " " + styles['courseMealName-displayed'] + " " + styles['courseMealName-displayed-top']
+                    : styles.courseMealName + " " + styles['courseMealName-displayed'] + " " + styles['courseMealName-displayed-top']
             }><div><span>{name}</span>
 
-                { !hasPerms ? undefined : <div className={styles['meal-name-buttons-div']}>
-                    <i onClick={event => editCourseMealName(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil ${styles['coursemeal-name-edit']}`} aria-hidden="true"></i>
-                    <i onClick={removeCourseMeal} className={`fa fa-trash ${styles.removeCourse}`} aria-hidden="true"></i>
-                </div>}
+                    {!hasPerms ? undefined : <div className={styles['meal-name-buttons-div']}>
+                        <i onClick={event => editCourseMealName(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil ${styles['coursemeal-name-edit']}`} aria-hidden="true"></i>
+                        <i onClick={removeCourseMeal} className={`fa fa-trash ${styles.removeCourse}`} aria-hidden="true"></i>
+                    </div>}
+                </div>
             </div>
-            </div>
-        <div  className={
-        !display ? styles['options-box'] : styles['options-box'] + " " + styles.displayed
-        }>
+            <div className={
+                !display ? styles['options-box'] : styles['options-box'] + " " + styles.displayed
+            }>
 
-            <div className={styles['meal-box']}>
+                <div className={styles['meal-box']}>
 
-                <div className={styles['coursemeal-tab-list']}>
-                    { !properties && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={event => selectMealInfo(event, 'properties')}>Propiedades</div> }
-                    { !ingredients && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={event => selectMealInfo(event, 'ingredients')}>Ingredientes</div> }
-                    { !recipe && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={event => selectMealInfo(event, 'recipe')}>Preparación</div> }
-                    { !comments && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={event => selectMealInfo(event, 'comments')}>Comentarios</div> }
-                </div>
-
-                <div className={styles['meal-info']}>
-
-              
-                    <div coursemeal-info="properties" className={styles.courseMealInfo}>
-                    { hasPerms ? <div className={styles['edit-box']}>
-                            <i onClick={event => editMealInfo(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil`} aria-hidden="true"></i>
-                        </div>
-                    : undefined}
-                    <p> { properties ? properties : undefined} </p>
+                    <div className={styles['coursemeal-tab-list']}>
+                        {!properties && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={event => selectMealInfo(event, 'properties')}>Propiedades</div>}
+                        {!ingredients && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={event => selectMealInfo(event, 'ingredients')}>Ingredientes</div>}
+                        {!recipe && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={event => selectMealInfo(event, 'recipe')}>Preparación</div>}
+                        {!comments && !hasPerms ? undefined : <div className={styles['coursemeal-tab']} onClick={event => selectMealInfo(event, 'comments')}>Comentarios</div>}
                     </div>
-            
 
-                    <div coursemeal-info="ingredients" className={styles['ingredient-list']}>
-                        
-                    { !hasPerms ? undefined : <div onClick={showForm} className={styles['add-ingredient']}>Añadir ingrediente</div> }
+                    <div className={styles['meal-info']}>
 
-                    { ingredientList ?
-                        Object.values(ingredientList).map(({name, quantity, brand, location, info}, index) => {
-                            const ingredientKey = Object.keys(ingredientList)[index];
-                            return (
-                                <React.Fragment key={index}>
-                                    <Ingredient
-                                        updateIngredients={updateIngredients}
-                                        ingredientList={ingredientList}
-                                        userId={userUid}
-                                        dietId={dietId}
-                                        mealKey={mealKey}
-                                        courseKey={courseKey}
-                                        ingredientKey={ingredientKey}
-                                        ingredientName={name}
-                                        quantity={quantity}
-                                        brand={brand}
-                                        location={location}
-                                        info={info}
-                                        hasPerms={hasPerms}
-                                    />
-                                </React.Fragment>
-                            )
-                        })
-                    : undefined}
+
+                        <div coursemeal-info="properties" className={styles.courseMealInfo}>
+                            {hasPerms ? <div className={styles['edit-box']}>
+                                <i onClick={event => editMealInfo(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil`} aria-hidden="true"></i>
+                            </div>
+                                : undefined}
+                            <p> {properties ? properties : undefined} </p>
+                        </div>
+
+
+                        <div coursemeal-info="ingredients" className={styles['ingredient-list']}>
+
+                            {!hasPerms ? undefined : <div onClick={showForm} className={styles['add-ingredient']}>Añadir ingrediente</div>}
+
+                            {ingredientList ?
+                                Object.values(ingredientList).map(({ name, quantity, brand, location, info }, index) => {
+                                    const ingredientKey = Object.keys(ingredientList)[index];
+                                    return (
+                                        <React.Fragment key={index}>
+                                            <Ingredient
+                                                updateIngredients={updateIngredients}
+                                                ingredientList={ingredientList}
+                                                userId={userUid}
+                                                dietId={dietId}
+                                                mealKey={mealKey}
+                                                courseKey={courseKey}
+                                                ingredientKey={ingredientKey}
+                                                ingredientName={name}
+                                                quantity={quantity}
+                                                brand={brand}
+                                                location={location}
+                                                info={info}
+                                                hasPerms={hasPerms}
+                                            />
+                                        </React.Fragment>
+                                    )
+                                })
+                                : undefined}
+
+                        </div>
+
+
+                        <div coursemeal-info="recipe" className={styles.courseMealInfo}>
+                            {hasPerms ? <div className={styles['edit-box']}>
+                                <i onClick={event => editMealInfo(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil`} aria-hidden="true"></i>
+                            </div>
+                                : undefined}
+                            <p> {recipe ? recipe : undefined} </p>
+                        </div>
+
+                        <div coursemeal-info="comments" className={styles.courseMealInfo}>
+                            {hasPerms ? <div className={styles['edit-box']}>
+                                <i onClick={event => editMealInfo(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil`} aria-hidden="true"></i>
+                            </div>
+                                : undefined}
+                            <p> {comments ? comments : undefined} </p>
+                        </div>
 
                     </div>
-                
-                
-                <div coursemeal-info="recipe" className={styles.courseMealInfo}>
-                { hasPerms ? <div className={styles['edit-box']}>
-                            <i onClick={event => editMealInfo(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil`} aria-hidden="true"></i>
-                        </div>
-                    : undefined}
-                <p> { recipe ? recipe : undefined} </p>
-                </div>
-                
-                <div coursemeal-info="comments" className={styles.courseMealInfo}>
-                { hasPerms ? <div className={styles['edit-box']}>
-                            <i onClick={event => editMealInfo(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil`} aria-hidden="true"></i>
-                        </div>
-                    : undefined}
-                <p> { comments ? comments : undefined} </p>
-                </div>
-                 
                 </div>
             </div>
         </div>
-    </div>
     )
 }
 

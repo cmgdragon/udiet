@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styles from './CreateDiet.module.css';
-import MealForm from './MealForm';
+import MealForm from './mealForm';
 import { addNewUserDiet } from '../../Database/writeDietInfo';
 import { UserContext } from '../../Context/userContext';
 import { signOut } from '../../Services/authProviders';
 import Header from '../Header';
 
 const CreateDiet = () => {
-    
+
     const [mealNumber, setMealNumber] = useState(0);
     const user = useContext(UserContext);
 
@@ -17,9 +17,9 @@ const CreateDiet = () => {
 
     const sendDiet = async event => {
         event.preventDefault()
-        
+
         const dietObject = {
-            dietName:  document.getElementById('diet-name').value,
+            dietName: document.getElementById('diet-name').value,
             isPrivate: document.getElementById('isprivate').checked,
             mealData: []
         }
@@ -35,12 +35,12 @@ const CreateDiet = () => {
 
                 const courseMealInputList = meal.querySelectorAll('[coursemeal-input]');
                 const currentCourseMeal = {};
-                                
+
                 courseMealInputList.forEach(courseMealInput => {
 
                     const key = Array.from(courseMealInput.attributes).find(a => a.name === 'coursemeal-input').value;
                     currentCourseMeal[key] = courseMealInput.value;
-    
+
                 });
 
                 currentCourseMeal['hasImage'] = false;
@@ -106,35 +106,35 @@ const CreateDiet = () => {
 
     }
 
-    return ( 
-    <>
-        <Header user={user} signOut={signOut}/>
-        <form onSubmit={sendDiet}>
+    return (
+        <>
+            <Header user={user} signOut={signOut} />
+            <form onSubmit={sendDiet}>
 
-            <div className={styles['diet-name']}>
-                <input type="text" id="diet-name" className={styles['diet-name']} placeholder="Nombre de la dieta" required/>
+                <div className={styles['diet-name']}>
+                    <input type="text" id="diet-name" className={styles['diet-name']} placeholder="Nombre de la dieta" required />
+                </div>
+
+                <div className={`${styles.checkboxes} ${styles['is-private']}`}>
+                    <input id="isprivate" type="checkbox" />
+                    <label onClick={activateCheck}>Hacer privada</label>
+                </div>
+
+                <div onClick={addMeal} className={styles['meal-button']}>
+                    Añadir Comida
             </div>
 
-            <div className={`${styles.checkboxes} ${styles['is-private']}`}>
-                <input id="isprivate" type="checkbox"/>
-                <label onClick={activateCheck}>Hacer privada</label>
-            </div>
+                <div id="mealBox" className={styles['meal-box']}>
 
-            <div onClick={addMeal} className={styles['meal-button']}>
-                Añadir Comida
-            </div>
+                    {
+                        renderMeals()
+                    }
 
-            <div id="mealBox" className={styles['meal-box']}>
+                </div>
 
-                {
-                    renderMeals()
-                }
-
-            </div>
-
-            <input className={styles.submit} type="submit" value="Crear dieta" />
-        </form> 
-    </>
+                <input className={styles.submit} type="submit" value="Crear dieta" />
+            </form>
+        </>
     )
 }
 
