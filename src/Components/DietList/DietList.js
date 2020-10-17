@@ -53,6 +53,7 @@ const Diet = props => {
 
         getDietUserList(user.uid);
         getSharedDietsByEmail(user.email);
+        document.getElementById('back-button').classList.add(styles.invisible);
 
     }, []);
 

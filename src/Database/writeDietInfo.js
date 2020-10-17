@@ -219,3 +219,20 @@ export const changeCourseMealName = async (userId, dietId, mealKey, courseKey, n
     }
 
 }
+
+export const setDietPrivateness = async (userId, dietId, isPrivate) => {
+
+    const dietList = await getUserDiets(userId);
+    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
+     : Object.getOwnPropertyNames(await dietList)[dietId];
+
+    try {
+       await firebase.database()
+        .ref(`diets/users/${userId}/${dietName}/isPrivate/`)
+        .set(isPrivate);
+        
+    } catch (error) {
+        console.error(error);
+    }
+
+}

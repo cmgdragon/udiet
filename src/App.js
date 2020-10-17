@@ -23,7 +23,8 @@ const App = () => {
           dietId: match.params.dietId,
           displayName: user.displayName,
           notLoggedIn: user ? false : true
-        }}/> : <DietList />
+        }}
+        currentUser={user}/> : <DietList />
       }
       </>
     )

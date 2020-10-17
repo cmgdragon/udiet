@@ -1,1 +1,1 @@
-export { default } from './CreateDiet';
+export { default, activateCheck } from './CreateDiet';

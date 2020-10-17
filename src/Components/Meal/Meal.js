@@ -24,12 +24,10 @@ const Meal = props => {
     const [courseMealImages, setcourseMealImages] = useState(undefined);
     const [modalMealShown, setModalMealShown] = useState(false);
     const [modalCourseShown, setModalCourseShown] = useState(false);
-    const userContext = useContext(UserContext);
+    const currentUser = useContext(UserContext);
 
     useEffect(() => {
-        userHasEditPermissions(userContext.uid, userContext.email, userUid, dietId).then(res => permissionRef.current = res);
-        if (!!document.getElementById('back-button'))
-            document.getElementById('back-button').classList.add(styles.goback);
+        userHasEditPermissions(currentUser.uid, currentUser.email, userUid, dietId).then(res => permissionRef.current = res);
         if (mealList) getCourseMealImageList();
     }, [mealList]);
 
