@@ -33,6 +33,20 @@ const Diet = props => {
 
     }
 
+    const filterSharedDietsByUserIdAndDietId = async dietId => {
+
+        try {
+            const sharedDiets = await getSharedDiets() || {};
+
+            return Object.values(sharedDiets).filter(shared => shared.dietUserUid === user.uid
+                    && shared.dietId !== dietId)
+
+        } catch (error) {
+            console.error(error);
+        }
+
+    }
+
     const getDietUserList = async userUid => setDietUserList(await getUserDiets(userUid));
 
     useEffect(() => {
@@ -42,10 +56,12 @@ const Diet = props => {
 
     }, []);
 
-    const removeDiet = (event, dietId) => {
+    const removeDiet = async (event, dietId) => {
         if (window.confirm('¿Quieres borrar esta dieta?')) {
             event.target.classList = [`fas fa-spinner fa-pulse ${styles['remove-diet']}`];
             deleteUserDiet(user.uid, dietId).then(re => window.location.reload());
+            const updatedUserDietList = await filterSharedDietsByUserIdAndDietId(dietId);
+            await modifyDietSharedUsers(updatedUserDietList);
         }
     }
 

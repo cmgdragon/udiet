@@ -48,14 +48,14 @@ export const deleteUserDiet = async (userId, dietId) => {
         .ref(`coursemeals/${userId}/${dietId}`)
         .listAll()
 
-        prefixes.forEach(async folder => {
+        for (const folder of prefixes) {
             const {items} = await folder.listAll();
-            items.forEach(async item => {
+            for (const item of items) {
                 await firebase.storage()
                 .ref(item.fullPath)
-                .delete();
-            });
-        });
+                .delete();  
+            }
+        }
 
      } catch (error) {
          console.error(error);
