@@ -7,8 +7,8 @@ import { deleteCourseMealImage, deleteDietMeal } from '../../Database/deleteDiet
 import { getCourseMealImage } from '../../Database/readDietInfo';
 import { userHasEditPermissions } from '../../Database/readDietInfo';
 import DietModal from '../DietModal';
-import CourseMealForm from '../CreateDiet/courseMealForm';
-import MealForm from '../CreateDiet/mealForm';
+import CourseMealForm from '../CreateDiet/CourseMealForm';
+import MealForm from '../CreateDiet/MealForm';
 import Skeleton from 'react-loading-skeleton';
 import { sendNewMeal, sendNewCourseMeal } from '../CreateDiet/addDietFunctions';
 import { editDietName, editMealName } from './mealEditFunctions';

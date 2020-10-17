@@ -7,10 +7,7 @@ const cancelEditOperation = (event, ingredientNameEl, ingredientListEl, editButt
     const oldNameEl = ingredientNameEl.querySelector(`.${styles.undisplay}:last-child`);
     oldNameEl.classList.remove(styles.undisplay);
 
-    console.log(oldNameEl)
     oldNameEl.innerText = value;
-    console.log(oldNameEl)
-
     ingredientNameEl.querySelector('input').remove();
 
     ingredientListEl.querySelectorAll('[ingredient-box]').forEach(ingredientBox => {

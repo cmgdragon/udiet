@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './MealOption.module.css';
 import Ingredient from '../Ingredient';
 import DietModal from '../DietModal';
-import IngredientForm from '../CreateDiet/ingredientForm';
+import IngredientForm from '../CreateDiet/IngredientForm';
 import { deleteDietCourseMeal } from '../../Database/deleteDietInfo';
 import { sendNewIngredient } from '../CreateDiet/addDietFunctions';
 import { editCourseMealName, editMealInfo } from './mealOptionEditFunctions';

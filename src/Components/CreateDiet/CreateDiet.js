@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styles from './CreateDiet.module.css';
-import MealForm from './mealForm';
+import MealForm from './MealForm';
 import { addNewUserDiet } from '../../Database/writeDietInfo';
 import { UserContext } from '../../Context/userContext';
 import { signOut } from '../../Services/authProviders';

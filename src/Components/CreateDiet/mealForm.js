@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './CreateDiet.module.css';
-import CourseMealForm from './courseMealForm';
+import CourseMealForm from './CourseMealForm';
 
 const MealForm = props => {
 
