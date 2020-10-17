@@ -8,9 +8,8 @@
 }
 
 .modal-form {
-    margin: 0;
     position: absolute;
-    width: 100%;
+    width: 80%;
     top: 15vh;
     align-self: center;
 }
@@ -153,4 +152,10 @@
 
 .cancel:hover {
     background-color: rgb(228, 127, 127);
+}
+
+@media (max-width: 750px) {
+    .modal-form {
+        width: 100%;
+    }
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './CreateDiet.module.css';
-import IngredientForm from './ingredientForm';
+import IngredientForm from './IngredientForm';
 import { activateCheck } from './CreateDiet';
 
 const CourseMealForm = ({ canRemove = true }) => {
