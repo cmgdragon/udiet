@@ -222,6 +222,7 @@
 @media (max-width: 750px) {
     .meal-box {
       display: inline-block;
+      margin-top: 1rem;
     }
     .coursemeal-tab-list {
         margin-top: 2.5rem;
@@ -229,5 +230,11 @@
     }
     .coursemeal-tab {
         margin-right: 0;
+    }
+    .add-ingredient {
+        left: 1.2rem;
+        margin-top: 1rem;
+        width: 50%;
+        margin: 1rem auto 0 auto;
     }
 }
