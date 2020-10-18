@@ -6,7 +6,10 @@ firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
 const providers = {
-    google: new firebase.auth.GoogleAuthProvider()
+    google: new firebase.auth.GoogleAuthProvider(),
+    twitter: new firebase.auth.TwitterAuthProvider(),
+    github: new firebase.auth.GithubAuthProvider(),
+    facebook: new firebase.auth.FacebookAuthProvider()
 }
 
 const signOut = async () => {

@@ -4,8 +4,14 @@
 
 :root{
   --white: #fff;
-  --google-blue: #4285f4;
-  --button-active-blue: #1669F2;
+  --google-color: #4285f4;
+  --twitter-color: #1da1f2;
+  --github-color: #24292e;
+  --facebook-color: #1877f2;
+  --google-active-color: #1669F2;
+  --twitter-active-color: #169af2;
+  --github-active-color:  #343536;
+  --facebook-active-color:  #4488e2;
   --body-color: #f8f8f9;
   --primary-color: #f9bf8f;
   --secondary-color: #fee9d7;
@@ -18,44 +24,127 @@ body  {
   font-family: 'Roboto';
 }
 
-.google-btn {
-  width: 184px;
-  height: 42px;
-  background-color: var(--google-blue);
-  border-radius: 2px;
-  box-shadow: 0 3px 4px 0 rgba(0,0,0,.25);
-  cursor: pointer;
+.login-buttons {
+  position: absolute;
+  top: 25%;
 }
 
-.google-btn > .google-icon-wrapper {
+.login-buttons > div {
+  margin-bottom: .6rem;
+}
+
+/* Providers css */
+.provider-btn {
+  width: 190px;
+  height: 42px;
+}
+
+.provider-btn > .provider-icon-wrapper {
   position: absolute;
-  margin-top: 1px;
-  margin-left: 1px;
-  width: 40px;
-  height: 40px;
-  border-radius: 2px;
+  width: 42px;
+  height: 42px;
   background-color: var(--white);
 }
 
-.google-btn .google-icon {
+.provider-btn .provider-icon {
   position: absolute;
   margin-top: 11px;
   margin-left: 11px;
   width: 18px;
   height: 18px;
 }
-.google-btn > .btn-text {
+
+.provider-btn > .btn-text {
   float: right;
   margin: 11px 11px 0 0;
   color: var(--white);
   font-size: 14px;
   letter-spacing: 0.2px;
 }
-.google-btn:hover {
-  box-shadow: 0 0 6px var(--google-blue);
+
+/* Google login */
+.google-btn {
+  background-color: var(--google-color);
+  border-radius: 2px;
+  box-shadow: 0 3px 4px 0 rgba(0,0,0,.25);
+  cursor: pointer;
 }
+
+.google-btn:hover {
+  box-shadow: 0 0 6px var(--google-color);
+}
+
 .google-btn:active {
-  background: var(--button-active-blue);
+  background: var(--google-active-color);
+}
+
+/* Twitter login */
+.twitter-btn {
+  background-color: var(--twitter-color);
+  border-radius: 2px;
+  box-shadow: 0 3px 4px 0 rgba(0,0,0,.25);
+  cursor: pointer;
+}
+
+.twitter-icon {
+  width: initial !important;
+  margin-left: 10px !important;
+}
+
+.twitter-btn:hover {
+  box-shadow: 0 0 6px var(--twitter-color);
+}
+
+.twitter-btn:active {
+  background: var(--twitter-active-color);
+}
+
+/* Github login */
+.github-btn {
+  background-color: var(--github-color);
+  border-radius: 2px;
+  box-shadow: 0 3px 4px 0 rgba(0,0,0,.25);
+  cursor: pointer;
+}
+
+.github-icon {
+  width: 22px !important;
+  height: 22px !important;
+  margin-left: 9px !important;
+}
+
+.github-btn:hover {
+  box-shadow: 0 0 6px var(--github-color);
+}
+
+.github-btn:active {
+  background: var(--github-active-color);
+}
+
+/* Facebook login */
+.facebook-btn {
+  background-color: var(--facebook-color);
+  border-radius: 2px;
+  box-shadow: 0 3px 4px 0 rgba(0,0,0,.25);
+  cursor: pointer;
+}
+
+.facebook-icon {
+  width: 23px !important;
+  height: 23px !important;
+  margin-left: 8px !important;
+}
+
+.facebook-btn:hover {
+  box-shadow: 0 0 6px var(--facebook-color);
+}
+
+.facebook-btn:active {
+  background: var(--facebook-active-color);
+}
+
+.facebook-btn > .btn-text {
+  font-size: 13px;
 }
 
 .loginbox {
@@ -63,7 +152,7 @@ body  {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 90vh;
+  height: 85vh;
 }
 
 .loginbox > div {
@@ -97,7 +186,7 @@ body  {
   border-radius: 2rem;
   font-size: 5rem;
   margin: auto 50vw 0;
-  top: 15vh;
+  top: 12%;
   font-family: 'Mali';
 }
 
@@ -136,4 +225,20 @@ footer > a:hover {
 .addthis-element {
   display: flex;
   justify-content: center;
+  margin: -2rem auto 1rem auto;
+}
+
+@media (max-width: 750px) {
+  .cuerpo {
+    width: auto;
+  }
+  .loginbox {
+    height: 100vh;
+  }
+  .share-diet {
+      right: 19vw;
+  }
+  .userbuttons {
+      flex-direction: column-reverse;
+  }
 }
