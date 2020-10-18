@@ -10,7 +10,7 @@ import { DietUsersModal } from '../DietModal';
 import Skeleton from 'react-loading-skeleton';
 import Header from '../Header';
 
-const Diet = props => {
+const Diet = () => {
 
     const [sharedUsersDiet, setSharedUsersDiet] = useState(undefined);
     const [modalShown, setModalShown] = useState(false);
@@ -37,9 +37,14 @@ const Diet = props => {
 
         try {
             const sharedDiets = await getSharedDiets() || {};
+            const dietToDelete = Object.entries(sharedDiets).filter(shared => shared[1].dietUserUid === user.uid
+                && shared[1].dietId === dietId);
 
-            return Object.values(sharedDiets).filter(shared => shared.dietUserUid === user.uid
-                    && shared.dietId !== dietId)
+            const dietKeyToDelete = dietToDelete.length ? dietToDelete[0][0] : false;
+
+            if (dietKeyToDelete) delete sharedDiets[dietKeyToDelete]; else return false;
+
+            return sharedDiets;
 
         } catch (error) {
             console.error(error);
@@ -62,7 +67,7 @@ const Diet = props => {
             event.target.classList = [`fas fa-spinner fa-pulse ${styles['remove-diet']}`];
             deleteUserDiet(user.uid, dietId).then(re => window.location.reload());
             const updatedUserDietList = await filterSharedDietsByUserIdAndDietId(dietId);
-            await modifyDietSharedUsers(updatedUserDietList);
+            if (updatedUserDietList) await modifyDietSharedUsers(updatedUserDietList);
         }
     }
 

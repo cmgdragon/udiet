@@ -8,7 +8,7 @@ import Header from '../Header';
 
 const CreateDiet = () => {
 
-    const [mealNumber, setMealNumber] = useState(0);
+    const [mealNumber, setMealNumber] = useState(1);
     const user = useContext(UserContext);
 
     useEffect(() => {
@@ -97,7 +97,7 @@ const CreateDiet = () => {
         for (let i = 0; i < mealNumber; i++) {
             renderMeals.push(
                 <React.Fragment key={i}>
-                    <MealForm initNumber={0} />
+                    <MealForm initNumber={0} canRemove={i === 0 ? false : true} />
                 </React.Fragment>
             );
         }
