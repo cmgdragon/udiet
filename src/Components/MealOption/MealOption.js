@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useDebugValue, useState } from 'react';
 import styles from './MealOption.module.css';
 import Ingredient from '../Ingredient';
 import DietModal from '../DietModal';
@@ -62,6 +62,11 @@ const MealOption = props => {
         }
     }
 
+    const includeText = (property, text) => {
+        if (document.querySelector(`[course-meal-list=meal${mealKey}] [course-meal=course${courseKey}] [coursemeal-info=${property}] p`))
+            document.querySelector(`[course-meal-list=meal${mealKey}] [course-meal=course${courseKey}] [coursemeal-info=${property}] p`).innerHTML = text.replace(/\n/g, '<br>');
+    }
+
     return (
         <div course-meal={`course${courseKey}`}>
             <DietModal shown={modalShown} closeFn={setModalShown} sendModal={() => sendNewIngredient(userUid, dietId, mealKey, courseKey, ingredientList, setIngredientList)}>
@@ -99,7 +104,7 @@ const MealOption = props => {
                                 <i onClick={event => editMealInfo(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil`} aria-hidden="true"></i>
                             </div>
                                 : undefined}
-                            <p> {properties ? properties : undefined} </p>
+                            <p> {properties ? includeText('properties', properties) : undefined} </p>
                         </div>
 
 
@@ -140,7 +145,7 @@ const MealOption = props => {
                                 <i onClick={event => editMealInfo(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil`} aria-hidden="true"></i>
                             </div>
                                 : undefined}
-                            <p> {recipe ? recipe : undefined} </p>
+                            <p> {recipe ? includeText('recipe', recipe) : undefined} </p>
                         </div>
 
                         <div coursemeal-info="comments" className={styles.courseMealInfo}>
@@ -148,7 +153,7 @@ const MealOption = props => {
                                 <i onClick={event => editMealInfo(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil`} aria-hidden="true"></i>
                             </div>
                                 : undefined}
-                            <p> {comments ? comments : undefined} </p>
+                            <p> {comments ? includeText('comments', comments) : undefined} </p>
                         </div>
 
                     </div>

@@ -13,7 +13,7 @@ const updateCourseMealName = async (userUid, dietId, mealKey, courseKey, current
 }
 
 export const editCourseMealName = (event, userId, dietId, mealKey, courseKey) => {
-        
+
     const currentTitle = event.target.parentElement.parentElement;
     const parentEl = event.target.parentElement.parentElement.parentElement;
     const newInput = document.createElement('input');
@@ -26,7 +26,7 @@ export const editCourseMealName = (event, userId, dietId, mealKey, courseKey) =>
     const checkButton = document.createElement('i');
     const cancelButton = document.createElement('i');
     checkButton.classList = [`fa fa-check ${styles.green}`]
-    checkButton.addEventListener('click', async () => updateCourseMealName(userId, dietId, mealKey, 
+    checkButton.addEventListener('click', async () => updateCourseMealName(userId, dietId, mealKey,
         courseKey, currentTitle, inputWrapper, newInput.value));
 
     cancelButton.classList = [`fa fa-ban ${styles.red}`]
@@ -41,7 +41,7 @@ export const editCourseMealName = (event, userId, dietId, mealKey, courseKey) =>
     newInput.value = oldText;
     newInput.select();
     parentEl.prepend(inputWrapper);
-    
+
     currentTitle.classList.add(styles.undisplay);
     newInput.select();
 
@@ -95,6 +95,6 @@ const sendNewMealInfo = async (event, contentEl, newTextarea, editBox, checkButt
     const property = Array.from(event.target.parentElement.parentElement.attributes)
         .find(a => a.name === "coursemeal-info").value;
     const newContent = event.target.parentElement.nextElementSibling.nextElementSibling.value;
-    await modifyCourseMealInfo(property, newContent);
+    await modifyCourseMealInfo(userUid, dietId, mealKey, courseKey, property, newContent);
     cancelEditOperation(contentEl, newTextarea, editBox, checkButton, cancelButton, content);
 }

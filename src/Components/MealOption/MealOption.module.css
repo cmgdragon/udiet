@@ -100,7 +100,8 @@
 .edit-box {
     display: flex;
     position: absolute;
-    left: 92%;
+    left: 95% !important;
+    top: -1rem;
 }
 
 .edit-box > i {
@@ -236,5 +237,9 @@
         margin-top: 1rem;
         width: 50%;
         margin: 1rem auto 0 auto;
+    }
+    .edit-box {
+        left: 80% !important;
+        top: -.8rem;
     }
 }

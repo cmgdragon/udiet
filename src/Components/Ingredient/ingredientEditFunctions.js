@@ -64,16 +64,16 @@ export const editIngredient = (event, userId, dietId, mealKey, courseKey, ingred
     buttonBox.appendChild(cancelButton);
 
     ingredientListEl.querySelectorAll('[ingredient-box]').forEach(ingredientBox => {
-        const valueDiv = ingredientBox.querySelector('div:last-child');
+        const valueDiv = ingredientBox.querySelector('[current-value]');
         const newInput = ingredientBox.className.includes('info') ? document.createElement('textarea')
-                            : document.createElement('input');
-        
+            : document.createElement('input');
+
         newInput.setAttribute('edit-ingredient', ingredientBox.getAttribute('ingredient-box'))
         newInput.classList = [styles['edit-input']];
         newInput.value = valueDiv.innerText;
         ingredientBox.appendChild(newInput);
         valueDiv.classList.add(styles.undisplay);
-        
+
         if (!expanded) setExpanded(true);
         else ingredientListEl.style.height = "";
 

@@ -76,7 +76,7 @@ const Meal = props => {
 
             courseMealImageInfo.push({ mealOptions: [] });
 
-            for (const [courseKey, mealOption] of Object.entries(courseMeals)) {
+            for (const [courseKey, mealOption] of courseMeals ? Object.entries(courseMeals) : []) {
 
                 courseMealImageInfo[mealIndex].mealOptions.push({
                     courseKey,
@@ -238,7 +238,7 @@ const Meal = props => {
                                             showForm(setModalCourseShown);
                                         }} className={styles['add-coursemeal']}>Añadir plato</div> : undefined}
 
-                                        {
+                                        {meal.courseMeals ?
 
                                             Object.values(meal.courseMeals).map((course, courseIndex) => {
                                                 const courseKey = Object.keys(meal.courseMeals)[courseIndex];
@@ -285,12 +285,14 @@ const Meal = props => {
                                                 )
                                             })
 
-                                        }
+                                            : undefined}
 
                                     </div>
 
                                     <div course-meal-list={`meal${mealKey}`}>
-                                        {
+
+                                        {meal.courseMeals ?
+
                                             Object.values(meal.courseMeals).map((courseMeal, courseIndex) => {
                                                 const courseKey = Object.keys(meal.courseMeals)[courseIndex];
                                                 return (
@@ -311,7 +313,7 @@ const Meal = props => {
                                                 )
                                             })
 
-                                        }
+                                            : undefined}
                                     </div>
                                 </div>
                             )
