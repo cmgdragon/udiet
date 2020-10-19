@@ -1,3 +1,7 @@
+#root {
+    height: inherit !important;
+}
+
 .cuerpo {
     background-color: var(--body-color);
     width: 80%;

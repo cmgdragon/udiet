@@ -81,8 +81,17 @@ export const ImageModal = props => {
     const { dataShown, closeModal } = props;
     const { shown, image, imageName } = dataShown;
 
-    if (shown)
-        document.body.setAttribute('style', 'overflow:hidden;')
+    const closeOnEscape = event => {
+        if (event.key === "Escape") {
+            closeModal({...dataShown, shown : false});
+            document.removeEventListener('keydown', closeOnEscape);
+        }
+    }
+
+    if (shown) {
+        document.body.setAttribute('style', 'overflow:hidden;');
+        document.addEventListener('keydown', closeOnEscape);
+    }
 
     return !shown ? '' : ReactDOM.createPortal((
     <>
@@ -91,7 +100,8 @@ export const ImageModal = props => {
             document.body.removeAttribute('style');
             closeModal({...dataShown, shown : false});
             }}>
-              <div className={styles['image-content']}><img src={image} alt={imageName} /></div>
+              <i className={`fa fa-times ${styles['close-image-button']}`} aria-hidden="true"></i>
+              <div  className={styles['image-content']}><img src={image} alt={imageName} /></div>
         </div>
     </>
     ), document.getElementById('diet-modal'));
