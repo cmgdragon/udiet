@@ -1,1 +1,1 @@
-export { default, DietUsersModal } from './DietModal';
+export { default, DietUsersModal, ImageModal } from './DietModal';

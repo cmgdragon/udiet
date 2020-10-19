@@ -76,4 +76,25 @@ export const DietUsersModal = props => {
     ), document.getElementById('diet-modal'));
 }
 
+export const ImageModal = props => {
+
+    const { dataShown, closeModal } = props;
+    const { shown, image, imageName } = dataShown;
+
+    if (shown)
+        document.body.setAttribute('style', 'overflow:hidden;')
+
+    return !shown ? '' : ReactDOM.createPortal((
+    <>
+        <div diet-modal='' onClick={event => {
+            event.stopPropagation();
+            document.body.removeAttribute('style');
+            closeModal({...dataShown, shown : false});
+            }}>
+              <div className={styles['image-content']}><img src={image} alt={imageName} /></div>
+        </div>
+    </>
+    ), document.getElementById('diet-modal'));
+}
+
 export default DietModal;

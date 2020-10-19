@@ -1,4 +1,4 @@
-import React, { useDebugValue, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './MealOption.module.css';
 import Ingredient from '../Ingredient';
 import DietModal from '../DietModal';
@@ -10,7 +10,7 @@ import { editCourseMealName, editMealInfo } from './mealOptionEditFunctions';
 const MealOption = props => {
 
     const { mealList, courseMeal, display, mealKey, courseKey, courseIndex, userUid, dietId,
-        hasPerms, updateCourseMeal } = props;
+        hasPerms, updateCourseMeal, setDataShown } = props;
     const { comments, ingredients, name, properties, recipe, hasImage } = courseMeal;
     const [ingredientList, setIngredientList] = useState(ingredients);
     const [modalShown, setModalShown] = useState(false);
@@ -67,6 +67,14 @@ const MealOption = props => {
             document.querySelector(`[course-meal-list=meal${mealKey}] [course-meal=course${courseKey}] [coursemeal-info=${property}] p`).innerHTML = text.replace(/\n/g, '<br>');
     }
 
+    const getImageShown = () => {
+        const image = document.getElementById(`image-${mealKey}-${courseKey}`).parentElement.style.backgroundImage;
+        const imageUrl = image !== '' ? image.replace('url("', "").replace(")", "") : undefined;
+
+        if (imageUrl)
+            setDataShown({image : imageUrl, name, shown : true});
+    }
+
     return (
         <div course-meal={`course${courseKey}`}>
             <DietModal shown={modalShown} closeFn={setModalShown} sendModal={() => sendNewIngredient(userUid, dietId, mealKey, courseKey, ingredientList, setIngredientList)}>
@@ -75,7 +83,7 @@ const MealOption = props => {
             <div className={
                 !display ? styles.courseMealName : courseIndex === 0 ? styles.courseMealName + " " + styles['courseMealName-displayed']
                     : styles.courseMealName + " " + styles['courseMealName-displayed'] + " " + styles['courseMealName-displayed-top']
-            }><div><span>{name}</span>
+            }><div><span className={styles['coursemeal-image-button']} onClick={() => getImageShown()}>{name}</span>
 
                     {!hasPerms ? undefined : <div className={styles['meal-name-buttons-div']}>
                         <i onClick={event => editCourseMealName(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil ${styles['coursemeal-name-edit']}`} aria-hidden="true"></i>

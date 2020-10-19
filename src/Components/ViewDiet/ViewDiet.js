@@ -56,7 +56,7 @@ const ViewDiet = props => {
           !dietUser?.mealData ? <div className={styles['error-diet-message']}>Dieta no encontrada</div> :
           hasAccess() ? <>
             <Addthis url='//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f85dd0fa7c0fa0d'
-                onLoad={updateAddthis()} />
+                onLoad={updateAddthis} />
             <div className={styles.cuerpo}>
 
                 <div className={`addthis_inline_share_toolbox ${styles['addthis-element']}`}></div>

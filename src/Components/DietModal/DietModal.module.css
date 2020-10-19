@@ -154,6 +154,20 @@
     background-color: rgb(228, 127, 127);
 }
 
+.image-content {
+    display: flex;
+    justify-content: center;
+    margin: 10% 0;
+    padding: 2rem;
+}
+
+.image-content > img {
+    max-width: 100%;
+    width: auto;
+    max-height: 80vh;
+    height: auto;
+}
+
 @media (max-width: 750px) {
     .modal-form {
         width: 100%;

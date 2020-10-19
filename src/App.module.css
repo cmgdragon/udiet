@@ -152,6 +152,7 @@ body  {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 689px;
   height: 85vh;
 }
 
@@ -231,9 +232,6 @@ footer > a:hover {
 @media (max-width: 750px) {
   .cuerpo {
     width: auto;
-  }
-  .loginbox {
-    height: 100vh;
   }
   .share-diet {
       right: 19vw;

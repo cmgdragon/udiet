@@ -6,7 +6,7 @@ import { modifyCouseMealImageInfo, uploadNewCourseMealImage } from '../../Databa
 import { deleteCourseMealImage, deleteDietMeal } from '../../Database/deleteDietInfo';
 import { getCourseMealImage } from '../../Database/readDietInfo';
 import { userHasEditPermissions } from '../../Database/readDietInfo';
-import DietModal from '../DietModal';
+import DietModal, { ImageModal } from '../DietModal';
 import CourseMealForm from '../CreateDiet/CourseMealForm';
 import MealForm from '../CreateDiet/MealForm';
 import Skeleton from 'react-loading-skeleton';
@@ -24,6 +24,7 @@ const Meal = props => {
     const [courseMealImages, setcourseMealImages] = useState(undefined);
     const [modalMealShown, setModalMealShown] = useState(false);
     const [modalCourseShown, setModalCourseShown] = useState(false);
+    const [modalImageShown, setModalImageShown] = useState({});
     const currentUser = useContext(UserContext);
 
     useEffect(() => {
@@ -202,6 +203,7 @@ const Meal = props => {
             <DietModal shown={modalCourseShown} sendModal={() => sendNewCourseMeal(userUid, dietId, mealDisplayed.mealKey, mealList, setMealList)} closeFn={setModalCourseShown}>
                 <CourseMealForm canRemove={false} initNumber={1}></CourseMealForm>
             </DietModal>
+            <ImageModal dataShown={modalImageShown} closeModal={setModalImageShown}  />
 
             <h1 className={styles['diet-name']}><span>{dietName}</span>
                 {!notLoggedIn && permissionRef.current ?
@@ -295,6 +297,7 @@ const Meal = props => {
 
                                             Object.values(meal.courseMeals).map((courseMeal, courseIndex) => {
                                                 const courseKey = Object.keys(meal.courseMeals)[courseIndex];
+
                                                 return (
                                                     <React.Fragment key={courseKey}>
                                                         <MealOption
@@ -302,6 +305,7 @@ const Meal = props => {
                                                             mealList={mealList}
                                                             mealKey={mealKey}
                                                             courseMeal={courseMeal}
+                                                            setDataShown={setModalImageShown}
                                                             courseKey={courseKey}
                                                             courseIndex={courseIndex}
                                                             hasPerms={permissionRef.current}
