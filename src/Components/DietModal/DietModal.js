@@ -84,6 +84,7 @@ export const ImageModal = props => {
     const closeOnEscape = event => {
         if (event.key === "Escape") {
             closeModal({...dataShown, shown : false});
+            document.body.removeAttribute('style');
             document.removeEventListener('keydown', closeOnEscape);
         }
     }
