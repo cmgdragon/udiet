@@ -16,6 +16,16 @@ const MealOption = props => {
     const [modalShown, setModalShown] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
+    const isCourseEmpty = !comments && !ingredients && !properties && !recipe;
+
+    const optionBoxStyles = {
+        visibility: (!isCourseEmpty && display) || hasPerms ? 'visible' : 'hidden'
+    }
+
+    const courseStyles = {
+        marginBottom: isCourseEmpty && display && !hasPerms ? '-12rem' : hasPerms && display ? '5rem' : '0'
+    }
+
     const selectMealInfo = (event, infoType) => {
 
         const mealElement = document.querySelectorAll(`[course-meal-list=meal${mealKey}] .${styles['options-box']}`);
@@ -79,7 +89,7 @@ const MealOption = props => {
     }
 
     return (
-        <div course-meal={`course${courseKey}`}>
+        <div course-meal={`course${courseKey}`} style={courseStyles}>
             <DietModal shown={modalShown} closeFn={setModalShown} sendModal={() => sendNewIngredient(userUid, dietId, mealKey, courseKey, ingredientList, setIngredientList)}>
                 <IngredientForm canRemove={false} initNumber={1}></IngredientForm>
             </DietModal>
@@ -96,7 +106,7 @@ const MealOption = props => {
             </div>
             <div className={
                 !display ? styles['options-box'] : styles['options-box'] + " " + styles.displayed
-            }>
+            } style={optionBoxStyles}>
 
                 <div className={styles['meal-box']}>
 

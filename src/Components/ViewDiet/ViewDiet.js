@@ -73,7 +73,7 @@ const ViewDiet = props => {
                 { user.uid === currentUser.uid ?
                 <div className={`${styles.checkboxes} ${styles['is-private']}`}>
                     <input onClick={updateDietPrivateness} id="isprivate" type="checkbox" defaultChecked={isPrivate} />
-                    <label onClick={activateCheck}>Hacer privada</label>
+                    <label onClick={activateCheck}>Es privada</label>
                 </div>
                 : undefined}
 

@@ -129,7 +129,7 @@ const CreateDiet = () => {
 
                 <div className={`${styles.checkboxes} ${styles['is-private']}`}>
                     <input id="isprivate" type="checkbox" />
-                    <label onClick={activateCheck}>Hacer privada</label>
+                    <label onClick={activateCheck}>Es privada</label>
                 </div>
 
                 <div onClick={addMeal} className={styles['meal-button']}>

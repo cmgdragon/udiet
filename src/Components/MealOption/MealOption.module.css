@@ -1,6 +1,9 @@
 .options-box {
     background-color: #ebebeb;
     transition: all .5s ease-in;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     transform: scale(0);
     height: 0;
     opacity: 0;
@@ -64,6 +67,13 @@
 .ingredient-list {
     display: none;
     margin-top: 1.2rem;
+}
+
+
+.coursemeal-tab-list {
+    position: absolute;
+    top: 1.7rem;
+    left: 2vw;
 }
 
 .coursemeal-tab {
@@ -245,6 +255,9 @@
     .coursemeal-tab-list {
         margin-top: 2.5rem;
         padding-bottom: 1.8rem;
+        position: initial !important;
+        left: 2rem !important;
+        top: 1.5rem !important;
     }
     .coursemeal-tab {
         margin-right: 0;
