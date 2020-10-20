@@ -10,7 +10,7 @@ import { setDietPrivateness } from '../../Database/writeDietInfo';
 import 'drag-drop-touch';
 
 const ViewDiet = props => {
-    const [isPrivate, setIsPrivate] = useState(true);
+    const [isPrivate, setIsPrivate] = useState(undefined);
     const [dietUser, setDietUser] = useState('loading');
     const { currentUser } = props;
 
@@ -24,8 +24,8 @@ const ViewDiet = props => {
     useEffect(() => {
         getUserDiets(user.uid).then(diets => {
             setDietUser(getDietUser(diets));
-            setIsPrivate(Object.values(diets)[user.dietId]?.isPrivate
-             ? Object.values(diets)[user.dietId].isPrivate : false);
+            setIsPrivate(diets && Object.values(diets)[user.dietId]?.isPrivate ?
+                Object.values(diets)[user.dietId].isPrivate : undefined);
         });
         document.getElementById('back-button').classList.remove(styles.invisible);
     }, []);
