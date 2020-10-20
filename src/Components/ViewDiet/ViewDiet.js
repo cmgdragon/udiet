@@ -47,7 +47,7 @@ const ViewDiet = props => {
     const hasAccess = () => {
         const collaborators = dietUser.sharedWith ? Object.values(dietUser.sharedWith) : [];
         const isCollaborator = collaborators.includes(currentUser.email);
-        return !isPrivate || user.uid === currentUser.uid || isCollaborator
+        return isPrivate ? !isPrivate: undefined || user.uid === currentUser.uid || isCollaborator
     }
 
     return (

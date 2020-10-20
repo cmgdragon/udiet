@@ -10,7 +10,7 @@ const cancelEditNameOperation = (elementToShow, elementToDelete, text, setIsEdit
 
 const updateCourseMealName = async (userUid, dietId, mealKey, courseKey, currentTitle, inputWrapper, newName, setIsEditing) => {
     await changeCourseMealName(userUid, dietId, mealKey, courseKey, newName);
-    cancelEditNameOperation(currentTitle, inputWrapper, newName);
+    cancelEditNameOperation(currentTitle, inputWrapper, newName, setIsEditing);
 }
 
 export const editCourseMealName = (event, userId, dietId, mealKey, courseKey, setIsEditing) => {
