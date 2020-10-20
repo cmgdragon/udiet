@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import styles from './CreateDiet.module.css';
 import MealForm from './MealForm';
 import { addNewUserDiet } from '../../Database/writeDietInfo';
+import { getUserDiets } from '../../Database/readDietInfo';
 import { UserContext } from '../../Context/userContext';
 import { signOut } from '../../Services/authProviders';
 import Header from '../Header';
@@ -80,8 +81,16 @@ const CreateDiet = () => {
 
         });
 
-        await addNewUserDiet(user.uid, dietObject);
-        window.location = window.location.origin;
+        if (window.confirm('¿Crear dieta?')) {
+            const userDiets = await getUserDiets(user.uid) || {};
+
+            const userDietList = Object.entries(userDiets);
+            const newKey = userDietList.length === 0 ? 0 : Math.max(...Object.keys(userDiets)) + 1;
+            const updatedDiets = {...userDiets, [newKey]: dietObject};
+
+            await addNewUserDiet(user.uid, updatedDiets);
+            window.location = window.location.origin;
+        }
 
     }
 

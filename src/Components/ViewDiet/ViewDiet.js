@@ -23,12 +23,19 @@ const ViewDiet = props => {
 
     useEffect(() => {
         getUserDiets(user.uid).then(diets => {
-            setDietUser(Object.values(diets ? diets : [])[user.dietId]);
+            setDietUser(getDietUser(diets));
             setIsPrivate(Object.values(diets)[user.dietId]?.isPrivate
              ? Object.values(diets)[user.dietId].isPrivate : false);
         });
         document.getElementById('back-button').classList.remove(styles.invisible);
     }, []);
+
+    const getDietUser = diets => {
+        const dietList = diets ? Object.entries(diets) : [];
+        return dietList === 0 ? undefined :
+            dietList.find(diet => diet[0] === user.dietId) ? 
+            dietList.find(diet => diet[0] === user.dietId)[1] : undefined;
+    }
 
     const updateAddthis = () => {
         if (typeof window.addthis?.layers?.refresh === 'function') {

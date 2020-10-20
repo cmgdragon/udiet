@@ -12,7 +12,7 @@ const Ingredient = props => {
     const ingredientContent = useRef();
 
     const expandedStyle = {
-        height: expanded ? ingredientContent.current.scrollHeight : '0px',
+        height: expanded ? ingredientContent.current.scrollHeight-10 : '0px',
         padding: expanded ? '0.7rem' : '0px'
     }
 

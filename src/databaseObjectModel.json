@@ -2,7 +2,7 @@
     "diets" : {
       "users" : {
         "wsFsr4sLsEVszzsk2t574vpNLY9" : {
-          "-MJcprDyOWdnzH_rLkP4" : {
+          "0" : {
             "dietName" : "My diet Name",
             "isPrivate" : false,
             "mealData" : [ {
@@ -19,6 +19,7 @@
               } ],
               "name" : "meal name"
             } ],
+            "mealOrder" : ["0"],
             "sharedWith" : [ "shared@email.com" ]
           }
         }

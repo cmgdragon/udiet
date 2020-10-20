@@ -30,13 +30,9 @@ export const getSharedDiets = async () => {
 
 export const getDietSharedUsers = async (userId, dietId) => {
 
-    const dietList = await getUserDiets(userId);
-    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
-     : Object.getOwnPropertyNames(await dietList)[dietId];
-
     try {
         const data = await firebase.database()
-            .ref(`diets/users/${userId}/${dietName}/sharedWith`)
+            .ref(`diets/users/${userId}/${dietId}/sharedWith`)
             .once('value');
         return data.exportVal();
 
@@ -75,14 +71,10 @@ export const getCourseMealImage = async (userUid, dietId, mealKey, courseMealKey
 
 export const getMealOrder = async (userUid, dietId) => {
 
-    const dietList = await getUserDiets(userUid);
-    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
-     : Object.getOwnPropertyNames(await dietList)[dietId];
-
     try {
 
         const data = await firebase.database()
-            .ref(`diets/users/${userUid}/${dietName}/mealOrder`)
+            .ref(`diets/users/${userUid}/${dietId}/mealOrder`)
             .once('value');
         return data.exportVal();
 

@@ -16,14 +16,10 @@ export const deleteCourseMealImage = async (userUid, dietId, mealKey, courseMeal
 
 export const deleteCourseMealIngredient = async (userId, dietId, mealKey, courseMealKey, ingredientKey) => {
 
-    const dietList = await getUserDiets(userId);
-    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
-     : Object.getOwnPropertyNames(await dietList)[dietId];
-
     try {
 
        await firebase.database()
-        .ref(`diets/users/${userId}/${dietName}/mealData/${mealKey}/courseMeals/${courseMealKey}/ingredients/${ingredientKey}`)
+        .ref(`diets/users/${userId}/${dietId}/mealData/${mealKey}/courseMeals/${courseMealKey}/ingredients/${ingredientKey}`)
         .remove();
         
     } catch (error) {
@@ -34,14 +30,10 @@ export const deleteCourseMealIngredient = async (userId, dietId, mealKey, course
 
 export const deleteUserDiet = async (userId, dietId) => {
 
-    const dietList = await getUserDiets(userId);
-    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
-     : Object.getOwnPropertyNames(await dietList)[dietId];
-
      try {
 
         await firebase.database()
-        .ref(`diets/users/${userId}/${dietName}`)
+        .ref(`diets/users/${userId}/${dietId}`)
         .remove();
 
         const {prefixes} = await firebase.storage()
@@ -65,14 +57,10 @@ export const deleteUserDiet = async (userId, dietId) => {
 
 export const deleteDietMeal = async (userId, dietId, mealKey) => {
 
-    const dietList = await getUserDiets(userId);
-    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
-     : Object.getOwnPropertyNames(await dietList)[dietId];
-
      try {
 
         await firebase.database()
-        .ref(`diets/users/${userId}/${dietName}/mealData/${mealKey}`)
+        .ref(`diets/users/${userId}/${dietId}/mealData/${mealKey}`)
         .remove();
 
         const { items } = await firebase.storage()
@@ -93,14 +81,10 @@ export const deleteDietMeal = async (userId, dietId, mealKey) => {
 
 export const deleteDietCourseMeal = async (userId, dietId, mealKey, courseMealKey, hasImage) => {
 
-    const dietList = await getUserDiets(userId);
-    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
-     : Object.getOwnPropertyNames(await dietList)[dietId];
-
      try {
 
         await firebase.database()
-        .ref(`diets/users/${userId}/${dietName}/mealData/${mealKey}/courseMeals/${courseMealKey}`)
+        .ref(`diets/users/${userId}/${dietId}/mealData/${mealKey}/courseMeals/${courseMealKey}`)
         .remove();
 
         if (hasImage) deleteCourseMealImage(userId, dietId, mealKey, courseMealKey);

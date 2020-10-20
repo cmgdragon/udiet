@@ -153,7 +153,8 @@ const Diet = () => {
                 <div className={styles['my-diets-label']}>Mis dietas</div>
                 <div className={styles['my-diets-label-border-bottom']}></div>
                 {dietUserList === 'loading' ? <Skeleton height={100} duration={.3} /> : !dietUserList ? undefined :
-                    Object.values(dietUserList).map(({ dietName }, dietId) => {
+                    Object.values(dietUserList).map(({ dietName }, dietIndex) => {
+                        const dietId = Object.keys(dietUserList)[dietIndex];
                         return (
                             <React.Fragment key={dietId}>
                                 <DietUsersModal
