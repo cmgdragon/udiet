@@ -24,7 +24,8 @@ const ViewDiet = props => {
     useEffect(() => {
         getUserDiets(user.uid).then(diets => {
             setDietUser(Object.values(diets ? diets : [])[user.dietId]);
-            setIsPrivate(diets ? Object.values(diets)[user.dietId].isPrivate : undefined);
+            setIsPrivate(Object.values(diets)[user.dietId]?.isPrivate
+             ? Object.values(diets)[user.dietId].isPrivate : false);
         });
         document.getElementById('back-button').classList.remove(styles.invisible);
     }, []);
@@ -47,7 +48,7 @@ const ViewDiet = props => {
     const hasAccess = () => {
         const collaborators = dietUser.sharedWith ? Object.values(dietUser.sharedWith) : [];
         const isCollaborator = collaborators.includes(currentUser.email);
-        return isPrivate ? !isPrivate: undefined || user.uid === currentUser.uid || isCollaborator
+        return !isPrivate || user.uid === currentUser.uid || isCollaborator
     }
 
     return (
