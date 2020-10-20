@@ -96,7 +96,7 @@ const MealOption = props => {
             <div onClick={getImageShown} className={
                 !display ? styles.courseMealName : courseIndex === 0 ? styles.courseMealName + " " + styles['courseMealName-displayed']
                     : styles.courseMealName + " " + styles['courseMealName-displayed'] + " " + styles['courseMealName-displayed-top']
-            }><div><span>{name}</span>
+            }><div><span onClick={getImageShown}>{name}</span>
 
                     {!hasPerms ? undefined : <div className={styles['meal-name-buttons-div']}>
                         <i onClick={event => editCourseMealName(event, userUid, dietId, mealKey, courseKey, setIsEditing)} className={`fa fa-pencil ${styles['coursemeal-name-edit']}`} aria-hidden="true"></i>
