@@ -2,16 +2,17 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import styles from './Meal.module.css';
 import MealOption from '../MealOption';
 import { UserContext } from '../../Context/userContext';
-import { modifyCouseMealImageInfo, uploadNewCourseMealImage } from '../../Database/writeDietInfo';
+import { modifyCouseMealImageInfo, uploadNewCourseMealImage, updateMealOrder } from '../../Database/writeDietInfo';
 import { deleteCourseMealImage, deleteDietMeal } from '../../Database/deleteDietInfo';
 import { getCourseMealImage } from '../../Database/readDietInfo';
-import { userHasEditPermissions } from '../../Database/readDietInfo';
+import { userHasEditPermissions, getMealOrder } from '../../Database/readDietInfo';
 import DietModal, { ImageModal } from '../DietModal';
 import CourseMealForm from '../CreateDiet/CourseMealForm';
 import MealForm from '../CreateDiet/MealForm';
 import Skeleton from 'react-loading-skeleton';
 import { sendNewMeal, sendNewCourseMeal } from '../CreateDiet/addDietFunctions';
 import { editDietName, editMealName } from './mealEditFunctions';
+import { orderMeals, switchDrag } from './mealOrderFunctions';
 import Compressor from 'compressorjs';
 
 const Meal = props => {
@@ -30,6 +31,7 @@ const Meal = props => {
     useEffect(() => {
         userHasEditPermissions(currentUser.uid, currentUser.email, userUid, dietId).then(res => permissionRef.current = res);
         if (mealList) getCourseMealImageList();
+        getMealOrder(userUid, dietId).then(order => orderMeals(order, userUid, dietId, permissionRef.current))
     }, [mealList]);
 
     const optionClick = (event, mealKey, courseKey, courseIndex) => {
@@ -186,11 +188,15 @@ const Meal = props => {
 
     const updateCourseMeal = newMealList => setMealList(newMealList);
 
-    const removeMeal = async mealIndex => {
+    const removeMeal = async mealKey => {
         if (window.confirm('¿Quieres borrar esta comida?')) {
-            await deleteDietMeal(userUid, dietId, mealIndex);
-            delete mealList[mealIndex];
+            const mealOrder = Object.values(await getMealOrder(userUid, dietId));
+            delete mealOrder[mealOrder.findIndex(o => o === mealKey.toString())];
+            await deleteDietMeal(userUid, dietId, mealKey);
+            await updateMealOrder(userUid, dietId, mealOrder);
+            delete mealList[mealKey];
             setMealList(mealList);
+            getCourseMealImageList();
             setMealDisplayed({ meal: undefined, meals: {}, mealKey: undefined })
         }
     }
@@ -223,13 +229,14 @@ const Meal = props => {
                         Object.values(mealList).map((meal, mealIndex) => {
                             const mealKey = Object.keys(mealList)[mealIndex];
                             return (
-                                <div key={mealKey}>
+                                <div meal-order={`o${mealKey}`} key={mealKey}>
                                     <h2 className={styles['meal-name']}><span>{meal.name}</span>
                                         {!notLoggedIn && permissionRef.current ? <>
                                             <i onClick={event => editMealName(event, userUid, dietId, mealKey)} className={`fa fa-pencil ${styles['meal-name-edit']}`} aria-hidden="true"></i>
                                             <i onClick={() => removeMeal(mealKey)} className={`fa fa-trash ${styles.removeMeal}`} aria-hidden="true"></i>
+                                            <i onClick={switchDrag} drag-id={`drag${mealKey}`} className={`fa fa-arrows ${styles['drag-switch']}`} aria-hidden="true"></i>
                                         </>
-                                            : undefined}
+                                        : undefined}
                                     </h2>
 
                                     <div className={permissionRef.current ? styles['meal-list-padding'] : styles['meal-list']}>

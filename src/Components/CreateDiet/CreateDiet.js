@@ -21,12 +21,13 @@ const CreateDiet = () => {
         const dietObject = {
             dietName: document.getElementById('diet-name').value,
             isPrivate: document.getElementById('isprivate').checked,
-            mealData: []
+            mealData: [],
+            mealOrder: []
         }
 
         const meals = document.querySelectorAll('[meal-object]');
 
-        meals.forEach(meal => {
+        meals.forEach((meal, index) => {
 
             const courseMeals = [];
             const courseMealList = meal.querySelectorAll('[coursemeal-object]');
@@ -74,6 +75,8 @@ const CreateDiet = () => {
                 name: meal.querySelector('[meal-name]').value,
                 courseMeals
             });
+
+            dietObject.mealOrder.push(index.toString());
 
         });
 

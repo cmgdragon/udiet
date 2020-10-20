@@ -245,6 +245,35 @@
     background-color: rgb(230, 105, 105) !important;
 }
 
+.drag-switch {
+    order: 3;
+    margin: 0 1rem 0 auto;
+    padding: .5rem !important;
+}
+
+.active-drag-button {
+    background-color: #77ff77;
+    box-shadow: inset 0px 0px 9px 1px rgb(0 0 0 / 33%);
+}
+
+.drag-switch:hover {
+    cursor: pointer;
+    box-shadow: inset 0px 0px 9px 1px rgb(0 0 0 / 33%);
+}
+
+.draggable-element {
+    cursor: move;
+}
+
+.draggable-element > .meal-list-padding {
+    box-shadow: inset 0px 0px 9px 1px rgb(70, 196, 70);
+    border: 2px dotted black;
+}
+
+.dragging {
+    opacity: .3;
+}
+
 @media (max-width: 750px) {
     .meal-box {
       margin: 0;

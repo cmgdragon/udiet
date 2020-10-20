@@ -1,19 +1,22 @@
 import styles from './MealOption.module.css';
 import { changeCourseMealName, modifyCourseMealInfo } from '../../Database/writeDietInfo';
 
-const cancelEditNameOperation = (elementToShow, elementToDelete, text) => {
+const cancelEditNameOperation = (elementToShow, elementToDelete, text, setIsEditing) => {
+    setIsEditing(false);
     elementToDelete.remove();
     elementToShow.classList.remove(styles.undisplay);
     elementToShow.firstChild.innerText = text;
 }
 
-const updateCourseMealName = async (userUid, dietId, mealKey, courseKey, currentTitle, inputWrapper, newName) => {
+const updateCourseMealName = async (userUid, dietId, mealKey, courseKey, currentTitle, inputWrapper, newName, setIsEditing) => {
     await changeCourseMealName(userUid, dietId, mealKey, courseKey, newName);
     cancelEditNameOperation(currentTitle, inputWrapper, newName);
 }
 
-export const editCourseMealName = (event, userId, dietId, mealKey, courseKey) => {
+export const editCourseMealName = (event, userId, dietId, mealKey, courseKey, setIsEditing) => {
+    event.stopPropagation();
 
+    setIsEditing(true);
     const currentTitle = event.target.parentElement.parentElement;
     const parentEl = event.target.parentElement.parentElement.parentElement;
     const newInput = document.createElement('input');
@@ -27,11 +30,11 @@ export const editCourseMealName = (event, userId, dietId, mealKey, courseKey) =>
     const cancelButton = document.createElement('i');
     checkButton.classList = [`fa fa-check ${styles.green}`]
     checkButton.addEventListener('click', async () => updateCourseMealName(userId, dietId, mealKey,
-        courseKey, currentTitle, inputWrapper, newInput.value));
+        courseKey, currentTitle, inputWrapper, newInput.value, setIsEditing));
 
     cancelButton.classList = [`fa fa-ban ${styles.red}`]
     cancelButton.addEventListener('click', () => cancelEditNameOperation(currentTitle,
-        inputWrapper, oldText));
+        inputWrapper, oldText, setIsEditing));
 
     editBox.prepend(checkButton);
     editBox.appendChild(cancelButton);

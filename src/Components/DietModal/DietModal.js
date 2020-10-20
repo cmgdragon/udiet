@@ -96,13 +96,14 @@ export const ImageModal = props => {
 
     return !shown ? '' : ReactDOM.createPortal((
     <>
-        <div diet-modal='' onClick={event => {
+        <div diet-modal='image' onClick={event => {
             event.stopPropagation();
             document.body.removeAttribute('style');
             closeModal({...dataShown, shown : false});
             }}>
-              <i className={`fa fa-times ${styles['close-image-button']}`} aria-hidden="true"></i>
-              <div  className={styles['image-content']}><img src={image} alt={imageName} /></div>
+
+                <div className={styles['image-content']}><img src={image} alt={imageName} /></div>
+
         </div>
     </>
     ), document.getElementById('diet-modal'));

@@ -1,4 +1,5 @@
-import { uploadNewCourseMeal, uploadNewMeal, uploadNewCourseMealIngredient } from '../../Database/writeDietInfo';
+import { uploadNewCourseMeal, uploadNewMeal, uploadNewCourseMealIngredient, updateMealOrder } from '../../Database/writeDietInfo';
+import { getMealOrder } from '../../Database/readDietInfo';
 
 export const sendNewMeal = (userUid, dietId, mealList, setMealList) => {
     const meal = document.querySelector('[diet-modal]')
@@ -53,7 +54,11 @@ export const sendNewMeal = (userUid, dietId, mealList, setMealList) => {
         const newKey = maxKeyList === 0 ? 1 : maxKeyList + 1;
         const mealData = {...mealList, [newKey]: newMeal};
 
+        const mealOrder = Object.values(await getMealOrder(userUid, dietId));
+        mealOrder.push(newKey.toString());
+
         await uploadNewMeal(userUid, dietId, mealData);
+        await updateMealOrder(userUid, dietId, mealOrder);
         setMealList(mealData);
 
     });

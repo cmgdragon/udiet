@@ -14,6 +14,7 @@ const MealOption = props => {
     const { comments, ingredients, name, properties, recipe, hasImage } = courseMeal;
     const [ingredientList, setIngredientList] = useState(ingredients);
     const [modalShown, setModalShown] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     const selectMealInfo = (event, infoType) => {
 
@@ -52,7 +53,8 @@ const MealOption = props => {
 
     const showForm = () => setModalShown(true);
 
-    const removeCourseMeal = async () => {
+    const removeCourseMeal = async event => {
+        event.stopPropagation();
         const courseMealImage = document.getElementById(`image-${mealKey}-${courseKey}`).parentElement;
         if (window.confirm('¿Quieres borrar este plato?')) {
             await deleteDietCourseMeal(userUid, dietId, mealKey, courseKey, hasImage);
@@ -67,12 +69,13 @@ const MealOption = props => {
             document.querySelector(`[course-meal-list=meal${mealKey}] [course-meal=course${courseKey}] [coursemeal-info=${property}] p`).innerHTML = text.replace(/\n/g, '<br>');
     }
 
-    const getImageShown = () => {
+    const getImageShown = event => {
         const image = document.getElementById(`image-${mealKey}-${courseKey}`).parentElement.style.backgroundImage;
         const imageUrl = image !== '' ? image.replace('url("', "").replace(")", "") : undefined;
 
-        if (imageUrl)
+        if (imageUrl && !isEditing)
             setDataShown({image : imageUrl, name, shown : true});
+        
     }
 
     return (
@@ -80,13 +83,13 @@ const MealOption = props => {
             <DietModal shown={modalShown} closeFn={setModalShown} sendModal={() => sendNewIngredient(userUid, dietId, mealKey, courseKey, ingredientList, setIngredientList)}>
                 <IngredientForm canRemove={false} initNumber={1}></IngredientForm>
             </DietModal>
-            <div className={
+            <div onClick={getImageShown} className={
                 !display ? styles.courseMealName : courseIndex === 0 ? styles.courseMealName + " " + styles['courseMealName-displayed']
                     : styles.courseMealName + " " + styles['courseMealName-displayed'] + " " + styles['courseMealName-displayed-top']
-            }><div><span className={styles['coursemeal-image-button']} onClick={() => getImageShown()}>{name}</span>
+            }><div><span>{name}</span>
 
                     {!hasPerms ? undefined : <div className={styles['meal-name-buttons-div']}>
-                        <i onClick={event => editCourseMealName(event, userUid, dietId, mealKey, courseKey)} className={`fa fa-pencil ${styles['coursemeal-name-edit']}`} aria-hidden="true"></i>
+                        <i onClick={event => editCourseMealName(event, userUid, dietId, mealKey, courseKey, setIsEditing)} className={`fa fa-pencil ${styles['coursemeal-name-edit']}`} aria-hidden="true"></i>
                         <i onClick={removeCourseMeal} className={`fa fa-trash ${styles.removeCourse}`} aria-hidden="true"></i>
                     </div>}
                 </div>

@@ -7,6 +7,7 @@ import Header from '../Header';
 import Addthis from "react-load-script";
 import { activateCheck } from '../CreateDiet';
 import { setDietPrivateness } from '../../Database/writeDietInfo';
+import 'drag-drop-touch';
 
 const ViewDiet = props => {
     const [isPrivate, setIsPrivate] = useState(true);

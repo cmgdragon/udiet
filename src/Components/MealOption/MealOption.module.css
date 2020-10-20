@@ -26,12 +26,25 @@
     font-weight: bold;
     z-index: 1;
     left: 0%;
+    padding: .3rem;
     border-radius: 5px;
     position: absolute;
+    box-shadow: 0px 0 4px 4px #0000004a;
     top: -1.2rem;
     background: white;
     transition: all .5s ease-in;
+    max-height: 60px;
     display: flex;
+}
+
+.courseMealName > div {
+    overflow: auto;
+}
+
+.courseMealName:hover {
+    cursor: pointer;
+    background-color: var(--body-color);
+    box-shadow: inset 0px 0 4px 4px #0000004a;
 }
 
 .courseMealName-displayed {
@@ -218,23 +231,16 @@
     margin: 0;
 }
 
-.coursemeal-image-button {
-    background-color: white;
-    padding: .3rem;
-    border-radius: 5px;
-    box-shadow: 0px 0 4px 4px #0000004a;
-}
-
-.coursemeal-image-button:hover {
-    cursor: pointer;
-    background-color: var(--body-color);
-    box-shadow: inset 0px 0 4px 4px #0000004a;
-}
-
 @media (max-width: 750px) {
     .meal-box {
       display: inline-block;
       margin-top: 1rem;
+    }
+    .courseMealName {
+
+    }
+    .displayed {
+        padding-top: 3.5rem;
     }
     .coursemeal-tab-list {
         margin-top: 2.5rem;
@@ -245,7 +251,7 @@
     }
     .add-ingredient {
         left: 1.2rem;
-        margin-top: 1rem;
+        top: 2.5rem;
         width: 50%;
         margin: 1rem auto 0 auto;
     }

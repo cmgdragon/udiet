@@ -72,3 +72,22 @@ export const getCourseMealImage = async (userUid, dietId, mealKey, courseMealKey
     }
 
 }
+
+export const getMealOrder = async (userUid, dietId) => {
+
+    const dietList = await getUserDiets(userUid);
+    const dietName = dietList.length > 1 ? Object.getOwnPropertyNames(await dietList)
+     : Object.getOwnPropertyNames(await dietList)[dietId];
+
+    try {
+
+        const data = await firebase.database()
+            .ref(`diets/users/${userUid}/${dietName}/mealOrder`)
+            .once('value');
+        return data.exportVal();
+
+    } catch (error) {
+        console.error(error)
+    }
+
+}

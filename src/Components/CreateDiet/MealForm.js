@@ -26,7 +26,7 @@ const MealForm = props => {
         for (let i = 0; i < courseMealNumber; i++) {
             renderCourseMeals.push(
                 <React.Fragment key={i}>
-                    <CourseMealForm />
+                    <CourseMealForm canRemove={false} initNumber={1} />
                 </React.Fragment>
             );
         }
