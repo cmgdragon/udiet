@@ -2,7 +2,7 @@ import styles from './Ingredient.module.css';
 import { modifyIngredientInfo } from '../../Database/writeDietInfo';
 
 const cancelEditOperation = (event, ingredientNameEl, ingredientListEl, editButton, removeButton,
-    checkButton, cancelButton, value, setExpanded) => {
+    checkButton, cancelButton, value, setExpanded, isUploadOperation) => {
     event.stopPropagation();
     const oldNameEl = ingredientNameEl.querySelector(`.${styles.undisplay}:last-child`);
     oldNameEl.classList.remove(styles.undisplay);
@@ -13,9 +13,17 @@ const cancelEditOperation = (event, ingredientNameEl, ingredientListEl, editButt
     ingredientListEl.querySelectorAll('[ingredient-box]').forEach(ingredientBox => {
 
         const valueInput = ingredientBox.querySelector('input') || ingredientBox.querySelector('textarea');
-        const oldValueDiv = ingredientBox.querySelector(`.${styles.undisplay}`);
+        const oldValueDiv = ingredientBox.querySelector(`[current-value].${styles.undisplay}`);
 
-        oldValueDiv.innerText = valueInput.value;
+        if (isUploadOperation) {
+            if (valueInput.value === '')
+                ingredientBox.classList.add(styles.undisplay);
+            oldValueDiv.innerText = valueInput.value;
+        } else {
+            if (oldValueDiv.innerText === '')
+            ingredientBox.classList.add(styles.undisplay);
+        }
+
         oldValueDiv.classList.remove(styles.undisplay);
         valueInput.remove();
 
@@ -58,12 +66,14 @@ export const editIngredient = (event, userId, dietId, mealKey, courseKey, ingred
     cancelButton.classList = [`fa fa-ban ${styles.red}`]
     cancelButton.addEventListener('click', event => cancelEditOperation(event,
         ingredientNameEl, ingredientListEl, editButton, removeButton, checkButton,
-        cancelButton, ingredientNameEl.lastChild.textContent, setExpanded));
+        cancelButton, ingredientNameEl.lastChild.textContent, setExpanded, false));
 
     buttonBox.appendChild(checkButton);
     buttonBox.appendChild(cancelButton);
 
     ingredientListEl.querySelectorAll('[ingredient-box]').forEach(ingredientBox => {
+
+        ingredientBox.classList.remove(styles.undisplay);
         const valueDiv = ingredientBox.querySelector('[current-value]');
         const newInput = ingredientBox.className.includes('info') ? document.createElement('textarea')
             : document.createElement('input');
@@ -92,6 +102,6 @@ const sendNewIngredientData = async (event, ingredientNameEl, ingredientListEl, 
 
     await modifyIngredientInfo(userId, dietId, mealKey, courseKey, ingredientKey, newObject);
     cancelEditOperation(event, ingredientNameEl, ingredientListEl, editButton, removeButton,
-        checkButton, cancelButton, newValue, setExpanded);
+        checkButton, cancelButton, newValue, setExpanded, true);
 
 }

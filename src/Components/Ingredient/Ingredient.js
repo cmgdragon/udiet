@@ -11,6 +11,8 @@ const Ingredient = props => {
     const [expanded, setExpanded] = useState(false);
     const ingredientContent = useRef();
 
+    const hasPropertyData = property => !property ? styles.undisplay : '';
+
     const expandedStyle = {
         height: expanded ? ingredientContent.current.scrollHeight-10 : '0px',
         padding: expanded ? '0.7rem' : '0px'
@@ -45,33 +47,25 @@ const Ingredient = props => {
 
             <div className={styles['ingredient-list-background']} style={expandedStyle} ref={ingredientContent}>
 
-                {!quantity && !hasPerms ? undefined :
-                    <div className={styles.quantity} ingredient-box='quantity'>
+                    <div className={`${styles.quantity} ${hasPropertyData(quantity)}`} ingredient-box='quantity'>
                         <div className={styles['ingredient-labels']}>Cantidad</div>
                         <div current-value=''>{quantity}</div>
                     </div>
-                }
 
-                {!brand && !hasPerms ? undefined :
-                    <div className={styles.brand} ingredient-box='brand'>
+                    <div className={`${styles.brand} ${hasPropertyData(brand)}`} ingredient-box='brand'>
                         <div className={styles['ingredient-labels']}>Marca</div>
                         <div current-value=''>{brand}</div>
                     </div>
-                }
 
-                {!location && !hasPerms ? undefined :
-                    <div className={styles.location} ingredient-box='location'>
+                    <div className={`${styles.location} ${hasPropertyData(location)}`} ingredient-box='location'>
                         <div className={styles['ingredient-labels']}>Localización</div>
                         <div current-value=''>{location}</div>
                     </div>
-                }
 
-                {!info && !hasPerms ? undefined :
-                    <div className={styles.info} ingredient-box='info'>
+                    <div className={`${styles.info} ${hasPropertyData(info)}`} ingredient-box='info'>
                         <div className={styles['ingredient-labels']}>Más info</div>
                         <p current-value='masinfo'>{info}</p>
                     </div>
-                }
             </div>
 
         </div>

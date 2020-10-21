@@ -107,6 +107,10 @@
     display: none;
 }
 
+.force-display {
+    display: flex !important;
+}
+
 .green {
     background-color: rgb(70, 196, 70) !important;
 }
