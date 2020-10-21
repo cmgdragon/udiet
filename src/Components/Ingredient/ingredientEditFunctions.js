@@ -2,7 +2,7 @@ import styles from './Ingredient.module.css';
 import { modifyIngredientInfo } from '../../Database/writeDietInfo';
 
 const cancelEditOperation = (event, ingredientNameEl, ingredientListEl, editButton, removeButton,
-    checkButton, cancelButton, value, setExpanded, isUploadOperation) => {
+    checkButton, cancelButton, value, setExpanded, isUploadOperation, setIsEmptyIngredient) => {
     event.stopPropagation();
     const oldNameEl = ingredientNameEl.querySelector(`.${styles.undisplay}:last-child`);
     oldNameEl.classList.remove(styles.undisplay);
@@ -10,12 +10,18 @@ const cancelEditOperation = (event, ingredientNameEl, ingredientListEl, editButt
     oldNameEl.innerText = value;
     ingredientNameEl.querySelector('input').remove();
 
+
+    let hasIngredients;
+    
+    ingredientListEl.classList.remove(styles['force-box-padding']);
     ingredientListEl.querySelectorAll('[ingredient-box]').forEach(ingredientBox => {
 
         const valueInput = ingredientBox.querySelector('input') || ingredientBox.querySelector('textarea');
         const oldValueDiv = ingredientBox.querySelector(`[current-value].${styles.undisplay}`);
 
         if (isUploadOperation) {
+            if (!hasIngredients && valueInput.value !== '')
+                hasIngredients = true;
             if (valueInput.value === '')
                 ingredientBox.classList.add(styles.undisplay);
             oldValueDiv.innerText = valueInput.value;
@@ -29,6 +35,7 @@ const cancelEditOperation = (event, ingredientNameEl, ingredientListEl, editButt
 
     });
 
+    if (setIsEmptyIngredient) setIsEmptyIngredient(hasIngredients);
     checkButton.remove();
     cancelButton.remove();
     editButton.classList.remove(styles.undisplay);
@@ -38,7 +45,7 @@ const cancelEditOperation = (event, ingredientNameEl, ingredientListEl, editButt
 }
 
 export const editIngredient = (event, userId, dietId, mealKey, courseKey, ingredientKey,
-    expanded, setExpanded) => {
+    expanded, setExpanded, setHasIngredients) => {
     event.stopPropagation();
     const ingredientNameEl = event.target.parentElement.parentElement;
     const ingredientListEl = ingredientNameEl.nextElementSibling;
@@ -61,7 +68,7 @@ export const editIngredient = (event, userId, dietId, mealKey, courseKey, ingred
     checkButton.classList = [`fa fa-check ${styles.green}`]
     checkButton.addEventListener('click', event => sendNewIngredientData(event,
         ingredientNameEl, ingredientListEl, editButton, removeButton, checkButton, cancelButton,
-        userId, dietId, mealKey, courseKey, ingredientKey, nameInput.value, setExpanded));
+        userId, dietId, mealKey, courseKey, ingredientKey, nameInput.value, setExpanded, setHasIngredients));
 
     cancelButton.classList = [`fa fa-ban ${styles.red}`]
     cancelButton.addEventListener('click', event => cancelEditOperation(event,
@@ -71,6 +78,7 @@ export const editIngredient = (event, userId, dietId, mealKey, courseKey, ingred
     buttonBox.appendChild(checkButton);
     buttonBox.appendChild(cancelButton);
 
+    ingredientListEl.classList.add(styles['force-box-padding']);
     ingredientListEl.querySelectorAll('[ingredient-box]').forEach(ingredientBox => {
 
         ingredientBox.classList.remove(styles.undisplay);
@@ -92,7 +100,7 @@ export const editIngredient = (event, userId, dietId, mealKey, courseKey, ingred
 }
 
 const sendNewIngredientData = async (event, ingredientNameEl, ingredientListEl, editButton, removeButton,
-    checkButton, cancelButton, userId, dietId, mealKey, courseKey, ingredientKey, newValue, setExpanded) => {
+    checkButton, cancelButton, userId, dietId, mealKey, courseKey, ingredientKey, newValue, setExpanded, setHasIngredients) => {
     event.stopPropagation();
     const ingredientSet = event.target.parentElement.parentElement.parentElement;
     const newObject = {}
@@ -102,6 +110,6 @@ const sendNewIngredientData = async (event, ingredientNameEl, ingredientListEl, 
 
     await modifyIngredientInfo(userId, dietId, mealKey, courseKey, ingredientKey, newObject);
     cancelEditOperation(event, ingredientNameEl, ingredientListEl, editButton, removeButton,
-        checkButton, cancelButton, newValue, setExpanded, true);
+        checkButton, cancelButton, newValue, setExpanded, true, setHasIngredients);
 
 }

@@ -9,13 +9,14 @@ const Ingredient = props => {
         dietId, mealKey, courseKey, ingredientKey, hasPerms,
         ingredientList, updateIngredients } = props;
     const [expanded, setExpanded] = useState(false);
+    const [hasIngredients, setHasIngredients] = useState(quantity || brand || location || info);
     const ingredientContent = useRef();
 
     const hasPropertyData = property => !property ? styles.undisplay : '';
 
     const expandedStyle = {
         height: expanded ? ingredientContent.current.scrollHeight-10 : '0px',
-        padding: expanded ? '0.7rem' : '0px'
+        padding: expanded ? hasIngredients ? '0.7rem' : '0px' : '0px'
     }
 
     const expand = () => setExpanded(!expanded);
@@ -37,7 +38,7 @@ const Ingredient = props => {
             <div className={styles['ingredient-name']} onClick={expand}>
                 {hasPerms ? <div className={styles['edit-box']}>
                     <i onClick={event => editIngredient(event, userId, dietId, mealKey, courseKey,
-                        ingredientKey, expanded, setExpanded)}
+                        ingredientKey, expanded, setExpanded, setHasIngredients)}
                         className={`fa fa-pencil`} aria-hidden="true"></i>
                     <i onClick={deleteIngredient} className={`fa fa-trash`} aria-hidden="true"></i>
                 </div>

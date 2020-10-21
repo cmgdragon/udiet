@@ -107,8 +107,8 @@
     display: none;
 }
 
-.force-display {
-    display: flex !important;
+.force-box-padding {
+    padding: .7rem !important;
 }
 
 .green {
