@@ -19,6 +19,8 @@ const Ingredient = props => {
         padding: expanded ? hasIngredients ? '0.7rem' : '0px' : '0px'
     }
 
+    const ingredientNameStyle = () => ({ cursor: hasIngredients ? 'pointer' : '' })
+
     const expand = () => setExpanded(!expanded);
 
     const deleteIngredient = async event => {
@@ -35,7 +37,7 @@ const Ingredient = props => {
     return (
         <div className={styles.ingredients}>
 
-            <div className={styles['ingredient-name']} onClick={expand}>
+            <div className={`${styles['ingredient-name']} ${hasIngredients ? styles['not-empty'] : ''}`} onClick={expand}>
                 {hasPerms ? <div className={styles['edit-box']}>
                     <i onClick={event => editIngredient(event, userId, dietId, mealKey, courseKey,
                         ingredientKey, expanded, setExpanded, setHasIngredients)}
