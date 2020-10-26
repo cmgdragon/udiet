@@ -20,7 +20,7 @@
               "name" : "meal name"
             } ],
             "mealOrder" : ["0"],
-            "sharedWith" : [ "shared@email.com" ]
+            "sharedWith" : [ "collaborator@email.com" ]
           }
         }
       }
