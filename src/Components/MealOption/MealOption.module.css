@@ -204,7 +204,7 @@
 }
 
 .undisplay {
-    display: none;
+    display: none !important;
 }
 
 .visibleEl {

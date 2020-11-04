@@ -104,7 +104,7 @@
 }
 
 .undisplay {
-    display: none;
+    display: none !important;
 }
 
 .force-box-padding {

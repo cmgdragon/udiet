@@ -234,7 +234,7 @@
 }
 
 .undisplay {
-    display: none;
+    display: none !important;
 }
 
 .green {
