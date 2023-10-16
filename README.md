@@ -6,4 +6,4 @@ Manage your meals and dishes, add ingredients and modify food metadata yourself 
 
 If you were planning to start a new healthier life, you should start managing your diet right here!
 
-:point_right: <font size="5">**[udiet.page](https://udiet.page "udiet.page")** </font>
+:point_right: <font size="5">**[youdiet-289718.web.app](https://youdiet-289718.web.app "youdiet-289718.web.app")**</font>
